@@ -1,0 +1,19 @@
+#ifndef NODE_H
+#define NODE_H
+#include <vector>
+
+
+class Node{
+private:
+    static unsigned long int number_of_nodes;
+    unsigned long int id;
+    unsigned long int degree;
+    std::vector<Node> adjacency_list;
+
+public:
+    Node();
+    Node(unsigned long int degree);
+    unsigned long int NumberOfNodes();
+};
+
+#endif // NODE_H

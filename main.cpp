@@ -1,0 +1,7 @@
+#include <QCoreApplication>
+#include <node.h>
+#include <iostream>
+int main(int argc, char *argv[]){
+    Node n = Node();
+    std::cout<<n.non();
+}
