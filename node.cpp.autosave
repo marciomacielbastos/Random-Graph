@@ -18,3 +18,11 @@ Node::Node(unsigned long int degree){
 unsigned long int Node::NumberOfNodes(){
     return this->number_of_nodes;
 }
+
+unsigned long int Node::GetId(){
+    return this->
+}
+
+void Node::AddNeighbor(Node n){
+    this->adjacency_list.push_back(n)
+}

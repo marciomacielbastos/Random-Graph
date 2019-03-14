@@ -8,12 +8,14 @@ private:
     static unsigned long int number_of_nodes;
     unsigned long int id;
     unsigned long int degree;
-    std::vector<Node> adjacency_list;
+    std::vector<unsigned long int> adjacency_list;
 
 public:
     Node();
     Node(unsigned long int degree);
     unsigned long int NumberOfNodes();
+    unsigned long int GetId();
+    void AddNeighbor(Node n);
 };
 
 #endif // NODE_H
