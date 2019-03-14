@@ -7,11 +7,15 @@ class Node{
 private:
     static unsigned long int number_of_nodes;
     unsigned long int id;
-    std::vector<Node> adjacency_list;
+    unsigned long int degree;
+    std::vector<unsigned long int> adjacency_list;
 
 public:
     Node();
-    unsigned long int non();
+    Node(unsigned long int degree);
+    unsigned long int NumberOfNodes();
+    unsigned long int GetId();
+    bool AddNeighbor(Node n);
 };
 
 #endif // NODE_H
