@@ -8,7 +8,6 @@
 class Network{
 private:
     std::vector<Node> NodeList;
-    unsigned long int GetRandomDegree();
 public:
     Network(unsigned long int numberOfNodes);
     void AddNode();
