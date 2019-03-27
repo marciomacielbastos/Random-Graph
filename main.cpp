@@ -14,10 +14,11 @@ int main(int argc, char *argv[]){
 //    Node n = Node();
 //    double val;
     std::srand(unsigned(time(nullptr)));
-    ZipfGen zg = ZipfGen(1, 10, 4);
+    ZipfGen zg = ZipfGen(100, 4);
+//    std::cout<<zg.HarmonicApprox(20)/12 - zg.HarmonicApprox(10)/12<<" "<<zg.Harmonic(20)-zg.Harmonic(10);
 //    unsigned long int rvs
     std::vector<unsigned long int> rv;
-    rv = zg.RandomBFMethod(100000000);
+    rv = zg.RandomBFMethod(10000);
     std::ofstream myfile;
     myfile.open ("/home/marcio/example.txt");
 //    std::sort(rv.begin(), rv.end());

@@ -1,23 +1,37 @@
 #include "zipfgen.h"
 
-void ZipfGen::setCDF(){
+void ZipfGen::SetCDF(){
     unsigned long int N = static_cast<unsigned long int>(this->N);
-    this->Zeta = Harmonic(N);
-    for(unsigned long int k = 0; k < N; k++){
-        this->cdf.push_back(Harmonic(k)/this->Zeta);
+    if(N < 1000){
+        this->Zeta = Harmonic(N);
+        for(unsigned long int k = 0; k < N; k++){
+            this->cdf.push_back(Harmonic(k)/this->Zeta);
+        }
+    }
+    else {
+        this->Zeta = HarmonicApprox(N);
+        for(unsigned long int k = 0; k < N; k++){
+            this->cdf.push_back(HarmonicApprox(k)/this->Zeta);
+        }
     }
 }
 
-ZipfGen::ZipfGen(unsigned long int xmax, double s): xmax(xmax), s(s){
+ZipfGen::ZipfGen(double N, double s): N(N), s(s){
     std::srand(unsigned(time(0)));
-    this->N = this->xmax - this->xmin;
-    setCDF();
+    this->xmax= this->N - 1;
+    SetCDF();
 }
 
-ZipfGen::ZipfGen(unsigned long int xmin, unsigned long int xmax, double s): xmin(xmin), xmax(xmax), s(s){
-    std::srand(unsigned(time(0)));
-    this->N = this->xmax - this->xmin;
-    setCDF();
+void ZipfGen::SetS(double s){
+    this->s = s;
+}
+
+void ZipfGen::SetXmin(double xmin){
+    this->xmin = xmin;
+}
+
+void ZipfGen::SetXmax(double xmax){
+    this->xmax = xmax;
 }
 
 double ZipfGen::Uniform(){
@@ -36,6 +50,8 @@ double ZipfGen::H12(double m, unsigned long int x){
     double H12 = 12*(((m * x * x * x) - 1)/(1 - s)) + 6 + (6 * m * x * x) + s - (s * (m * x));
     return H12;
 }
+
+
 
 //Derivative of H_(x,s) * 12
 double ZipfGen::H12_(double m, unsigned long int x){
@@ -79,6 +95,14 @@ std::vector<unsigned long int> ZipfGen::RandomApproxMethod(unsigned long size){
         randomVector.push_back(RandomApproxMethod());
     }
     return randomVector;
+}
+
+double ZipfGen::HarmonicApprox(unsigned long int k){
+    double powN = std::pow(N, -(s+2));
+    double a = H12(powN, this->N);
+    double pow_k = std::pow(k, -(s+2));
+    double b = H12(pow_k, k);
+    return b;
 }
 
 //----------------------------------------------------------------------------------------//

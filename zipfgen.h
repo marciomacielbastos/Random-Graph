@@ -19,15 +19,18 @@ private:
     std::vector<double> cdf;
 
 public:
-    ZipfGen(unsigned long int xmax, double s);
-    ZipfGen(unsigned long int xmin, unsigned long int xmax, double s);
-    void setCDF();
+    ZipfGen(double N, double s);
+    void SetS(double s);
+    void SetXmin(double xmin);
+    void SetXmax(double xmax);
+    void SetCDF();
     double H12(double x_power_s, unsigned long int x);
     double H12_(double x_power_s, unsigned long int x);
     double NewtonRaphson(double p);
     double Uniform();
     unsigned long int RandomApproxMethod();
     std::vector<unsigned long int> RandomApproxMethod(unsigned long int size);
+    double HarmonicApprox(unsigned long int k);
     double Harmonic(unsigned long int k);
     unsigned long int RandomBFMethod();
     std::vector<unsigned long int> RandomBFMethod(unsigned long size);
