@@ -17,6 +17,9 @@ void ZipfGen::SetCDF(){
 }
 
 ZipfGen::ZipfGen(double N, double s): s(s), N(N){
+    if(s==1){
+        SetS(1.000001);
+    }
     std::srand(unsigned(time(nullptr)));
     this->xmax= this->N - 1;
     SetCDF();

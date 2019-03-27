@@ -4,14 +4,17 @@
 #include <vector>
 #include <time.h>
 #include <stdlib.h>
+#include <zipfgen.h>
 
 class Network{
 private:
-    std::vector<Node> NodeList;
+    std::vector<Node> nodeList;
+    std::vector<unsigned long int> algoList;
 public:
-    Network(unsigned long int numberOfNodes);
-    void AddNode();
-    void AddLink(Node v, Node w);
+    Network(unsigned long int numberOfNodes, double degree);
+    bool AddNode(Node n);
+    bool AddLink(Node v, Node w);
+    bool RandomLink();
 };
 
 #endif // NETWORK_H
