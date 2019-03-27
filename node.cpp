@@ -12,7 +12,7 @@ Node::Node(unsigned long int degree){
     this->id = this->number_of_nodes;
     this->number_of_nodes++;
     this->degree = degree;
-}   
+}
 
 unsigned long int Node::NumberOfNodes(){
     return this->number_of_nodes;

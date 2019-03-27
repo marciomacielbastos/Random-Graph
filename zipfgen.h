@@ -24,8 +24,8 @@ public:
     void SetXmin(double xmin);
     void SetXmax(double xmax);
     void SetCDF();
-    double H12(double x_power_s, unsigned long int x);
-    double H12_(double x_power_s, unsigned long int x);
+    double H12(double x_power_s, double x);
+    double H12_(double x_power_s, double x);
     double NewtonRaphson(double p);
     double Uniform();
     unsigned long int RandomApproxMethod();

@@ -16,8 +16,8 @@ void ZipfGen::SetCDF(){
     }
 }
 
-ZipfGen::ZipfGen(double N, double s): N(N), s(s){
-    std::srand(unsigned(time(0)));
+ZipfGen::ZipfGen(double N, double s): s(s), N(N){
+    std::srand(unsigned(time(nullptr)));
     this->xmax= this->N - 1;
     SetCDF();
 }
@@ -42,25 +42,40 @@ double ZipfGen::Uniform(){
 //*********************************APPROXIMATION*METHOD***********************************//
 //----------------------------------------------------------------------------------------//
 
-//THIS METHOD IS UNSTABLE!!!!
 
 //H_(x,s) * 12 obtained by approximation by the Euler-MacLaurin formula truncated in the 2nd order
 // https://medium.com/@jasoncrease/zipf-54912d5651cc
-double ZipfGen::H12(double m, unsigned long int x){
-    double H12 = 12*(((m * x * x * x) - 1)/(1 - s)) + 6 + (6 * m * x * x) + s - (s * (m * x));
+//https://en.wikipedia.org/wiki/Euler%E2%80%93Maclaurin_formula
+//----------------------------------------------------------------------------------------//
+//*******************************2nd*Order*Euler-Maclaurin********************************//
+//----------------------------------------------------------------------------------------//
+//double ZipfGen::H12(double m, double x){
+//    double H12 = 12*(((m * x * x * x) - 1)/(1 - s)) + 6 + (6 * m * x * x) + s - (s * (m * x));
+//    return H12;
+//}
+
+////Derivative of H_(x,s) * 12
+//double ZipfGen::H12_(double m, double x){
+//    double H12_ = (12 * m * x * x) - ( 6 * s * (m * x)) + (s * (s + 1) * (m));
+//    return H12_;
+//}
+
+//----------------------------------------------------------------------------------------//
+//*******************************3rd*Order*Euler-Maclaurin********************************//
+//----------------------------------------------------------------------------------------//
+double ZipfGen::H12(double m, double x){
+    double H12 = 720*(((m * x * x * x * x * x) - 1)/(1 - s)) + 360 + (360 * m * x * x * x * x) + 60*s - 60*(s * (m * x * x * x)) + s * (s + 1) * (s + 2) - s * (s + 1) * (s + 2) * m * x;
     return H12;
 }
 
-
-
 //Derivative of H_(x,s) * 12
-double ZipfGen::H12_(double m, unsigned long int x){
-    double H12_ = (12 * m * x * x) - ( 6 * s * (m * x)) + (s * (s + 1) * (m));
+double ZipfGen::H12_(double m, double x){
+    double H12_ = (720 * m * x * x * x * x) - ( 360 * s * (m * x * x * x)) + (60 * s * (s + 1) * (m * x * x)) + s * (s + 1) * (s + 2) * (s + 2) * m;
     return H12_;
 }
 
 double ZipfGen::NewtonRaphson(double p){
-    double powN = std::pow(N, -(s+2));
+    double powN = std::pow(N, -(s+4.0));
     double D = H12(powN, this->N);
     double x = this->x0;
     int test = 1000;
@@ -70,7 +85,7 @@ double ZipfGen::NewtonRaphson(double p){
             double new_p = Uniform();
             return NewtonRaphson(new_p);
         }
-        double pow_x = std::pow(x, -(s+2));
+        double pow_x = std::pow(x, -(s+4));
         double f = H12(pow_x, x) - (p * D); // f(x)
         double f_ = H12_(pow_x, x); //f'(x)
         double factor = (f/f_);
