@@ -14,8 +14,14 @@ Node::Node(unsigned long int degree){
     this->degree = degree;
 }
 
-unsigned long int Node::NumberOfNodes(){
-    return this->number_of_nodes;
+//This must be optimized!!!
+bool Node::IsConnected(Node n){
+    for (auto x : this->adjacency_list){
+        if(x == n.GetId()){
+            return true;
+        }
+    }
+    return false;
 }
 
 unsigned long int Node::GetId(){

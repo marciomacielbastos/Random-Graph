@@ -15,6 +15,7 @@ public:
     bool AddNode(Node n);
     bool AddLink(Node v, Node w);
     bool RandomLink();
+    unsigned long int Uniform(unsigned long int n);
 };
 
 #endif // NETWORK_H

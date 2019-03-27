@@ -13,9 +13,12 @@ private:
 public:
     Node();
     Node(unsigned long int degree);
-    unsigned long int NumberOfNodes();
     unsigned long int GetId();
     bool AddNeighbor(Node n);
+    bool IsConnected(Node n);
+    static unsigned long int NumberOfNodes(){
+        return number_of_nodes;
+    }
 };
 
 #endif // NODE_H
