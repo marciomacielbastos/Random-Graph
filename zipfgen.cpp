@@ -98,11 +98,11 @@ std::vector<unsigned long int> ZipfGen::RandomApproxMethod(unsigned long size){
 }
 
 double ZipfGen::HarmonicApprox(unsigned long int k){
-    double powN = std::pow(N, -(s+2));
-    double a = H12(powN, this->N);
+//    double powN = std::pow(N, -(s+2));
+//    double a = H12(powN, this->N);
     double pow_k = std::pow(k, -(s+2));
     double b = H12(pow_k, k);
-    return b;
+    return b/12;
 }
 
 //----------------------------------------------------------------------------------------//
@@ -127,11 +127,11 @@ unsigned long int ZipfGen::RandomBFMethod(){
     double U = Uniform();
     unsigned long int N = static_cast<unsigned long int>(this->N);
     for(unsigned long int k = 0; k < N; k++){
-        double j = this->cdf[k];
         if(this->cdf[k] < U && U <= this->cdf[k+1]){
             return k;
         }
     }
+    return 0;
 }
 
 std::vector<unsigned long int> ZipfGen::RandomBFMethod(unsigned long size){
