@@ -37,3 +37,23 @@ bool Node::AddNeighbor(Node n){
         return false;
     }
 }
+
+unsigned long int Node::GedDegree(){
+    return this->degree;
+}
+
+bool  Node::operator>(Node n){
+    if(this->GedDegree() > n.GedDegree()){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool  Node::operator<(Node n){
+    if(this->GedDegree() < n.GedDegree()){
+        return true;
+    } else {
+        return false;
+    }
+}

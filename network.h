@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <zipfgen.h>
+#include <algorithm>
 
 class Network{
 private:
@@ -14,7 +15,8 @@ public:
     Network(unsigned long int numberOfNodes, double degree);
     bool AddNode(Node n);
     bool AddLink(Node v, Node w);
-    bool RandomLink();
+    bool RandomLinkAA();
+    bool RandomLinkNuno();
     unsigned long int Uniform(unsigned long int n);
 };
 

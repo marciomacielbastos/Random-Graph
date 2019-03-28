@@ -40,9 +40,9 @@ Network::Network(unsigned long int numberOfNodes, double degree){
     }
 }
 
-
 // I have to count to 100, give up and start again
-bool Network::RandomLink(){
+// Andre Auto linking method
+bool Network::RandomLinkAA(){
     unsigned long int N = this->algoList.size();
     int counter = 0;
     while(N > 0){
@@ -70,3 +70,33 @@ bool Network::RandomLink(){
     return true;
 }
 
+// Nuno linking method
+bool Network::RandomLinkNuno(){
+//    std::vector<Node> nodeList = this->nodeList;
+    std::sort(this->nodeList.rbegin(), this->nodeList.rend());
+    unsigned long int N = this->algoList.size();
+    int counter = 0;
+    while(N > 0){
+        unsigned long int rand1 = Uniform(N);
+        unsigned long int rand2 = Uniform(N);
+        unsigned long int rnd1 = this->algoList[rand1];
+        unsigned long int rnd2 = this->algoList[rand2];
+        while((rand1 == rand2) && (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
+            counter++;
+            rand1 = Uniform(N);
+            rand2 = Uniform(N);
+            rnd1 = this->algoList[rand1];
+            rnd2 = this->algoList[rand2];
+            if(counter >= 100){
+                return false;
+            }
+        }
+        AddLink(nodeList[rand1] , nodeList[rand2]);
+        algoList[rand1] = algoList[N];
+        algoList[rand2] = algoList[N-1];
+        algoList.pop_back();
+        algoList.pop_back();
+        N -= 2;
+    }
+    return true;
+}
