@@ -66,7 +66,7 @@ bool Network::RandomLinkAA(){
         unsigned long int rand2 = Uniform(0, N);
         unsigned long int rnd1 = this->algoList[rand1];
         unsigned long int rnd2 = this->algoList[rand2];
-        while((rand1 == rand2) || (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
+        while((rnd1 == rnd2) || (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
             counter++;
             rand1 = Uniform(N);
             rand2 = Uniform(N);
@@ -76,7 +76,7 @@ bool Network::RandomLinkAA(){
                 return false;
             }
         }
-        AddLink(&nodeList[rand1] , &nodeList[rand2]);
+        AddLink(&nodeList[rnd1] , &nodeList[rnd2]);
         algoList[rand1] = algoList[N-1];
         algoList[rand2] = algoList[N-2];
         algoList.pop_back();
@@ -109,9 +109,14 @@ bool Network::RandomLinkNuno(){
         unsigned long int p2 = 0;
         unsigned long int val1 = this->algoList[p1];
         unsigned long int val2 = val1;
+        int count = 100;
         while ((val1 == val2) || (nodeList[val1].IsConnected(nodeList[val2]))){
             p2 = Uniform(GetNext(p1,0), N);
             val2 = this->algoList[p2];
+            if(count <= 0){
+                count--;
+                return false;
+            }
         }
         AddLink(&nodeList[val1] , &nodeList[val2]);
         // Possible error point (cast from unsigned to signed)

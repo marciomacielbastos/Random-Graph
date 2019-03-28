@@ -9,7 +9,7 @@
 
 
 int main(int argc, char *argv[]){
-    Network net = Network(100,2);
+    Network net = Network(10,2);
     bool b = net.RandomLinkAA();
     std::cout<<b<<std::endl;
 //    std::ofstream myfile;
