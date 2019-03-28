@@ -15,6 +15,7 @@ public:
     Node(unsigned long int degree);
     unsigned long int GetId();
     unsigned long int GedDegree();
+    void SetDegree(unsigned long int degree);
     bool AddNeighbor(Node n);
     bool IsConnected(Node n);
     bool  operator > (Node n);

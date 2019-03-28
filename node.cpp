@@ -42,6 +42,10 @@ unsigned long int Node::GedDegree(){
     return this->degree;
 }
 
+void Node::SetDegree(unsigned long int degree){
+    this->degree = degree;
+}
+
 bool  Node::operator>(Node n){
     if(this->GedDegree() > n.GedDegree()){
         return true;
