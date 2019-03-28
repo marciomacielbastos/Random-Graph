@@ -17,7 +17,8 @@ void ZipfGen::SetCDF(){
 }
 
 ZipfGen::ZipfGen(double N, double s): s(s), N(N){
-    if(s==1){
+    // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
+    if(std::abs(s - 1) < std::numeric_limits<double>::epsilon()){
         SetS(1.000001);
     }
     std::srand(unsigned(time(nullptr)));

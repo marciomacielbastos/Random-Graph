@@ -9,9 +9,9 @@
 
 
 int main(int argc, char *argv[]){
-    std::vector<int> a={1,2,3};
-    a.erase(a.begin()+1);
-    Network net = Network(1000,2);
+    Network net = Network(100,2);
+    bool b = net.RandomLinkAA();
+    std::cout<<b<<std::endl;
 //    std::ofstream myfile;
 //    myfile.open ("/home/marcim/exampleBF.txt");
 //    ZipfGen zg = ZipfGen(10000000, 1.000001);

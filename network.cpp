@@ -14,21 +14,24 @@ unsigned long int Network::Uniform(unsigned long int min, unsigned long int max)
 }
 
 
-bool Network::AddLink(Node v, Node w){
+bool Network::AddLink(Node *v, Node *w){
     bool isLinked;
-    isLinked = v.AddNeighbor(w);
+    isLinked = v->AddNeighbor(*w);
     if(!isLinked){
         return false;
     }
-    isLinked = w.AddNeighbor(v);
+    isLinked = w->AddNeighbor(*v);
     if(!isLinked){
         return false;
     }
     return true;
 }
 
-void Network::SetNodeLists(unsigned long int numberOfNodes){
+void Network::SetNodeLists(unsigned long int numberOfNodes, double s){
+    double N = static_cast<double>(numberOfNodes);
+    ZipfGen zg = ZipfGen(N, s);
     std::vector<unsigned long int> rv;
+    rv = zg.RandomApproxMethod(numberOfNodes);
     for (unsigned long int i = 0; i < numberOfNodes; i++) {
         unsigned long int n = rv[i];
         Node node = Node(n);
@@ -48,11 +51,7 @@ void Network::SetAlgoList(unsigned long numberOfNodes){
 
 Network::Network(unsigned long int numberOfNodes, double s){
     std::srand(unsigned(time(nullptr)));
-    double N = static_cast<double>(numberOfNodes);
-    ZipfGen zg = ZipfGen(N, s);
-    std::vector<unsigned long int> rv;
-    rv = zg.RandomApproxMethod(numberOfNodes);
-    SetNodeLists(numberOfNodes);
+    SetNodeLists(numberOfNodes, s);
 }
 
 
@@ -63,11 +62,11 @@ bool Network::RandomLinkAA(){
     unsigned long int N = this->algoList.size();
     int counter = 0;
     while(N > 1){
-        unsigned long int rand1 = Uniform(N);
-        unsigned long int rand2 = Uniform(N);
+        unsigned long int rand1 = Uniform(0, N);
+        unsigned long int rand2 = Uniform(0, N);
         unsigned long int rnd1 = this->algoList[rand1];
         unsigned long int rnd2 = this->algoList[rand2];
-        while((rand1 == rand2) && (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
+        while((rand1 == rand2) || (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
             counter++;
             rand1 = Uniform(N);
             rand2 = Uniform(N);
@@ -77,9 +76,9 @@ bool Network::RandomLinkAA(){
                 return false;
             }
         }
-        AddLink(nodeList[rand1] , nodeList[rand2]);
-        algoList[rand1] = algoList[N];
-        algoList[rand2] = algoList[N-1];
+        AddLink(&nodeList[rand1] , &nodeList[rand2]);
+        algoList[rand1] = algoList[N-1];
+        algoList[rand2] = algoList[N-2];
         algoList.pop_back();
         algoList.pop_back();
         N -= 2;
@@ -96,8 +95,8 @@ unsigned long int Network::GetNext(unsigned long int head, unsigned long int it)
 
 // Nuno linking method
 bool Network::RandomLinkNuno(){
-    SetAlgoList(this->nodeList.size());
     std::sort(this->nodeList.rbegin(), this->nodeList.rend());
+    SetAlgoList(this->nodeList.size());
     unsigned long int N = this->algoList.size();
 //    Verify if the algoList size is even and reduce the degreen of the less connecter node by one
 //    if(N % 2){
@@ -110,14 +109,14 @@ bool Network::RandomLinkNuno(){
         unsigned long int p2 = 0;
         unsigned long int val1 = this->algoList[p1];
         unsigned long int val2 = val1;
-        while (val1==val2 && (nodeList[val1].IsConnected(nodeList[val2]))){
+        while ((val1 == val2) || (nodeList[val1].IsConnected(nodeList[val2]))){
             p2 = Uniform(GetNext(p1,0), N);
             val2 = this->algoList[p2];
         }
-        AddLink(nodeList[val1] , nodeList[val2]);
-        algoList.erase(algoList.begin());
+        AddLink(&nodeList[val1] , &nodeList[val2]);
         // Possible error point (cast from unsigned to signed)
         algoList.erase(algoList.begin() + static_cast<long int >(p2));
+        algoList.erase(algoList.begin());
         N -= 2;
     }
     return true;
