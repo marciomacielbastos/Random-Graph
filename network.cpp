@@ -62,7 +62,7 @@ bool Network::RandomLinkAA(){
     SetAlgoList(this->nodeList.size());
     unsigned long int N = this->algoList.size();
     int counter = 0;
-    while(N > 0){
+    while(N > 1){
         unsigned long int rand1 = Uniform(N);
         unsigned long int rand2 = Uniform(N);
         unsigned long int rnd1 = this->algoList[rand1];
@@ -100,12 +100,12 @@ bool Network::RandomLinkNuno(){
     std::sort(this->nodeList.rbegin(), this->nodeList.rend());
     unsigned long int N = this->algoList.size();
 //    Verify if the algoList size is even and reduce the degreen of the less connecter node by one
-    if(N % 2){
-        unsigned long int p = this->algoList[this->algoList.size() - 1];
-        nodeList[p].SetDegree(nodeList[p].GedDegree() - 1);
-        this->algoList.pop_back();
-    }
-    while(N > 0){
+//    if(N % 2){
+//        unsigned long int p = this->algoList[this->algoList.size() - 1];
+//        nodeList[p].SetDegree(nodeList[p].GedDegree() - 1);
+//        this->algoList.pop_back();
+//    }
+    while(N > 1){
         unsigned long int p1 = 0;
         unsigned long int p2 = 0;
         unsigned long int val1 = this->algoList[p1];
