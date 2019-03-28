@@ -9,6 +9,11 @@ unsigned long int Network::Uniform(unsigned long int n){
     return static_cast<unsigned long int>(std::rand()) % n; // in (0, n - 1)
 }
 
+unsigned long int Network::Uniform(unsigned long int min, unsigned long int max){
+    return static_cast<unsigned long int>(std::rand()) %(max-min) + min; // in [min, max)
+}
+
+
 bool Network::AddLink(Node v, Node w){
     bool isLinked;
     isLinked = v.AddNeighbor(w);
@@ -41,10 +46,10 @@ void Network::SetAlgoList(unsigned long numberOfNodes){
     }
 }
 
-Network::Network(unsigned long int numberOfNodes, double degree){
+Network::Network(unsigned long int numberOfNodes, double s){
     std::srand(unsigned(time(nullptr)));
     double N = static_cast<double>(numberOfNodes);
-    ZipfGen zg = ZipfGen(N, degree);
+    ZipfGen zg = ZipfGen(N, s);
     std::vector<unsigned long int> rv;
     rv = zg.RandomApproxMethod(numberOfNodes);
     SetNodeLists(numberOfNodes);
@@ -96,17 +101,11 @@ bool Network::RandomLinkNuno(){
     unsigned long int N = this->algoList.size();
     while(N > 0){
         unsigned long int p1 = 0;
-        unsigned long int p2 = GetNext(p1,0);
+        unsigned long int p2 = 0;
         unsigned long int val1 = this->algoList[p1];
-        unsigned long int val2 = this->algoList[p2];
-        while((val1 == val2) && (nodeList[val1].IsConnected(nodeList[val2]))){
-            //Switch positions
-            unsigned long int p3;
-            p3 = GetNext(val2, p2);
-            unsigned long int temp;
-            temp = this->algoList[p2];
-            this->algoList[p2] = this->algoList[p3];
-            this->algoList[p3] = temp;
+        unsigned long int val2 = val1;
+        while (val1==val2 && (nodeList[val1].IsConnected(nodeList[val2]))){
+            p2 = Uniform(GetNext(p1,0), N);
             val2 = this->algoList[p2];
         }
         AddLink(nodeList[val1] , nodeList[val2]);

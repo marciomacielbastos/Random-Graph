@@ -21,6 +21,7 @@ public:
     bool RandomLinkAA();
     bool RandomLinkNuno();
     unsigned long int Uniform(unsigned long int n);
+    unsigned long int Uniform(unsigned long int max, unsigned long int min);
 };
 
 #endif // NETWORK_H
