@@ -50,17 +50,22 @@ bool Network::RandomLink(){
         unsigned long int rand2 = Uniform(N);
         unsigned long int rnd1 = this->algoList[rand1];
         unsigned long int rnd2 = this->algoList[rand2];
-        if((rand1 == rand2) && (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
-            continue;
+        while((rand1 == rand2) && (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
+            counter++;
+            rand1 = Uniform(N);
+            rand2 = Uniform(N);
+            rnd1 = this->algoList[rand1];
+            rnd2 = this->algoList[rand2];
+            if(counter >= 100){
+                return false;
+            }
         }
-        else  {
-            AddLink(nodeList[rand1] , nodeList[rand2]);
-            algoList[rand1] = algoList[N];
-            algoList[rand2] = algoList[N-1];
-            algoList.pop_back();
-            algoList.pop_back();
-            N -= 2;
-        }
+        AddLink(nodeList[rand1] , nodeList[rand2]);
+        algoList[rand1] = algoList[N];
+        algoList[rand2] = algoList[N-1];
+        algoList.pop_back();
+        algoList.pop_back();
+        N -= 2;
     }
     return true;
 }
