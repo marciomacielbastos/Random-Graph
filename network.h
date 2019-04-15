@@ -12,7 +12,7 @@ private:
     std::vector<Node> nodeList;
     std::vector<unsigned long int> algoList;
 public:
-    Network(unsigned long int numberOfNodes, double degree);
+    Network(unsigned long int numberOfNodes, double s);
     bool AddNode(Node n);
     bool AddLink(Node *v, Node *w);
     void SetNodeLists(unsigned long int numberOfNodes, double s);
@@ -22,6 +22,7 @@ public:
     bool RandomLinkNuno();
     unsigned long int Uniform(unsigned long int n);
     unsigned long int Uniform(unsigned long int max, unsigned long int min);
+    std::vector<Node> GetNodeList();
 };
 
 #endif // NETWORK_H

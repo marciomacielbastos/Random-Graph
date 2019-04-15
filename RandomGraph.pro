@@ -18,7 +18,8 @@ SOURCES += \
         main.cpp \
     node.cpp \
     network.cpp \
-    zipfgen.cpp
+    zipfgen.cpp \
+    hoshenkopelman.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -28,4 +29,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     node.h \
     network.h \
-    zipfgen.h
+    zipfgen.h \
+    hoshenkopelman.h

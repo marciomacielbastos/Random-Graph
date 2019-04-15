@@ -61,3 +61,7 @@ bool  Node::operator<(Node n){
         return false;
     }
 }
+
+std::vector<unsigned long int> Node::GetAdjacencyList(){
+    return this->adjacency_list;
+}

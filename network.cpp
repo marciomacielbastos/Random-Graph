@@ -126,3 +126,7 @@ bool Network::RandomLinkNuno(){
     }
     return true;
 }
+
+std::vector<Node> Network::GetNodeList(){
+    return this->nodeList;
+}

@@ -20,6 +20,7 @@ public:
     bool IsConnected(Node n);
     bool  operator > (Node n);
     bool  operator < (Node n);
+    std::vector<unsigned long int> GetAdjacencyList();
     static unsigned long int NumberOfNodes(){
         return number_of_nodes;
     }
