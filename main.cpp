@@ -10,10 +10,11 @@
 
 
 int main(int argc, char *argv[]){
-    Network net = Network(25,2);
+    unsigned long int s = 145;
+    Network net = Network(s,2);
     bool b = net.RandomLinkAA();
     std::vector<unsigned long int> test;
-    HoshenKopelman hk = HoshenKopelman(25);
+    HoshenKopelman hk = HoshenKopelman(s);
     hk.Relabel(net.GetNodeList());
 //    bool b = net.RandomLinkAA();
 //    std::cout<<b<<std::endl;
