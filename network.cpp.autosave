@@ -5,15 +5,6 @@ bool Network::AddNode(Node n){
     return true;
 }
 
-//unsigned long int Network::Uniform(unsigned long int n){
-//    return static_cast<unsigned long int>(std::rand()) % n; // in (0, n - 1)
-//}
-
-//unsigned long int Network::Uniform(unsigned long int min, unsigned long int max){
-//    return static_cast<unsigned long int>(std::rand()) %(max-min) + min; // in [min, max)
-//}
-
-
 bool Network::AddLink(Node *v, Node *w){
     bool isLinked;
     isLinked = v->AddNeighbor(*w);

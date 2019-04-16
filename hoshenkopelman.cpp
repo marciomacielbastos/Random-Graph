@@ -58,6 +58,6 @@ void HoshenKopelman::Relabel(const std::vector<Node> & nodeList){
     }
 }
 
-unsigned long int HoshenKopelman::GetNumberOfComponents(){
+unsigned long int HoshenKopelman::GetNumberOfComponents() {
     return this->components.size();
 }

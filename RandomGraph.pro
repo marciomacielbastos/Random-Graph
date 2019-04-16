@@ -19,7 +19,9 @@ SOURCES += \
     node.cpp \
     network.cpp \
     zipfgen.cpp \
-    hoshenkopelman.cpp
+    hoshenkopelman.cpp \
+    qexponential.cpp \
+    randomdistribution.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -30,4 +32,6 @@ HEADERS += \
     node.h \
     network.h \
     zipfgen.h \
-    hoshenkopelman.h
+    hoshenkopelman.h \
+    qexponential.h \
+    randomdistribution.h

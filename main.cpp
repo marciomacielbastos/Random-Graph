@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <zipfgen.h>
+#include <randomdistribution.h>
 #include <network.h>
 #include <fstream>
 #include <hoshenkopelman.h>
@@ -11,7 +12,10 @@
 
 int main(int argc, char *argv[]){
     unsigned long int s = 145;
-    Network net = Network(s,2.5);
+    RandomDistribution *rd;
+    ZipfGen zg = ZipfGen();
+    rd = &zg;
+    Network net = Network(s, 2.5, rd);
     bool b = net.RandomLinkAA();
     std::vector<unsigned long int> test;
     HoshenKopelman hk = HoshenKopelman(s);

@@ -4,15 +4,16 @@
 #include <vector>
 #include <time.h>
 #include <stdlib.h>
-#include <zipfgen.h>
+#include <randomdistribution.h>
 #include <algorithm>
 
 class Network{
 private:
     std::vector<Node> nodeList;
+    RandomDistribution *distribution;
     std::vector<unsigned long int> algoList;
 public:
-    Network(unsigned long int numberOfNodes, double s);
+    Network(unsigned long int numberOfNodes, double s, RandomDistribution *rd);
     bool AddNode(Node n);
     bool AddLink(Node *v, Node *w);
     void SetNodeLists(unsigned long int numberOfNodes, double s);
@@ -20,8 +21,6 @@ public:
     unsigned long int GetNext(unsigned long int head, unsigned long int it);
     bool RandomLinkAA();
     bool RandomLinkNuno();
-    unsigned long int Uniform(unsigned long int n);
-    unsigned long int Uniform(unsigned long int max, unsigned long int min);
     std::vector<Node> GetNodeList();
 };
 

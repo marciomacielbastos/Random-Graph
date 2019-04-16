@@ -16,17 +16,29 @@ void ZipfGen::SetCDF(){
     }
 }
 
-ZipfGen::ZipfGen(double N, double s): s(s), N(N){
-    // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
-    if(std::abs(s - 1) < std::numeric_limits<double>::epsilon()){
-        SetS(1.000001);
-    }
+ZipfGen::ZipfGen(){
     std::srand(unsigned(time(nullptr)));
+}
+
+void ZipfGen::SetPDF(double N, double s){
+    this->N = N;
+    this->xmax= this->N - 1;
+    SetS(s);
+    SetCDF();
+}
+
+ZipfGen::ZipfGen(double N, double s): N(N){
+    std::srand(unsigned(time(nullptr)));
+    SetS(s);
     this->xmax= this->N - 1;
     SetCDF();
 }
 
 void ZipfGen::SetS(double s){
+    // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
+    if(std::abs(s - 1) < std::numeric_limits<double>::epsilon()){
+        SetS(1.000001);
+    }
     this->s = s;
 }
 
@@ -38,18 +50,14 @@ void ZipfGen::SetXmax(double xmax){
     this->xmax = xmax;
 }
 
-double ZipfGen::Uniform(){
-    return double(std::rand())/RAND_MAX; // in (0, 1)
-}
-
 //----------------------------------------------------------------------------------------//
 //*********************************APPROXIMATION*METHOD***********************************//
 //----------------------------------------------------------------------------------------//
 
 
-//H_(x,s) * 12 obtained by approximation by the Euler-MacLaurin formula truncated in the 2nd order
+// H_(x,s) * 12 obtained by approximation by the Euler-MacLaurin formula truncated in the 2nd order
 // https://medium.com/@jasoncrease/zipf-54912d5651cc
-//https://en.wikipedia.org/wiki/Euler%E2%80%93Maclaurin_formula
+// https://en.wikipedia.org/wiki/Euler%E2%80%93Maclaurin_formula
 //----------------------------------------------------------------------------------------//
 //*******************************2nd*Order*Euler-Maclaurin********************************//
 //----------------------------------------------------------------------------------------//
@@ -108,12 +116,20 @@ unsigned long int ZipfGen::RandomApproxMethod(){
     return static_cast<unsigned long int>(x);
 }
 
+unsigned long int ZipfGen::Random(){
+    return RandomApproxMethod();
+}
+
 std::vector<unsigned long int> ZipfGen::RandomApproxMethod(unsigned long size){
     std::vector<unsigned long int> randomVector;
     for(unsigned long int i = 0; i < size; i++){
         randomVector.push_back(RandomApproxMethod());
     }
     return randomVector;
+}
+
+std::vector<unsigned long int> ZipfGen::Random(unsigned long size){
+    return RandomApproxMethod(size);
 }
 
 double ZipfGen::HarmonicApprox(unsigned long int k){

@@ -1,14 +1,13 @@
 #ifndef RANDOMGEN_H
 #define RANDOMGEN_H
+#include <randomdistribution.h>
 #include <vector>
-#include <time.h>
-#include <stdlib.h>
 #include <float.h>
 #include <cmath>
 #include <limits>
 
 
-class ZipfGen{
+class ZipfGen: public RandomDistribution{
 private:
     double xmax;
     double xmin = 2;
@@ -20,15 +19,18 @@ private:
     std::vector<double> cdf;
 
 public:
+    ZipfGen();
     ZipfGen(double N, double s);
     void SetS(double s);
     void SetXmin(double xmin);
     void SetXmax(double xmax);
     void SetCDF();
+    void SetPDF(double N, double s);
     double H12(double x_power_s, double x);
     double H12_(double x_power_s, double x);
     double NewtonRaphson(double p);
-    double Uniform();
+    unsigned long int Random();
+    std::vector<unsigned long int> Random(unsigned long int size);
     unsigned long int RandomApproxMethod();
     std::vector<unsigned long int> RandomApproxMethod(unsigned long int size);
     double HarmonicApprox(unsigned long int k);
