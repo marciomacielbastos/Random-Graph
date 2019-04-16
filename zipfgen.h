@@ -11,7 +11,7 @@
 class ZipfGen{
 private:
     double xmax;
-    double xmin = 1;
+    double xmin = 2;
     double s;
     double tol = 0.01;
     double x0 = 1;
