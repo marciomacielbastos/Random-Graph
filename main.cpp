@@ -11,7 +11,7 @@
 
 int main(int argc, char *argv[]){
     unsigned long int s = 145;
-    Network net = Network(s,2);
+    Network net = Network(s,2.5);
     bool b = net.RandomLinkAA();
     std::vector<unsigned long int> test;
     HoshenKopelman hk = HoshenKopelman(s);
