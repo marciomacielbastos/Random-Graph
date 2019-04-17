@@ -3,6 +3,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include <vector>
+#include <limits>
+#include <cmath>
 
 
 class Random{
@@ -17,6 +19,7 @@ public:
 //    virtual std::vector<unsigned long int> RandomApproxMethod(unsigned long int size);
     virtual unsigned long int Rand();
     virtual std::vector<unsigned long int> Rand(unsigned long int size);
+    virtual double SetParameter(double p);
     virtual void SetPDF(double N, double s);
 };
 

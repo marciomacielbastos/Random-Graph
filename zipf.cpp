@@ -36,11 +36,7 @@ Zipf::Zipf(unsigned long int N, double s) {
 }
 
 void Zipf::SetS(double s){
-    // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
-    if(std::abs(s - 1) < std::numeric_limits<double>::epsilon()){
-        SetS(1.000001);
-    }
-    this->s = s;
+    this->s = SetParameter(s);
 }
 
 void Zipf::SetXmin(double xmin){

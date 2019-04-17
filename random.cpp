@@ -20,6 +20,12 @@ std::vector<unsigned long int> Random::Rand(unsigned long int size){
     return zero;
 }
 
+double Random::SetParameter(double p){
+    // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
+    if(std::abs(p - 1) < std::numeric_limits<double>::epsilon()) return 1.000001;
+    else return p;
+}
+
 void Random::SetPDF(double N, double s){
 }
 

@@ -3,9 +3,6 @@
 #include <random.h>
 #include <vector>
 #include <float.h>
-#include <cmath>
-#include <limits>
-
 
 class Zipf: public Random{
 private:

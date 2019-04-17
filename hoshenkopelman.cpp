@@ -1,5 +1,4 @@
 #include "hoshenkopelman.h"
-#include <iostream>
 
 HoshenKopelman::HoshenKopelman(unsigned long int size){
     this->size = size;
