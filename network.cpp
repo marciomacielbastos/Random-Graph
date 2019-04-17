@@ -5,14 +5,6 @@ bool Network::AddNode(Node n){
     return true;
 }
 
-//unsigned long int Network::Uniform(unsigned long int n){
-//    return static_cast<unsigned long int>(std::rand()) % n; // in (0, n - 1)
-//}
-
-//unsigned long int Network::Uniform(unsigned long int min, unsigned long int max){
-//    return static_cast<unsigned long int>(std::rand()) %(max-min) + min; // in [min, max)
-//}
-
 
 bool Network::AddLink(Node *v, Node *w){
     bool isLinked;
@@ -27,11 +19,11 @@ bool Network::AddLink(Node *v, Node *w){
     return true;
 }
 
-void Network::SetNodeLists(unsigned long int numberOfNodes, double s){
-    double N = static_cast<double>(numberOfNodes);
-    this->distribution->SetPDF(N, s);
+void Network::SetNodeLists(unsigned long int numberOfNodes){
+//    double N = static_cast<double>(numberOfNodes);
+//    this->distribution->SetPDF(N, s);
     std::vector<unsigned long int> rv;
-    rv = this->distribution->Random(numberOfNodes);
+    rv = this->distribution->Rand(numberOfNodes);
     for (unsigned long int i = 0; i < numberOfNodes; i++) {
         unsigned long int n = rv[i];
         Node node = Node(n);
@@ -49,14 +41,14 @@ void Network::SetAlgoList(unsigned long numberOfNodes){
     }
 }
 
-Network::Network(unsigned long int numberOfNodes, double s, RandomDistribution *rd){
+//It must receive a random distribution already setted up.
+Network::Network(unsigned long int numberOfNodes, Random *rd){
     this->distribution = rd;
-    SetNodeLists(numberOfNodes, s);
+    SetNodeLists(numberOfNodes);
 }
 
-
-// I have to count to 100, give up and start again
 // Andre Auto linking method
+// I have to count to 100, give up and start again
 bool Network::RandomLinkAA(){
     SetAlgoList(this->nodeList.size());
     unsigned long int N = this->algoList.size();

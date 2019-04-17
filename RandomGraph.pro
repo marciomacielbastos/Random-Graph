@@ -18,10 +18,10 @@ SOURCES += \
         main.cpp \
     node.cpp \
     network.cpp \
-    zipfgen.cpp \
     hoshenkopelman.cpp \
     qexponential.cpp \
-    randomdistribution.cpp
+    zipf.cpp \
+    random.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -31,7 +31,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     node.h \
     network.h \
-    zipfgen.h \
     hoshenkopelman.h \
     qexponential.h \
-    randomdistribution.h
+    zipf.h \
+    random.h

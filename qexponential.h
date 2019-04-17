@@ -1,8 +1,8 @@
 #ifndef QEXPONENTIAL_H
 #define QEXPONENTIAL_H
-#include <randomdistribution.h>
+#include <random.h>
 
-class qExponential: public RandomDistribution{
+class qExponential: public Random{
 
 public:
     qExponential();

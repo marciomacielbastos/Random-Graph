@@ -3,22 +3,22 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
-#include <zipfgen.h>
-#include <randomdistribution.h>
+#include <zipf.h>
+#include <random.h>
 #include <network.h>
 #include <fstream>
 #include <hoshenkopelman.h>
 
 
 int main(int argc, char *argv[]){
-    unsigned long int s = 145;
-    RandomDistribution *rd;
-    ZipfGen zg = ZipfGen();
+    unsigned long int N = 145;
+    Random *rd;
+    Zipf zg = Zipf(N, 2.5);
     rd = &zg;
-    Network net = Network(s, 2.5, rd);
+    Network net = Network(N, rd);
     bool b = net.RandomLinkAA();
     std::vector<unsigned long int> test;
-    HoshenKopelman hk = HoshenKopelman(s);
+    HoshenKopelman hk = HoshenKopelman(N);
     hk.Relabel(net.GetNodeList());
 //    bool b = net.RandomLinkAA();
 //    std::cout<<b<<std::endl;

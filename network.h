@@ -4,19 +4,19 @@
 #include <vector>
 #include <time.h>
 #include <stdlib.h>
-#include <randomdistribution.h>
+#include <random.h>
 #include <algorithm>
 
 class Network{
 private:
     std::vector<Node> nodeList;
-    RandomDistribution *distribution;
+    Random *distribution;
     std::vector<unsigned long int> algoList;
 public:
-    Network(unsigned long int numberOfNodes, double s, RandomDistribution *rd);
+    Network(unsigned long int numberOfNodes, Random *rd);
     bool AddNode(Node n);
     bool AddLink(Node *v, Node *w);
-    void SetNodeLists(unsigned long int numberOfNodes, double s);
+    void SetNodeLists(unsigned long int numberOfNodes);
     void SetAlgoList(unsigned long int numberOfNodes);
     unsigned long int GetNext(unsigned long int head, unsigned long int it);
     bool RandomLinkAA();

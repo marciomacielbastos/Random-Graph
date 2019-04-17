@@ -1,6 +1,6 @@
-#include "zipfgen.h"
+#include "zipf.h"
 
-void ZipfGen::SetCDF(){
+void Zipf::SetCDF(){
     unsigned long int N = static_cast<unsigned long int>(this->N);
     if(N < 1000){
         this->Zeta = Harmonic(N);
@@ -16,25 +16,26 @@ void ZipfGen::SetCDF(){
     }
 }
 
-ZipfGen::ZipfGen(){
+Zipf::Zipf(){
     std::srand(unsigned(time(nullptr)));
 }
 
-void ZipfGen::SetPDF(double N, double s){
+void Zipf::SetPDF(double N, double s){
     this->N = N;
     this->xmax= this->N - 1;
     SetS(s);
     SetCDF();
 }
 
-ZipfGen::ZipfGen(double N, double s): N(N){
+Zipf::Zipf(unsigned long int N, double s) {
+    this->N = static_cast<double>(N);
     std::srand(unsigned(time(nullptr)));
     SetS(s);
     this->xmax= this->N - 1;
     SetCDF();
 }
 
-void ZipfGen::SetS(double s){
+void Zipf::SetS(double s){
     // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
     if(std::abs(s - 1) < std::numeric_limits<double>::epsilon()){
         SetS(1.000001);
@@ -42,11 +43,11 @@ void ZipfGen::SetS(double s){
     this->s = s;
 }
 
-void ZipfGen::SetXmin(double xmin){
+void Zipf::SetXmin(double xmin){
     this->xmin = xmin;
 }
 
-void ZipfGen::SetXmax(double xmax){
+void Zipf::SetXmax(double xmax){
     this->xmax = xmax;
 }
 
@@ -75,18 +76,18 @@ void ZipfGen::SetXmax(double xmax){
 //----------------------------------------------------------------------------------------//
 //*******************************3rd*Order*Euler-Maclaurin********************************//
 //----------------------------------------------------------------------------------------//
-double ZipfGen::H12(double m, double x){
+double Zipf::H12(double m, double x){
     double H12 = 720*(((m * x * x * x * x * x) - 1)/(1 - s)) + 360 + (360 * m * x * x * x * x) + 60*s - 60*(s * (m * x * x * x)) + s * (s + 1) * (s + 2) - s * (s + 1) * (s + 2) * m * x;
     return H12;
 }
 
 //Derivative of H_(x,s) * 12
-double ZipfGen::H12_(double m, double x){
+double Zipf::H12_(double m, double x){
     double H12_ = (720 * m * x * x * x * x) - ( 360 * s * (m * x * x * x)) + (60 * s * (s + 1) * (m * x * x)) + s * (s + 1) * (s + 2) * (s + 2) * m;
     return H12_;
 }
 
-double ZipfGen::NewtonRaphson(double p){
+double Zipf::NewtonRaphson(double p){
     double powN = std::pow(N, -(s+4.0));
     double D = H12(powN, this->N);
     double x = this->x0;
@@ -110,17 +111,17 @@ double ZipfGen::NewtonRaphson(double p){
     }
 }
 
-unsigned long int ZipfGen::RandomApproxMethod(){
+unsigned long int Zipf::RandomApproxMethod(){
     double p = Uniform(); // p ~ U(0,1)
     double x = NewtonRaphson(p);
     return static_cast<unsigned long int>(x);
 }
 
-unsigned long int ZipfGen::Random(){
+unsigned long int Zipf::Rand(){
     return RandomApproxMethod();
 }
 
-std::vector<unsigned long int> ZipfGen::RandomApproxMethod(unsigned long size){
+std::vector<unsigned long int> Zipf::RandomApproxMethod(unsigned long size){
     std::vector<unsigned long int> randomVector;
     for(unsigned long int i = 0; i < size; i++){
         randomVector.push_back(RandomApproxMethod());
@@ -128,11 +129,11 @@ std::vector<unsigned long int> ZipfGen::RandomApproxMethod(unsigned long size){
     return randomVector;
 }
 
-std::vector<unsigned long int> ZipfGen::Random(unsigned long size){
+std::vector<unsigned long int> Zipf::Rand(unsigned long size){
     return RandomApproxMethod(size);
 }
 
-double ZipfGen::HarmonicApprox(unsigned long int k){
+double Zipf::HarmonicApprox(unsigned long int k){
 //    double powN = std::pow(N, -(s+2));
 //    double a = H12(powN, this->N);
     double pow_k = std::pow(k, -(s+2));
@@ -146,7 +147,7 @@ double ZipfGen::HarmonicApprox(unsigned long int k){
 
 //Inverse Transform Method applied to discrete random variable (Zipf distributed)
 
-double ZipfGen::Harmonic(unsigned long int k){
+double Zipf::Harmonic(unsigned long int k){
     double summ = 0;
     double kpow;
     for(unsigned long int i = 1; i < k; i++){
@@ -158,7 +159,7 @@ double ZipfGen::Harmonic(unsigned long int k){
 }
 
 //http://www.columbia.edu/~ks20/4404-Sigman/4404-Notes-ITM.pdf
-unsigned long int ZipfGen::RandomBFMethod(){
+unsigned long int Zipf::RandomBFMethod(){
     double U = Uniform();
     unsigned long int N = static_cast<unsigned long int>(this->N);
     for(unsigned long int k = 0; k < N; k++){
@@ -169,7 +170,7 @@ unsigned long int ZipfGen::RandomBFMethod(){
     return 0;
 }
 
-std::vector<unsigned long int> ZipfGen::RandomBFMethod(unsigned long size){
+std::vector<unsigned long int> Zipf::RandomBFMethod(unsigned long size){
     std::vector<unsigned long int> randomVector;
     for(unsigned long int i = 0; i < size; i++){
         randomVector.push_back(RandomBFMethod());
