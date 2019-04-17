@@ -17,7 +17,7 @@ public:
     double factor(double x);
     double f(double f1, double f2);
     double df(double f1, double f2);
-    double d2f(double f1);
+    double d3f(double f1);
 };
 
 #endif // QEXPONENTIAL_H
