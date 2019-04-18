@@ -21,7 +21,8 @@ SOURCES += \
     hoshenkopelman.cpp \
     qexponential.cpp \
     zipf.cpp \
-    random.cpp
+    random.cpp \
+    exponential.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -34,4 +35,5 @@ HEADERS += \
     hoshenkopelman.h \
     qexponential.h \
     zipf.h \
-    random.h
+    random.h \
+    exponential.h

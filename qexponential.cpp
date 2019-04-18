@@ -6,7 +6,13 @@ qExponential::qExponential() {
 
 qExponential::qExponential(unsigned long int N, double lambda, double q):N(static_cast<double>(N)), lambda(lambda), q(SetParameter(q)){
     std::srand(unsigned(time(nullptr)));
-    xmax = N - 1;
+    q = SetParameter(q);
+    if(q > 1){
+        xmax = N - 1;
+    } else if (q < 1) {
+        double factor = 1 / (lambda * (q - 1));
+        xmax = std::fmin(N - 1, x - factor);
+    }
 }
 
 double qExponential::h() {
@@ -96,7 +102,7 @@ unsigned long int qExponential::Rand(){
 std::vector<unsigned long int> qExponential::Rand(unsigned long int size){
     std::vector<unsigned long int> randomVector;
     while (size > 0) {
-        double p = Uniform(); // p ~ U(0,1)
+        double p = Uniform();
         double x = InverseCDF(p);
         randomVector.push_back(static_cast<unsigned long int>(x));
         size--;

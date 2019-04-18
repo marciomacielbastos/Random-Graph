@@ -1,6 +1,7 @@
 #ifndef QEXPONENTIAL_H
 #define QEXPONENTIAL_H
 #include <random.h>
+#include <exponential.h>
 
 class qExponential: public Random{
 private:
@@ -24,7 +25,7 @@ public:
     double Harmonic(double f1, double f2, double f1_0, double f2_0);
     double dHarmonic(double f1, double f2);
     double InverseCDF(double p);
-    unsigned long int  Rand();
+    unsigned long int Rand();
     std::vector<unsigned long int> Rand(unsigned long int size);
 };
 

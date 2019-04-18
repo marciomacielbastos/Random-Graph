@@ -15,8 +15,6 @@ public:
     double Uniform();
     static unsigned long int DiscreteUniform(unsigned long int max);
     static unsigned long int DiscreteUniform(unsigned long int min, unsigned long int max);
-//    virtual unsigned long int RandomApproxMethod();
-//    virtual std::vector<unsigned long int> RandomApproxMethod(unsigned long int size);
     virtual unsigned long int Rand();
     virtual std::vector<unsigned long int> Rand(unsigned long int size);
     virtual double SetParameter(double p);
