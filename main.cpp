@@ -8,13 +8,14 @@
 #include <network.h>
 #include <fstream>
 #include <hoshenkopelman.h>
+#include <qexponential.h>
 
 
 int main(int argc, char *argv[]){
     unsigned long int N = 145;
     Random *rd;
-    Zipf zg = Zipf(N, 2.5);
-    rd = &zg;
+    qExponential qe = qExponential(N, 2, 1.5);
+    rd = &qe;
     Network net = Network(N, rd);
     bool b = net.RandomLinkAA();
     std::vector<unsigned long int> test;
