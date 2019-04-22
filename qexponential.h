@@ -14,6 +14,7 @@ private:
 public:
     qExponential();
     qExponential(unsigned long int N, double lambda, double q);
+    qExponential(unsigned long int N, double lambda, double q, double xmin);
     double h();
     double Factor1(double x);
     double Factor2(double f1);

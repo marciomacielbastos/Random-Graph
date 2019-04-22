@@ -7,7 +7,7 @@
 class Zipf: public Random{
 private:
     double xmax;
-    double xmin = 2;
+    double xmin = 1;
     double s;
     double tol = 0.01;
     double x0 = 1;
@@ -18,7 +18,7 @@ private:
 public:
     Zipf();
     Zipf(unsigned long int N, double s);
-
+    Zipf(unsigned long int N, double s, double xmin);
     double h();
     double Factor1(double x);
     double Factor2(double f1);

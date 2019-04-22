@@ -10,6 +10,12 @@ Zipf::Zipf(unsigned long int N, double s):s(SetParameter(s)), N(static_cast<doub
     this->xmax= this->N - 1;
 }
 
+Zipf::Zipf(unsigned long int N, double s, double xmin):s(SetParameter(s)), N(static_cast<double>(N)) {
+    std::srand(unsigned(time(nullptr)));
+    this->xmax= this->N - 1;
+    SetMin(xmin);
+}
+
 double Zipf::h(){
     double h;
     h = (xmax - xmin) / (N - 1);

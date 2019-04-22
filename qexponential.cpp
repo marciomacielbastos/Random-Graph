@@ -14,6 +14,17 @@ qExponential::qExponential(unsigned long int N, double lambda, double q):N(stati
     }
 }
 
+qExponential::qExponential(unsigned long int N, double lambda, double q, double xmin):N(static_cast<double>(N)), lambda(lambda), q(SetParameter(q)){
+    std::srand(unsigned(time(nullptr)));
+    if(this->q > 1){
+        xmax = N - 1;
+    } else if (this->q < 1) {
+        double factor = 1 / (lambda * (this->q - 1));
+        xmax = std::fmin(N - 1, factor);
+    }
+    SetMin(xmin);
+}
+
 double qExponential::h() {
     double h;
     h = (xmax - xmin) / (N - 1);
