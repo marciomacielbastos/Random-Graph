@@ -15,10 +15,10 @@ public:
     double Uniform();
     static unsigned long int DiscreteUniform(unsigned long int max);
     static unsigned long int DiscreteUniform(unsigned long int min, unsigned long int max);
+    virtual double InverseCDF(double p);
     virtual unsigned long int Rand();
     virtual std::vector<unsigned long int> Rand(unsigned long int size);
     virtual double SetParameter(double p);
-    virtual void SetPDF(double N, double s);
 };
 
 #endif // RANDOMDISTRIBUTION_H

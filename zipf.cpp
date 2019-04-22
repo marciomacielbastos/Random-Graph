@@ -1,50 +1,53 @@
 #include "zipf.h"
 
-void Zipf::SetCDF(){
-    unsigned long int N = static_cast<unsigned long int>(this->N);
-    if(N < 1000){
-        this->Zeta = Harmonic(N);
-        for(unsigned long int k = 0; k < N; k++){
-            this->cdf.push_back(Harmonic(k)/this->Zeta);
-        }
-    }
-    else {
-        this->Zeta = HarmonicApprox(N);
-        for(unsigned long int k = 0; k < N; k++){
-            this->cdf.push_back(HarmonicApprox(k)/this->Zeta);
-        }
-    }
-}
 
 Zipf::Zipf(){
     std::srand(unsigned(time(nullptr)));
 }
 
-void Zipf::SetPDF(double N, double s){
-    this->N = N;
-    this->xmax= this->N - 1;
-    SetS(s);
-    SetCDF();
-}
-
-Zipf::Zipf(unsigned long int N, double s) {
-    this->N = static_cast<double>(N);
+Zipf::Zipf(unsigned long int N, double s):s(SetParameter(s)), N(static_cast<double>(N)) {
     std::srand(unsigned(time(nullptr)));
-    SetS(s);
     this->xmax= this->N - 1;
-    SetCDF();
 }
 
-void Zipf::SetS(double s){
-    this->s = SetParameter(s);
+double Zipf::h(){
+    double h;
+    h = (xmax - xmin) / (N - 1);
+    return h;
 }
 
-void Zipf::SetXmin(double xmin){
-    this->xmin = xmin;
+double Zipf::Factor1(double x){
+    return x;
 }
 
-void Zipf::SetXmax(double xmax){
-    this->xmax = xmax;
+double Zipf::Factor2(double f1){
+    double f = std::pow(f1, -(s+4));
+    return f;
+}
+
+double Zipf::f(double x, double f){
+    double result = x * x * x * x * f;
+    return   result;
+}
+
+double Zipf::df(double x, double f){
+    double result = -(s) * x * x * x * f;
+    return result;
+}
+
+double Zipf::d2f(double x, double f){
+    double result = s * (s + 1) * x * x * f;
+    return result;
+}
+
+double Zipf::d3f(double x, double f){
+    double result = -(s) * (s + 1) * (s + 2) * x * f;
+    return result;
+}
+
+double Zipf::d4f(double f){
+    double result = s * (s + 1) * (s + 2) * (s + 3) * f;
+    return result;
 }
 
 //----------------------------------------------------------------------------------------//
@@ -52,124 +55,47 @@ void Zipf::SetXmax(double xmax){
 //----------------------------------------------------------------------------------------//
 
 
-// H_(x,s) * 12 obtained by approximation by the Euler-MacLaurin formula truncated in the 2nd order
+// Euler-MacLaurin formula truncated in the 3rd order
 // https://medium.com/@jasoncrease/zipf-54912d5651cc
 // https://en.wikipedia.org/wiki/Euler%E2%80%93Maclaurin_formula
-//----------------------------------------------------------------------------------------//
-//*******************************2nd*Order*Euler-Maclaurin********************************//
-//----------------------------------------------------------------------------------------//
-//double ZipfGen::H12(double m, double x){
-//    double H12 = 12*(((m * x * x * x) - 1)/(1 - s)) + 6 + (6 * m * x * x) + s - (s * (m * x));
-//    return H12;
-//}
 
-////Derivative of H_(x,s) * 12
-//double ZipfGen::H12_(double m, double x){
-//    double H12_ = (12 * m * x * x) - ( 6 * s * (m * x)) + (s * (s + 1) * (m));
-//    return H12_;
-//}
 
 //----------------------------------------------------------------------------------------//
 //*******************************3rd*Order*Euler-Maclaurin********************************//
 //----------------------------------------------------------------------------------------//
-double Zipf::H12(double m, double x){
-    double H12 = 720*(((m * x * x * x * x * x) - 1)/(1 - s)) + 360 + (360 * m * x * x * x * x) + 60*s - 60*(s * (m * x * x * x)) + s * (s + 1) * (s + 2) - s * (s + 1) * (s + 2) * m * x;
-    return H12;
+
+double Zipf::Harmonic(double f1, double f2, double f1_0, double f2_0){
+    double I = (f1 * f1 * f1 * f1 * f1 * f2 - 1) / (1 - s);
+//    Using h = 1
+    double harmonic = (720 * I) + (360 * (f(f1, f2) + f(f1_0, f2_0))) + (60 * (df(f1, f2) - df(f1_0, f2_0))) - (d3f(f1, f2) - d3f(f1_0, f2_0));
+    return harmonic;
 }
 
-//Derivative of H_(x,s) * 12
-double Zipf::H12_(double m, double x){
-    double H12_ = (720 * m * x * x * x * x) - ( 360 * s * (m * x * x * x)) + (60 * s * (s + 1) * (m * x * x)) + s * (s + 1) * (s + 2) * (s + 2) * m;
-    return H12_;
+double Zipf::dHarmonic(double f1, double f2){
+//    Using h = 1
+    double harmonic_ = (720 * f(f1, f2)) + (360 * (df(f1, f2))) + (60 * (d2f(f1, f2))) - d4f(f2);
+    return harmonic_;
 }
 
-double Zipf::NewtonRaphson(double p){
-    double powN = std::pow(N, -(s+4.0));
-    double D = H12(powN, this->N);
-    double x = this->x0;
-    int test = 1000;
+double Zipf::InverseCDF(double p){
+    double x = xmax / 2;
+    double tol = 0.01;
+    double f1 = Factor1(xmax);
+    double f2 = Factor2(f1);
+    double f1_0 = Factor1(1);
+    double f2_0 = Factor2(f1_0);
+    double pD = p * Harmonic(f1, f2, f1_0, f2_0);
+//    Newton-Raphson method
     while (true) {
-//        MacGyver method to avoid to get stuck in non convergence
-        if(test == 0){
-            double new_p = Uniform();
-            return NewtonRaphson(new_p);
-        }
-        double pow_x = std::pow(x, -(s+4));
-        double f = H12(pow_x, x) - (p * D); // f(x)
-        double f_ = H12_(pow_x, x); //f'(x)
-        double factor = (f/f_);
+        double f1 = Factor1(x);
+        double f2 = Factor2(f1);
+        double H = Harmonic(f1, f2, f1_0, f2_0);
+        double dH = dHarmonic(f1, f2);
+        double factor = (H - pD) / dH;
         double newx = std::fmax(1, x - factor);
         if(std::abs(newx - x) <= tol){
             return newx + this->xmin - 1;
         }
         x = newx;
-        test --;
     }
-}
-
-unsigned long int Zipf::RandomApproxMethod(){
-    double p = Uniform(); // p ~ U(0,1)
-    double x = NewtonRaphson(p);
-    return static_cast<unsigned long int>(x);
-}
-
-unsigned long int Zipf::Rand(){
-    return RandomApproxMethod();
-}
-
-std::vector<unsigned long int> Zipf::RandomApproxMethod(unsigned long size){
-    std::vector<unsigned long int> randomVector;
-    for(unsigned long int i = 0; i < size; i++){
-        randomVector.push_back(RandomApproxMethod());
-    }
-    return randomVector;
-}
-
-std::vector<unsigned long int> Zipf::Rand(unsigned long size){
-    return RandomApproxMethod(size);
-}
-
-double Zipf::HarmonicApprox(unsigned long int k){
-//    double powN = std::pow(N, -(s+2));
-//    double a = H12(powN, this->N);
-    double pow_k = std::pow(k, -(s+2));
-    double b = H12(pow_k, k);
-    return b/12;
-}
-
-//----------------------------------------------------------------------------------------//
-//***********************************BRUTE-FORCE*METHOD***********************************//
-//----------------------------------------------------------------------------------------//
-
-//Inverse Transform Method applied to discrete random variable (Zipf distributed)
-
-double Zipf::Harmonic(unsigned long int k){
-    double summ = 0;
-    double kpow;
-    for(unsigned long int i = 1; i < k; i++){
-        kpow = static_cast<double>(i);
-        kpow = std::pow(kpow, s);
-        summ += 1.0 / kpow;
-    }
-    return summ;
-}
-
-//http://www.columbia.edu/~ks20/4404-Sigman/4404-Notes-ITM.pdf
-unsigned long int Zipf::RandomBFMethod(){
-    double U = Uniform();
-    unsigned long int N = static_cast<unsigned long int>(this->N);
-    for(unsigned long int k = 0; k < N; k++){
-        if(this->cdf[k] < U && U <= this->cdf[k+1]){
-            return k;
-        }
-    }
-    return 0;
-}
-
-std::vector<unsigned long int> Zipf::RandomBFMethod(unsigned long size){
-    std::vector<unsigned long int> randomVector;
-    for(unsigned long int i = 0; i < size; i++){
-        randomVector.push_back(RandomBFMethod());
-    }
-    return randomVector;
 }

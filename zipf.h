@@ -18,22 +18,18 @@ private:
 public:
     Zipf();
     Zipf(unsigned long int N, double s);
-    void SetS(double s);
-    void SetXmin(double xmin);
-    void SetXmax(double xmax);
-    void SetCDF();
-    void SetPDF(double N, double s);
-    double H12(double x_power_s, double x);
-    double H12_(double x_power_s, double x);
-    double NewtonRaphson(double p);
-    unsigned long int Rand();
-    std::vector<unsigned long int> Rand(unsigned long int size);
-    unsigned long int RandomApproxMethod();
-    std::vector<unsigned long int> RandomApproxMethod(unsigned long int size);
-    double HarmonicApprox(unsigned long int k);
-    double Harmonic(unsigned long int k);
-    unsigned long int RandomBFMethod();
-    std::vector<unsigned long int> RandomBFMethod(unsigned long size);
+
+    double h();
+    double Factor1(double x);
+    double Factor2(double f1);
+    double f(double f1, double f2);
+    double df(double f1, double f2);
+    double d2f(double f1, double f2);
+    double d3f(double f1, double f2);
+    double d4f(double f1);
+    double Harmonic(double f1, double f2, double f1_0, double f2_0);
+    double dHarmonic(double f1, double f2);
+    double InverseCDF(double p);
 };
 
 #endif // RANDOMGEN_H

@@ -25,8 +25,6 @@ public:
     double Harmonic(double f1, double f2, double f1_0, double f2_0);
     double dHarmonic(double f1, double f2);
     double InverseCDF(double p);
-    unsigned long int Rand();
-    std::vector<unsigned long int> Rand(unsigned long int size);
 };
 
 #endif // QEXPONENTIAL_H

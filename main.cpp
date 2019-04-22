@@ -14,7 +14,9 @@
 int main(int argc, char *argv[]){
     unsigned long int N = 145;
     Random *rd;
-    qExponential qe = qExponential(N, 2, 1.5);
+    qExponential qe = qExponential(N, 1 , 1.5);
+    std::vector<unsigned long int> test2;
+    test2 = qe.Rand(150);
     rd = &qe;
     Network net = Network(N, rd);
     bool b = net.RandomLinkAA();

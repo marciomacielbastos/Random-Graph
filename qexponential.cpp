@@ -6,12 +6,11 @@ qExponential::qExponential() {
 
 qExponential::qExponential(unsigned long int N, double lambda, double q):N(static_cast<double>(N)), lambda(lambda), q(SetParameter(q)){
     std::srand(unsigned(time(nullptr)));
-    q = SetParameter(q);
-    if(q > 1){
+    if(this->q > 1){
         xmax = N - 1;
-    } else if (q < 1) {
-        double factor = 1 / (lambda * (q - 1));
-        xmax = std::fmin(N - 1, x - factor);
+    } else if (this->q < 1) {
+        double factor = 1 / (lambda * (this->q - 1));
+        xmax = std::fmin(N - 1, factor);
     }
 }
 
@@ -22,7 +21,7 @@ double qExponential::h() {
 }
 
 double qExponential::Factor1(double x){
-    double f1 = (1 - q) * lambda * x;
+    double f1 = 1 - ((1 - q) * lambda * x);
     return f1;
 }
 
@@ -65,7 +64,6 @@ double qExponential::Harmonic(double f1, double f2, double f1_0, double f2_0){
 }
 
 double qExponential::dHarmonic(double f1, double f2){
-    double I = 1 - (f1 * f1 * f1 * f1 * f2);
 //    Using h = 1
     double harmonic_ = (720 * f(f1, f2)) + (360 * (df(f1, f2))) + (60 * (d2f(f1, f2))) - d4f(f2);
     return harmonic_;
@@ -77,7 +75,7 @@ double qExponential::InverseCDF(double p){
     double f1 = Factor1(xmax);
     double f2 = Factor2(f1);
     double f1_0 = Factor1(0);
-    double f2_0 = Factor2(0);
+    double f2_0 = Factor2(f1_0);
     double pD = p * Harmonic(f1, f2, f1_0, f2_0);
     while (true) {
         double f1 = Factor1(x);
@@ -91,21 +89,4 @@ double qExponential::InverseCDF(double p){
         }
         x = newx;
     }
-}
-
-unsigned long int qExponential::Rand(){
-    double p = Uniform(); // p ~ U(0,1)
-    double x = InverseCDF(p);
-    return static_cast<unsigned long int>(x);
-}
-
-std::vector<unsigned long int> qExponential::Rand(unsigned long int size){
-    std::vector<unsigned long int> randomVector;
-    while (size > 0) {
-        double p = Uniform();
-        double x = InverseCDF(p);
-        randomVector.push_back(static_cast<unsigned long int>(x));
-        size--;
-    }
-    return randomVector;
 }

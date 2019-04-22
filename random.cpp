@@ -11,22 +11,31 @@ double Random::Uniform(){
     return double(std::rand())/RAND_MAX; // in (0, 1)
 }
 
+double Random::InverseCDF(double p){
+    return p;
+}
+
 unsigned long int Random::Rand(){
-    return 0;
+    double p = Uniform(); // p ~ U(0,1)
+    double x = InverseCDF(p);
+    return static_cast<unsigned long int>(x);
 }
 
 std::vector<unsigned long int> Random::Rand(unsigned long int size){
-    std::vector<unsigned long int> zero;
-    return zero;
+    std::vector<unsigned long int> randomVector;
+    while (size > 0) {
+        double p = Uniform();
+        double x = InverseCDF(p);
+        randomVector.push_back(static_cast<unsigned long int>(x));
+        size--;
+    }
+    return randomVector;
 }
 
 double Random::SetParameter(double p){
     // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
     if(std::abs(p - 1) < std::numeric_limits<double>::epsilon()) return 1.000001;
     else return p;
-}
-
-void Random::SetPDF(double N, double s){
 }
 
 unsigned long int Random::DiscreteUniform(unsigned long int max){
