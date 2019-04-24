@@ -15,7 +15,7 @@ public:
     qExponential();
     qExponential(unsigned long int N, double lambda, double q);
     qExponential(unsigned long int N, double lambda, double q, double xmin);
-    double h();
+    void SetMin(double x0);
     double Factor1(double x);
     double Factor2(double f1);
     double f(double f1, double f2);
@@ -25,7 +25,10 @@ public:
     double d4f(double f1);
     double Harmonic(double f1, double f2, double f1_0, double f2_0);
     double dHarmonic(double f1, double f2);
+    double Integ(double f1, double f2);
     double InverseCDF(double p);
+//    unsigned long int PickRand();
+//    std::vector<unsigned long int> PickRand(unsigned long int size);
 };
 
 #endif // QEXPONENTIAL_H

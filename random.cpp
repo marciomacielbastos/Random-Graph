@@ -7,9 +7,10 @@ Random::Random(){
 Random::~Random(){
 }
 
-void Random::SetMin(unsigned long xmin){
-    this->xmin = xmin;
-    this->xmax = this->xmax - xmin;
+double Random::h() {
+    double h;
+    h = (xmax - xmin) / (xmax - 1);
+    return h;
 }
 
 double Random::Uniform(){
@@ -23,15 +24,14 @@ double Random::InverseCDF(double p){
 unsigned long int Random::Rand(){
     double p = Uniform(); // p ~ U(0,1)
     double x = InverseCDF(p);
-    return static_cast<unsigned long int>(x + this->xmin);
+    return static_cast<unsigned long int>(x);
 }
 
 std::vector<unsigned long int> Random::Rand(unsigned long int size){
     std::vector<unsigned long int> randomVector;
     while (size > 0) {
-        double p = Uniform();
-        double x = InverseCDF(p);
-        randomVector.push_back(static_cast<unsigned long int>(x));
+        unsigned long x = Rand();
+        randomVector.push_back(x);
         size--;
     }
     return randomVector;

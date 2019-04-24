@@ -20,8 +20,6 @@ bool Network::AddLink(Node *v, Node *w){
 }
 
 void Network::SetNodeLists(unsigned long int numberOfNodes){
-//    double N = static_cast<double>(numberOfNodes);
-//    this->distribution->SetPDF(N, s);
     std::vector<unsigned long int> rv;
     rv = this->distribution->Rand(numberOfNodes);
     for (unsigned long int i = 0; i < numberOfNodes; i++) {

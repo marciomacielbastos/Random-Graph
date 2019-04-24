@@ -12,27 +12,37 @@
 
 
 int main(int argc, char *argv[]){
-    unsigned long int N = 145;
+    unsigned long int N = 10000;
     Random *rd;
-    qExponential qe = qExponential(N, 1 , 1.5);
-    std::vector<unsigned long int> test2;
-    test2 = qe.Rand(150);
-    rd = &qe;
-    Network net = Network(N, rd);
-    bool b = net.RandomLinkAA();
-    std::vector<unsigned long int> test;
-    HoshenKopelman hk = HoshenKopelman(N);
-    hk.Relabel(net.GetNodeList());
+    qExponential qe = qExponential(N, 2 , 1.5);
+    int counter = 1000;
+    while(counter > 0){
+        qe.SetMin(1);
+        rd = &qe;
+        Network net = Network(N, rd);
+        bool b = net.RandomLinkAA();
+        HoshenKopelman hk = HoshenKopelman(N);
+        hk.Relabel(net.GetNodeList());
+    }
+//    qe.SetMin(1);
+//    rd = &qe;
+//    Network net = Network(N, rd);
+//    bool b = net.RandomLinkAA();
+//    HoshenKopelman hk = HoshenKopelman(N);
+//    hk.Relabel(net.GetNodeList());
 //    bool b = net.RandomLinkAA();
 //    std::cout<<b<<std::endl;
 //    std::ofstream myfile;
-//    myfile.open ("/home/marcim/exampleBF.txt");
+//    myfile.open ("/home/marcim/qExp15_2.txt");
 //    ZipfGen zg = ZipfGen(10000000, 1.000001);
 //    std::vector<unsigned long int> rv;
 //    rv = zg.RandomApproxMethod(10000000);
-//    for (auto x : rv)
-//        myfile << x << " ";
-//    std::cout << "Randon Vector Saved \n";
-//    myfile.close();
+//    for (unsigned long int i=0; i<rv.size(); i++)
+//        if(i < rv.size() - 1) myfile << rv[i] << ",";
+//        else {
+//            myfile << rv[i];
+//        }
+    std::cout << "Randon Vector Saved \n";
+    myfile.close();
 }
 

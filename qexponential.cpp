@@ -14,6 +14,10 @@ qExponential::qExponential(unsigned long int N, double lambda, double q):N(stati
     }
 }
 
+void qExponential::SetMin(double x0){
+    this->xmin = x0;
+}
+
 qExponential::qExponential(unsigned long int N, double lambda, double q, double xmin):N(static_cast<double>(N)), lambda(lambda), q(SetParameter(q)){
     std::srand(unsigned(time(nullptr)));
     if(this->q > 1){
@@ -23,12 +27,6 @@ qExponential::qExponential(unsigned long int N, double lambda, double q, double 
         xmax = std::fmin(N - 1, factor);
     }
     SetMin(xmin);
-}
-
-double qExponential::h() {
-    double h;
-    h = (xmax - xmin) / (N - 1);
-    return h;
 }
 
 double qExponential::Factor1(double x){
@@ -67,8 +65,12 @@ double qExponential::d4f(double f2){
     return result;
 }
 
+double qExponential::Integ(double f1, double f2){
+    return (f1 * f1 * f1 * f1 * f1 * f2);
+}
+
 double qExponential::Harmonic(double f1, double f2, double f1_0, double f2_0){
-    double I = 1 - (f1 * f1 * f1 * f1 * f2);
+    double I = Integ(f1_0, f2_0) - Integ(f1, f2);
 //    Using h = 1
     double harmonic = (720 * I) + (360 * (f(f1, f2) + f(f1_0, f2_0))) + (60 * (df(f1, f2) - df(f1_0, f2_0))) - (d3f(f1, f2) - d3f(f1_0, f2_0));
     return harmonic;
@@ -81,11 +83,11 @@ double qExponential::dHarmonic(double f1, double f2){
 }
 
 double qExponential::InverseCDF(double p){
-    double x = xmax / 2;
-    double tol = 0.01;
+    double x = xmin;
+    double tol = 0.001;
     double f1 = Factor1(xmax);
     double f2 = Factor2(f1);
-    double f1_0 = Factor1(0);
+    double f1_0 = Factor1(xmin);
     double f2_0 = Factor2(f1_0);
     double pD = p * Harmonic(f1, f2, f1_0, f2_0);
     while (true) {
@@ -94,9 +96,9 @@ double qExponential::InverseCDF(double p){
         double H = Harmonic(f1, f2, f1_0, f2_0);
         double dH = dHarmonic(f1, f2);
         double factor = (H - pD) / dH;
-        double newx = std::fmax(1, x - factor);
+        double newx = std::fmax(xmin, x - factor);
         if(std::abs(newx - x) <= tol){
-            return newx + this->xmin - 1;
+            return newx;
         }
         x = newx;
     }

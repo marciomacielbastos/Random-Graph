@@ -10,16 +10,14 @@ Zipf::Zipf(unsigned long int N, double s):s(SetParameter(s)), N(static_cast<doub
     this->xmax= this->N - 1;
 }
 
+void Zipf::SetMin(double x0){
+    this->xmin = x0;
+}
+
 Zipf::Zipf(unsigned long int N, double s, double xmin):s(SetParameter(s)), N(static_cast<double>(N)) {
     std::srand(unsigned(time(nullptr)));
     this->xmax= this->N - 1;
     SetMin(xmin);
-}
-
-double Zipf::h(){
-    double h;
-    h = (xmax - xmin) / (N - 1);
-    return h;
 }
 
 double Zipf::Factor1(double x){
@@ -70,8 +68,12 @@ double Zipf::d4f(double f){
 //*******************************3rd*Order*Euler-Maclaurin********************************//
 //----------------------------------------------------------------------------------------//
 
+double Zipf::Integ0(double f1, double f2){
+    return (f1 * f1 * f1 * f1 * f1 * f2);
+}
+
 double Zipf::Harmonic(double f1, double f2, double f1_0, double f2_0){
-    double I = (f1 * f1 * f1 * f1 * f1 * f2 - 1) / (1 - s);
+    double I = (Integ0(f1, f2) - Integ0(f1_0, f2_0)) / (1 - s);
 //    Using h = 1
     double harmonic = (720 * I) + (360 * (f(f1, f2) + f(f1_0, f2_0))) + (60 * (df(f1, f2) - df(f1_0, f2_0))) - (d3f(f1, f2) - d3f(f1_0, f2_0));
     return harmonic;
@@ -88,7 +90,7 @@ double Zipf::InverseCDF(double p){
     double tol = 0.01;
     double f1 = Factor1(xmax);
     double f2 = Factor2(f1);
-    double f1_0 = Factor1(1);
+    double f1_0 = Factor1(xmin);
     double f2_0 = Factor2(f1_0);
     double pD = p * Harmonic(f1, f2, f1_0, f2_0);
 //    Newton-Raphson method
@@ -98,9 +100,9 @@ double Zipf::InverseCDF(double p){
         double H = Harmonic(f1, f2, f1_0, f2_0);
         double dH = dHarmonic(f1, f2);
         double factor = (H - pD) / dH;
-        double newx = std::fmax(1, x - factor);
+        double newx = std::fmax(xmin, x - factor);
         if(std::abs(newx - x) <= tol){
-            return newx + this->xmin - 1;
+            return newx;
         }
         x = newx;
     }

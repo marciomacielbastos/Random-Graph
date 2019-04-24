@@ -19,7 +19,8 @@ public:
     Zipf();
     Zipf(unsigned long int N, double s);
     Zipf(unsigned long int N, double s, double xmin);
-    double h();
+    double Integ0(double f1, double f2);
+    void SetMin(double x0);
     double Factor1(double x);
     double Factor2(double f1);
     double f(double f1, double f2);

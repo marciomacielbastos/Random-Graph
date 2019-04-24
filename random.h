@@ -13,12 +13,12 @@ private:
     double xmax;
 public:
     Random();
-    virtual ~Random();
     Random(double N, double s);
+    virtual ~Random();   
+    double h();
     double Uniform();
     unsigned long int Rand();
     std::vector<unsigned long int> Rand(unsigned long int size);
-    void SetMin(unsigned long int xmin);
     static unsigned long int DiscreteUniform(unsigned long int max);
     static unsigned long int DiscreteUniform(unsigned long int min, unsigned long int max);
     virtual double InverseCDF(double p);
