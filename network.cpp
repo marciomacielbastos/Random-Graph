@@ -19,13 +19,10 @@ bool Network::AddLink(Node *v, Node *w){
     return true;
 }
 
-void Network::SetNodeLists(unsigned long int numberOfNodes){
-    std::vector<unsigned long int> rv;
-    rv = this->distribution->Rand(numberOfNodes);
-    for (unsigned long int i = 0; i < numberOfNodes; i++) {
-        unsigned long int n = rv[i];
-        Node node = Node(n);
-        // Add node to network
+void Network::SetNodeLists(unsigned long numberOfNodes){
+    std::vector<unsigned long> rv = this->distribution->Rand(numberOfNodes);
+    for (auto x : rv) {
+        Node node = Node(x);
         AddNode(node);
     }
 }
@@ -69,9 +66,14 @@ bool Network::RandomLinkAA(){
         AddLink(&nodeList[rnd1] , &nodeList[rnd2]);
         algoList[rand1] = algoList[N-1];
         algoList[rand2] = algoList[N-2];
-        algoList.pop_back();
-        algoList.pop_back();
-        N -= 2;
+        if(algoList.size() > 1) {
+            algoList.pop_back();
+            N--;
+        }
+        if(algoList.size() > 1) {
+            algoList.pop_back();
+            N--;
+        }
     }
     return true;
 }

@@ -21,9 +21,8 @@ public:
     bool  operator > (Node n);
     bool  operator < (Node n);
     std::vector<unsigned long int> GetAdjacencyList();
-    static unsigned long int NumberOfNodes(){
-        return number_of_nodes;
-    }
+    static unsigned long int NumberOfNodes();
+    static void Free();
 };
 
 #endif // NODE_H

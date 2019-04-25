@@ -32,8 +32,7 @@ bool Node::AddNeighbor(Node n){
     if(this->adjacency_list.size() < this->degree){
         this->adjacency_list.push_back(n.GetId());
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -64,4 +63,12 @@ bool  Node::operator<(Node n){
 
 std::vector<unsigned long int> Node::GetAdjacencyList(){
     return this->adjacency_list;
+}
+
+unsigned long int Node::NumberOfNodes(){
+    return number_of_nodes;
+}
+
+void Node::Free(){
+    number_of_nodes = 0;
 }
