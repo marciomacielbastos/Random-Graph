@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 #include <vector>
+#include <algorithm>
 
 
 class Node{
@@ -23,6 +24,9 @@ public:
     std::vector<unsigned long int> GetAdjacencyList();
     static unsigned long int NumberOfNodes();
     static void Free();
+    unsigned long int GetAdjacencySize();
+    unsigned long int GetPosition(unsigned long int val);
+    long int RemoveLink(unsigned long int);
 };
 
 #endif // NODE_H

@@ -72,3 +72,22 @@ unsigned long int Node::NumberOfNodes(){
 void Node::Free(){
     number_of_nodes = 0;
 }
+
+unsigned long int Node::GetAdjacencySize(){
+    return this->adjacency_list.size();
+}
+
+unsigned long int Node::GetPosition(unsigned long int val){
+    std::vector<unsigned long int>::iterator it = std::find(adjacency_list.begin(), adjacency_list.end(), val);
+    return *it;
+}
+
+long int Node::RemoveLink(unsigned long int position){
+    if(GetAdjacencySize() > position){
+        long int node_id = static_cast<long int>(this->adjacency_list[position]);
+        this->adjacency_list.erase (this->adjacency_list.begin() + static_cast<long int >(position));
+        return node_id;
+    } else {
+        return -1;
+    }
+}

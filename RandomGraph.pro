@@ -22,7 +22,9 @@ SOURCES += \
     qexponential.cpp \
     zipf.cpp \
     random.cpp \
-    exponential.cpp
+    exponential.cpp \
+    unionfind.cpp \
+    assembler.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -36,4 +38,6 @@ HEADERS += \
     qexponential.h \
     zipf.h \
     random.h \
-    exponential.h
+    exponential.h \
+    unionfind.h \
+    assembler.h

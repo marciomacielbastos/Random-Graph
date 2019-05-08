@@ -12,6 +12,7 @@ private:
     std::vector<Node> nodeList;
     Random *distribution;
     std::vector<unsigned long int> algoList;
+    unsigned long int linkCounter;
 public:
     Network(unsigned long int numberOfNodes, Random *rd);
     bool AddNode(Node n);
@@ -22,6 +23,8 @@ public:
     bool RandomLinkAA();
     bool RandomLinkNuno();
     std::vector<Node> GetNodeList();
+    long int RandomPop(unsigned long int);
+    unsigned long int GetLinkCounter();
 };
 
 #endif // NETWORK_H

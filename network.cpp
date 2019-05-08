@@ -12,10 +12,8 @@ bool Network::AddLink(Node *v, Node *w){
     if(!isLinked){
         return false;
     }
-    isLinked = w->AddNeighbor(*v);
-    if(!isLinked){
-        return false;
-    }
+    w->AddNeighbor(*v);
+    this->linkCounter++;
     return true;
 }
 
@@ -121,4 +119,21 @@ bool Network::RandomLinkNuno(){
 
 std::vector<Node> Network::GetNodeList(){
     return this->nodeList;
+}
+
+long int Network::RandomPop(unsigned long int node){
+    unsigned long int adj_id = this->nodeList[node].GetAdjacencySize();
+    if(adj_id > 0){
+        long int new_node = this->nodeList[node].RemoveLink(Random::DiscreteUniform(adj_id));
+        this->nodeList[static_cast<unsigned long int>(new_node)].RemoveLink(nodeList[static_cast<unsigned long int>(new_node)].GetPosition(adj_id));
+        this->linkCounter--;
+        return new_node;
+    }
+    else {
+        return -1;
+    }
+}
+
+unsigned long int Network::GetLinkCounter(){
+    return this->linkCounter;
 }
