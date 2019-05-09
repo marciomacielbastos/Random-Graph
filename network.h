@@ -25,6 +25,7 @@ public:
     std::vector<Node> GetNodeList();
     long int RandomPop(unsigned long int);
     unsigned long int GetLinkCounter();
+    std::vector<std::pair<unsigned long int, unsigned long int>> GetLinkList();
 };
 
 #endif // NETWORK_H

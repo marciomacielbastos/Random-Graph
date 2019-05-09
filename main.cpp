@@ -9,10 +9,11 @@
 #include <fstream>
 #include <hoshenkopelman.h>
 #include <qexponential.h>
+#include <assembler.h>
 
 
 int main(int argc, char *argv[]){
-    unsigned long int N = 1000;
+    unsigned long int N = 10000;
     qExponential qe = qExponential(N, 2 , 1.3);
 //    std::vector<unsigned long int> rv = qe.Rand(100);
     qe.SetMin(2);
@@ -25,7 +26,8 @@ int main(int argc, char *argv[]){
         net = Network(N, rd);
         b = net.RandomLinkAA();
     }
-
+    Assembler as = Assembler(net);
+    as.Assemble();
 //    int counter = 10000;
 //    double counter2 = 0;
 

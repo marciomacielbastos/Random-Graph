@@ -1,11 +1,13 @@
 #include "network.h"
 
+
+//Add a node to the network
 bool Network::AddNode(Node n){
     this->nodeList.push_back(n);
     return true;
 }
 
-
+//Add a link to the network, return false if the nodes are already linked
 bool Network::AddLink(Node *v, Node *w){
     bool isLinked;
     isLinked = v->AddNeighbor(*w);
@@ -13,7 +15,6 @@ bool Network::AddLink(Node *v, Node *w){
         return false;
     }
     w->AddNeighbor(*v);
-    this->linkCounter++;
     return true;
 }
 
@@ -37,6 +38,7 @@ void Network::SetAlgoList(unsigned long numberOfNodes){
 //It must receive a random distribution already setted up.
 Network::Network(unsigned long int numberOfNodes, Random *rd){
     this->distribution = rd;
+    this->linkCounter = 0;
     SetNodeLists(numberOfNodes);
 }
 
@@ -52,14 +54,14 @@ bool Network::RandomLinkAA(){
         unsigned long int rnd1 = this->algoList[rand1];
         unsigned long int rnd2 = this->algoList[rand2];
         while((rnd1 == rnd2) || (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
-            counter++;
+            if(counter >= 100){
+                return false;
+            }
             rand1 =  distribution->DiscreteUniform(N);
             rand2 =  distribution->DiscreteUniform(N);
             rnd1 = this->algoList[rand1];
             rnd2 = this->algoList[rand2];
-            if(counter >= 100){
-                return false;
-            }
+            counter++;
         }
         AddLink(&nodeList[rnd1] , &nodeList[rnd2]);
         algoList[rand1] = algoList[N-1];
@@ -117,23 +119,21 @@ bool Network::RandomLinkNuno(){
     return true;
 }
 
+//Return the list of nodes in the network
 std::vector<Node> Network::GetNodeList(){
     return this->nodeList;
 }
 
-long int Network::RandomPop(unsigned long int node){
-    unsigned long int adj_id = this->nodeList[node].GetAdjacencySize();
-    if(adj_id > 0){
-        long int new_node = this->nodeList[node].RemoveLink(Random::DiscreteUniform(adj_id));
-        this->nodeList[static_cast<unsigned long int>(new_node)].RemoveLink(nodeList[static_cast<unsigned long int>(new_node)].GetPosition(adj_id));
-        this->linkCounter--;
-        return new_node;
+std::vector<std::pair<unsigned long int, unsigned long int>> Network::GetLinkList(){
+    std::vector<std::pair<unsigned long int, unsigned long int>> list;
+    for (unsigned long int i = 0; i < this->nodeList.size(); i++) {
+        for (unsigned long int j = 0; j < this->nodeList[i].GetAdjacencySize() ; j++) {
+            unsigned long int adjacent_id = this->nodeList[i].GetAdjacencyList()[j];
+            if(i < adjacent_id){
+                std::pair<unsigned long int, unsigned long int> pair (i, adjacent_id);
+                list.push_back(pair);
+            }
+        }
     }
-    else {
-        return -1;
-    }
-}
-
-unsigned long int Network::GetLinkCounter(){
-    return this->linkCounter;
+    return list;
 }

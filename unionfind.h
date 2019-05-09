@@ -7,7 +7,7 @@ class UnionFind{
 private:
     std::vector<unsigned long int> id;
     std::vector<unsigned long int> sizes;
-    unsigned int count;
+    unsigned long int count;
 public:
     UnionFind(unsigned long int N);
     void Union(unsigned long int v, unsigned long int w);
