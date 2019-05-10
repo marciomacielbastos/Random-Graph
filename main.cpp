@@ -13,7 +13,7 @@
 
 
 int main(int argc, char *argv[]){
-    unsigned long int N = 10000;
+    unsigned long int N = 100;
     qExponential qe = qExponential(N, 2 , 1.3);
 //    std::vector<unsigned long int> rv = qe.Rand(100);
     qe.SetMin(2);

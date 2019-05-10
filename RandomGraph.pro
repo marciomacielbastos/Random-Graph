@@ -24,7 +24,8 @@ SOURCES += \
     random.cpp \
     exponential.cpp \
     unionfind.cpp \
-    assembler.cpp
+    assembler.cpp \
+    components.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -40,4 +41,5 @@ HEADERS += \
     random.h \
     exponential.h \
     unionfind.h \
-    assembler.h
+    assembler.h \
+    components.h
