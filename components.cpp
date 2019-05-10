@@ -15,7 +15,10 @@ std::set<unsigned long int> Components::GetElements(){
 
 void Components::Union(Components c){
     std::set<unsigned long int> e = c.GetElements();
-    this->elements.insert(e.begin(), e.end());
+    std::set<unsigned long int> new_elements;
+    std::set_union(e.begin(), e.end(), this->elements.begin(), this->elements.end(), std::inserter(new_elements, new_elements.begin()));
+    this->elements = new_elements;
+//    this->elements.insert(e.begin(), e.end());
 }
 
 unsigned long int Components::GetId() const{

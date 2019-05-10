@@ -4,15 +4,16 @@
 #include <network.h>
 #include <unionfind.h>
 #include <vector>
+#include <map>
 
 class Assembler{
 private:
     Network net;
-    std::vector<unsigned long int> component_sizes;
+    std::vector<std::vector<double>> mean_component_sizes;
 
 public:
     Assembler(Network net);
-    void Assemble();
+    std::vector<std::vector<double>> Assemble();
 
 };
 

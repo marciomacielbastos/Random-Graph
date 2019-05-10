@@ -16,6 +16,9 @@ public:
     unsigned long int Find(unsigned long int v);
     unsigned long int GetNumberOfComponents();
     unsigned long int GetMaxSize();
+    std::map<unsigned long int, Components> GetComponents();
+    std::vector<unsigned long int> GetComponentsSize();
+    std::map<unsigned long int, unsigned long int> GetNumSize();
     bool Connected(unsigned long int v, unsigned long int w);
 };
 

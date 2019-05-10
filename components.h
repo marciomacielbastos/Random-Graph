@@ -1,6 +1,7 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 #include <set>
+#include <algorithm>
 
 
 class Components{
@@ -17,15 +18,6 @@ public:
     bool operator = (const unsigned long int & id) const;
     bool operator < ( const Components & c) const;
     bool operator < ( const unsigned long int & id) const;
-};
-
-struct find_by_id {
-    find_by_id(const unsigned long int & id) : id(id) {}
-    bool operator()(Components & c) {
-        return c.GetId() == id;
-    }
-private:
-    unsigned long int id;
 };
 
 #endif // COMPONENTS_H

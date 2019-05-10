@@ -53,3 +53,36 @@ void UnionFind::Union(unsigned long int v, unsigned long int w){
 bool UnionFind::Connected(unsigned long int v, unsigned long int w){
     return (this->Find(v) == this->Find(w));
 }
+
+std::map<unsigned long int, Components> UnionFind::GetComponents(){
+    return this->components;
+}
+
+std::vector<unsigned long int> UnionFind::GetComponentsSize(){
+    std::vector<unsigned long int> list;
+    for (auto it = components.begin(); it != components.end(); it++) {
+        list.push_back(it->second.GetElements().size());
+    }
+    std::sort(list.begin(), list.end());
+    return list;
+}
+
+std::map<unsigned long int, unsigned long int> UnionFind::GetNumSize(){
+    std::vector<unsigned long int> list = GetComponentsSize();
+    std::map<unsigned long int, unsigned long int> numSize;
+    unsigned long int i = list[0];
+    unsigned long int sum = 0;
+    while (list.size()) {
+        if(list[0] == i){
+            sum++;
+            list.erase(list.begin());
+        } else {
+           numSize.insert(std::pair<unsigned long int, unsigned long int>(i,sum));
+           i = list[0];
+           sum = 1;
+           list.erase(list.begin());
+        }
+    }
+    numSize.insert(std::pair<unsigned long int, unsigned long int>(i,sum));
+    return numSize;
+}
