@@ -67,22 +67,22 @@ std::vector<unsigned long int> UnionFind::GetComponentsSize(){
     return list;
 }
 
-std::map<unsigned long int, unsigned long int> UnionFind::GetNumSize(){
+std::map<unsigned long int, unsigned long int> UnionFind::GetSizeQuantity(){
     std::vector<unsigned long int> list = GetComponentsSize();
     std::map<unsigned long int, unsigned long int> numSize;
-    unsigned long int i = list[0];
-    unsigned long int sum = 0;
+    unsigned long int i_nodes = list[0];
+    unsigned long int number_of_components_with_i_nodes = 0;
     while (list.size()) {
-        if(list[0] == i){
-            sum++;
+        if(list[0] == i_nodes){
+            number_of_components_with_i_nodes++;
             list.erase(list.begin());
         } else {
-           numSize.insert(std::pair<unsigned long int, unsigned long int>(i,sum));
-           i = list[0];
-           sum = 1;
+           numSize.insert(std::pair<unsigned long int, unsigned long int>(i_nodes, number_of_components_with_i_nodes));
+           i_nodes = list[0];
+           number_of_components_with_i_nodes = 1;
            list.erase(list.begin());
         }
     }
-    numSize.insert(std::pair<unsigned long int, unsigned long int>(i,sum));
+    numSize.insert(std::pair<unsigned long int, unsigned long int>(i_nodes, number_of_components_with_i_nodes));
     return numSize;
 }

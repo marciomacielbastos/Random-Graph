@@ -18,7 +18,7 @@ public:
     unsigned long int GetMaxSize();
     std::map<unsigned long int, Components> GetComponents();
     std::vector<unsigned long int> GetComponentsSize();
-    std::map<unsigned long int, unsigned long int> GetNumSize();
+    std::map<unsigned long int, unsigned long int> GetSizeQuantity();
     bool Connected(unsigned long int v, unsigned long int w);
 };
 

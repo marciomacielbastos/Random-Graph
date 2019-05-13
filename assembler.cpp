@@ -20,19 +20,19 @@ std::vector<std::vector<double>> Assembler::Assemble(){
         // Union the nodes of this link
         uf.Union(pair.first, pair.second);
         // Get the pair (number of nodes in the component, number of components with this number of nodes)
-        std::map<unsigned long int, unsigned long int> numSize = uf.GetNumSize();
+        std::map<unsigned long int, unsigned long int> size_quantity = uf.GetSizeQuantity();
         // Mean value of the square of the number of nodes in each component
         double Sc2 = 0;
         double num_comp = 0;
-        for (auto it = numSize.begin(); it != numSize.end(); it++) {
+        for (auto it = size_quantity.begin(); it != size_quantity.end(); it++) {
             Sc2 += static_cast<double>(it->first * it->first * it->second);
             num_comp += static_cast<double>(it->second);
         }
         // Remove the link from the list of links
         list.erase(list.begin() + static_cast<long int>(position));
         // Add to the list of mean values
-        Sc2 = Sc2 / num_comp;
-        auto it = numSize.end();
+        Sc2 /= num_comp;
+        auto it = size_quantity.end();
         it--;
         double Tm = it->first;
         double f = 1 - static_cast<double>(list.size())/initial_number_of_links;
