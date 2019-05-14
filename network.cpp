@@ -19,7 +19,7 @@ bool Network::AddLink(Node *v, Node *w){
 }
 
 void Network::SetNodeLists(unsigned long numberOfNodes){
-    std::vector<unsigned long> rv = this->distribution->Rand(numberOfNodes);
+    std::vector<unsigned long> rv = this->distribution->random(numberOfNodes);
     for (auto x : rv) {
         Node node = Node(x);
         AddNode(node);
