@@ -14,15 +14,45 @@
 
 
 int main(int argc, char *argv[]){
-    std::vector<unsigned long int> test;
-    unsigned long int N = 100000;
+    std::vector<unsigned long int> random_vector;
+    unsigned long int N = 1000000;
     qExponential qe = qExponential(N, 2 , 1.3);
     qe.SetMin(2);
     auto start = std::chrono::high_resolution_clock::now();
-    test = qe.random(N);
+    random_vector = qe.random(N, 6);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << duration.count() << std::endl;
+    std::cout << duration.count() << " microseconds" << std::endl;
+
+    start = std::chrono::high_resolution_clock::now();
+    Network net = Network(random_vector, 6);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << duration.count() << " microseconds" << std::endl;
+    bool b = net.random_link_AA_algorithm();
+    start = std::chrono::high_resolution_clock::now();
+    while(!b){
+        Node::free();
+        random_vector = qe.random(N, 6);
+        net = Network(random_vector, 6);
+        b = net.random_link_AA_algorithm();
+    }
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << duration.count() << " microseconds" << std::endl;
+    start = std::chrono::high_resolution_clock::now();
+    Assembler as = Assembler(net);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << duration.count() << " microseconds" << std::endl;
+
+    start = std::chrono::high_resolution_clock::now();
+    as.assembly();
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << duration.count() << " microseconds" << std::endl;
+
+    int k = 0;
 
 //    unsigned long int N = 100;
 //    qExponential qe = qExponential(N, 2 , 1.3);

@@ -16,7 +16,7 @@ void HoshenKopelman::Relabel(const std::vector<Node> & nodeList){
     for (unsigned long int i=0; i<size; ++i) {
         min_label = labels[i];
         Node n = nodeList[i];
-        std::vector<unsigned long int> adjL = n.GetAdjacencyList();
+        std::vector<unsigned long int> adjL = n.get_adjacency_list();
         for (adjacent_list_position = 0; adjacent_list_position < adjL.size(); adjacent_list_position++) {
             unsigned long int val = labels[adjL[adjacent_list_position]];
             /* If the current minimum label value (at node 'i' running through its adjacency list)

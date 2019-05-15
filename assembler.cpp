@@ -7,9 +7,9 @@ Assembler::Assembler(Network net): net(net){
 
 //This method iterate through a network's links adding them step by step through the Union-Find algorithm.
 //In each step the size of the biggest component is added to a vector.
-std::vector<std::vector<double>> Assembler::Assemble(){
-    unsigned long int size = net.GetNodeList().size();
-    std::vector<std::pair<unsigned long int, unsigned long int>> list = net.GetLinkList();
+std::vector<std::vector<double>> Assembler::assembly(){
+    unsigned long int size = net.get_list_of_nodes().size();
+    std::vector<std::pair<unsigned long int, unsigned long int>> list = net.get_list_of_links();
     UnionFind uf = UnionFind(size);
     this->mean_component_sizes.push_back({1, 1, 0});
     unsigned long int initial_number_of_links = list.size();

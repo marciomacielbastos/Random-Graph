@@ -1,85 +1,146 @@
 #include "network.h"
 
 
+//It must receive a random distribution already setted up.
+Network::Network(unsigned long int numberOfNodes, Random *rd){
+    this->distribution = rd;
+    set_list_of_nodes(numberOfNodes);
+}
+
+Network::Network(std::vector<unsigned long int> &degrees, unsigned int num_threads){
+    unsigned long int size = degrees.size();
+//    std::vector<unsigned long int> vector_sum_of_degrees(num_threads + 1, 0);
+
+//    unsigned long int sum_of_degrees = get_sum_of_degrees(std::ref(degrees), std::ref(vector_sum_of_degrees), num_threads);
+
+    { std::vector<Node> node_list(size, Node());
+      this->list_of_nodes = node_list; }
+//    { std::vector<unsigned long int> algorithm_list(sum_of_degrees, 0);
+//      this->algorithm_list = algorithm_list; }
+
+    std::thread t[num_threads];
+    unsigned long int begin = 0;
+    unsigned long int end = 0;
+    for (unsigned int i = 0; i < num_threads; ++i) {
+        if(i < size % num_threads){
+            end += size / (num_threads + 1) + 1;
+        }
+        else {
+            end += size / (num_threads + 1);
+        }
+        t[i] = (std::thread(&Network::set_list_of_nodes_t, this, std::ref(degrees), begin, end));
+        begin = end;
+    }
+    set_list_of_nodes_t(std::ref(degrees), begin, degrees.size());
+    for (unsigned int i = 0; i < num_threads; ++i){
+        t[i].join();
+    }
+}
+
+//Keep here for future parallelization
+unsigned long int Network::get_sum_of_degrees(const std::vector<unsigned long int> &  degrees, std::vector<unsigned long int> &  vector_sum_of_degrees, unsigned long int num_threads){
+    unsigned long int size = degrees.size();
+    unsigned long int sum_of_degrees = 0;
+    unsigned long int begin = 0;
+    unsigned long int end = 0;
+    unsigned long int remainder = size % (num_threads + 1);
+    for (unsigned int i = 0; i < size; ++i) {
+        if(i >= end){
+            vector_sum_of_degrees[begin] = sum_of_degrees;
+            begin++;
+            if(remainder) {
+                end += size / (num_threads + 1) + 1;
+                remainder--;
+            } else{
+                end += size / (num_threads + 1);
+            }
+        }
+        sum_of_degrees += degrees[i];
+    }
+    vector_sum_of_degrees[begin] = sum_of_degrees;
+    return sum_of_degrees;
+}
+
 //Add a node to the network
-bool Network::AddNode(Node n){
-    this->nodeList.push_back(n);
+bool Network::add_node(Node n){
+    this->list_of_nodes.push_back(n);
     return true;
 }
 
 //Add a link to the network, return false if the nodes are already linked
-bool Network::AddLink(Node *v, Node *w){
+bool Network::link(Node *v, Node *w){
     bool isLinked;
-    isLinked = v->AddNeighbor(*w);
+    isLinked = v->add_neighbor(*w);
     if(!isLinked){
         return false;
     }
-    w->AddNeighbor(*v);
+    w->add_neighbor(*v);
     return true;
 }
 
-void Network::SetNodeLists(unsigned long numberOfNodes){
-    std::vector<unsigned long> rv = this->distribution->random(numberOfNodes);
-    for (auto x : rv) {
-        Node node = Node(x);
-        AddNode(node);
+void Network::set_list_of_nodes_t(std::vector<unsigned long> &degrees, unsigned long begin, unsigned long end){
+    for (unsigned long int i = begin; i < end; ++i) {
+        this->list_of_nodes[i].set_id(i);
+        this->list_of_nodes[i].set_degree(degrees[i]);
     }
 }
 
-void Network::SetAlgoList(unsigned long numberOfNodes){
-    for (unsigned long int i = 0; i < numberOfNodes; i++) {
+void Network::set_list_of_nodes(unsigned long number_of_nodes){
+        std::vector<unsigned long> rv = this->distribution->random(number_of_nodes);
+        for (auto x : rv) {
+            Node node = Node(x);
+            add_node(node);
+        }
+}
+
+void Network::set_algotithm_list(){
+    unsigned long int number_of_nodes = this->list_of_nodes.size();
+    for (unsigned long int i = 0; i < number_of_nodes; i++) {
         // Create a list of degree-repeated node id
-        std::vector<unsigned long int> links(nodeList[i].GedDegree(), nodeList[i].GetId());
+        std::vector<unsigned long int> links(this->list_of_nodes[i].ged_degree(), this->list_of_nodes[i].get_id());
         // Append the lists cited above to create the network through Andre Auto algorithm
-        this->algoList.insert(algoList.end(), links.begin(), links.end());
+        this->algorithm_list.insert(algorithm_list.end(), links.begin(), links.end());
     }
-}
-
-//It must receive a random distribution already setted up.
-Network::Network(unsigned long int numberOfNodes, Random *rd){
-    this->distribution = rd;
-    this->linkCounter = 0;
-    SetNodeLists(numberOfNodes);
 }
 
 // Andre Auto linking method
 // I have to count to 100, give up and start again
-bool Network::RandomLinkAA(){
-    SetAlgoList(this->nodeList.size());
-    unsigned long int N = this->algoList.size();
+bool Network::random_link_AA_algorithm(){
+    set_algotithm_list();
+    unsigned long int N = this->algorithm_list.size();
     int counter = 0;
     while(N > 1){
         unsigned long int rand1 =  distribution->DiscreteUniform(0, N);
         unsigned long int rand2 =  distribution->DiscreteUniform(0, N);
-        unsigned long int rnd1 = this->algoList[rand1];
-        unsigned long int rnd2 = this->algoList[rand2];
-        while((rnd1 == rnd2) || (nodeList[rnd1].IsConnected(nodeList[rnd2]))){
+        unsigned long int rnd1 = this->algorithm_list[rand1];
+        unsigned long int rnd2 = this->algorithm_list[rand2];
+        while((rnd1 == rnd2) || (list_of_nodes[rnd1].is_connected(list_of_nodes[rnd2]))){
             if(counter >= 100){
                 return false;
             }
             rand1 =  distribution->DiscreteUniform(N);
             rand2 =  distribution->DiscreteUniform(N);
-            rnd1 = this->algoList[rand1];
-            rnd2 = this->algoList[rand2];
+            rnd1 = this->algorithm_list[rand1];
+            rnd2 = this->algorithm_list[rand2];
             counter++;
         }
-        AddLink(&nodeList[rnd1] , &nodeList[rnd2]);
-        algoList[rand1] = algoList[N-1];
-        algoList[rand2] = algoList[N-2];
-        if(algoList.size() > 1) {
-            algoList.pop_back();
+        link(&list_of_nodes[rnd1] , &list_of_nodes[rnd2]);
+        algorithm_list[rand1] = algorithm_list[N-1];
+        algorithm_list[rand2] = algorithm_list[N-2];
+        if(algorithm_list.size() > 1) {
+            algorithm_list.pop_back();
             N--;
         }
-        if(algoList.size() > 1) {
-            algoList.pop_back();
+        if(algorithm_list.size() > 1) {
+            algorithm_list.pop_back();
             N--;
         }
     }
     return true;
 }
 
-unsigned long int Network::GetNext(unsigned long int head, unsigned long int it){
-    while(head == algoList[it]){
+unsigned long int Network::get_next_value_of_algorithm_list(unsigned long int head, unsigned long int it){
+    while(head == algorithm_list[it]){
         it++;
     }
     return it;
@@ -87,9 +148,9 @@ unsigned long int Network::GetNext(unsigned long int head, unsigned long int it)
 
 // Nuno linking method
 bool Network::RandomLinkNuno(){
-    std::sort(this->nodeList.rbegin(), this->nodeList.rend());
-    SetAlgoList(this->nodeList.size());
-    unsigned long int N = this->algoList.size();
+    std::sort(this->list_of_nodes.rbegin(), this->list_of_nodes.rend());
+    set_algotithm_list();
+    unsigned long int N = this->algorithm_list.size();
 //    Verify if the algoList size is even and reduce the degreen of the less connecter node by one
 //    if(N % 2){
 //        unsigned long int p = this->algoList[this->algoList.size() - 1];
@@ -99,36 +160,36 @@ bool Network::RandomLinkNuno(){
     while(N > 1){
         unsigned long int p1 = 0;
         unsigned long int p2 = 0;
-        unsigned long int val1 = this->algoList[p1];
+        unsigned long int val1 = this->algorithm_list[p1];
         unsigned long int val2 = val1;
         int count = 100;
-        while ((val1 == val2) || (nodeList[val1].IsConnected(nodeList[val2]))){
-            p2 =  distribution->DiscreteUniform(GetNext(p1,0), N);
-            val2 = this->algoList[p2];
+        while ((val1 == val2) || (list_of_nodes[val1].is_connected(list_of_nodes[val2]))){
+            p2 =  distribution->DiscreteUniform(get_next_value_of_algorithm_list(p1,0), N);
+            val2 = this->algorithm_list[p2];
             if(count <= 0){
                 count--;
                 return false;
             }
         }
-        AddLink(&nodeList[val1] , &nodeList[val2]);
+        link(&list_of_nodes[val1] , &list_of_nodes[val2]);
         // Possible error point (cast from unsigned to signed)
-        algoList.erase(algoList.begin() + static_cast<long int >(p2));
-        algoList.erase(algoList.begin());
+        algorithm_list.erase(algorithm_list.begin() + static_cast<long int >(p2));
+        algorithm_list.erase(algorithm_list.begin());
         N -= 2;
     }
     return true;
 }
 
 //Return the list of nodes in the network
-std::vector<Node> Network::GetNodeList(){
-    return this->nodeList;
+std::vector<Node> Network::get_list_of_nodes(){
+    return this->list_of_nodes;
 }
 
-std::vector<std::pair<unsigned long int, unsigned long int>> Network::GetLinkList(){
+std::vector<std::pair<unsigned long int, unsigned long int>> Network::get_list_of_links(){
     std::vector<std::pair<unsigned long int, unsigned long int>> list;
-    for (unsigned long int i = 0; i < this->nodeList.size(); i++) {
-        for (unsigned long int j = 0; j < this->nodeList[i].GetAdjacencySize() ; j++) {
-            unsigned long int adjacent_id = this->nodeList[i].GetAdjacencyList()[j];
+    for (unsigned long int i = 0; i < this->list_of_nodes.size(); i++) {
+        for (unsigned long int j = 0; j < this->list_of_nodes[i].get_adjacency_list_size() ; j++) {
+            unsigned long int adjacent_id = this->list_of_nodes[i].get_adjacency_list()[j];
             if(i < adjacent_id){
                 std::pair<unsigned long int, unsigned long int> pair (i, adjacent_id);
                 list.push_back(pair);

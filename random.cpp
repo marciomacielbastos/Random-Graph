@@ -59,17 +59,16 @@ std::vector<unsigned long int> Random::random(unsigned long int size, unsigned l
     unsigned long int end = 0;
 
     for (unsigned int i = 0; i < num_threads; ++i) {
-        if(i < size % num_threads){
+        if(i < size % (num_threads + 1)){
             end += size / (num_threads + 1) + 1;
-            t[i] = (std::thread(&Random::random_t, this, std::ref(random_vector), begin, end));
         }
         else {
-            end += size / (num_threads + 1);
-            t[i] = (std::thread(&Random::random_t, this, std::ref(random_vector), begin, end));
+            end += size / (num_threads + 1);           
         }
+        t[i] = (std::thread(&Random::random_t, this, std::ref(random_vector), begin, end));
         begin = end;
     }
-    random_t(std::ref(random_vector), num_threads * (size / (num_threads + 1)), (num_threads + 1) * (size / (num_threads + 1)));
+    random_t(std::ref(random_vector), begin, random_vector.size());
     for (unsigned int i = 0; i < num_threads; ++i){
         t[i].join();
     }
@@ -78,6 +77,7 @@ std::vector<unsigned long int> Random::random(unsigned long int size, unsigned l
 
 void Random::random_t(std::vector<unsigned long int> & random_vector, unsigned long int begin, unsigned long int end){
     for (unsigned int i = begin; i < end; ++i) {
-        random_vector[i] = random();
+        unsigned long int val = random();
+        random_vector[i] = val;
     }
 }

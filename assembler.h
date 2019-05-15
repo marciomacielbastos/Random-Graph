@@ -13,7 +13,7 @@ private:
 
 public:
     Assembler(Network net);
-    std::vector<std::vector<double>> Assemble();
+    std::vector<std::vector<double>> assembly();
 
 };
 
