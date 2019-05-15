@@ -29,10 +29,9 @@ int main(int argc, char *argv[]){
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << duration.count() << " microseconds" << std::endl;
-    bool b = net.random_link_AA_algorithm();
     start = std::chrono::high_resolution_clock::now();
+    bool b = net.random_link_AA_algorithm();
     while(!b){
-        Node::free();
         random_vector = qe.random(N, 6);
         net = Network(random_vector, 6);
         b = net.random_link_AA_algorithm();
@@ -46,11 +45,11 @@ int main(int argc, char *argv[]){
     duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << duration.count() << " microseconds" << std::endl;
 
-    start = std::chrono::high_resolution_clock::now();
-    as.assembly();
-    stop = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << duration.count() << " microseconds" << std::endl;
+//    start = std::chrono::high_resolution_clock::now();
+//    as.assembly();
+//    stop = std::chrono::high_resolution_clock::now();
+//    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+//    std::cout << duration.count() << " microseconds" << std::endl;
 
     int k = 0;
 
