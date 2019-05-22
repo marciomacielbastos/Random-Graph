@@ -8,18 +8,19 @@ class UnionFind{
 private:
     std::vector<unsigned long int> id;
     std::vector<unsigned long int> sizes;
-    std::map<unsigned long int, Components> components;
+    std::vector<unsigned long int> number_of_clusters_per_size;
+//    std::map<unsigned long int, Components> components;
     unsigned long int count;
 public:
     UnionFind(unsigned long int N);
-    void Union(unsigned long int v, unsigned long int w);
-    unsigned long int Find(unsigned long int v);
-    unsigned long int GetNumberOfComponents();
-    unsigned long int GetMaxSize();
-    std::map<unsigned long int, Components> GetComponents();
-    std::vector<unsigned long int> GetComponentsSize();
-    std::map<unsigned long int, unsigned long int> GetSizeQuantity();
-    bool Connected(unsigned long int v, unsigned long int w);
+    void union_(unsigned long int v, unsigned long int w);
+    unsigned long int find(unsigned long int v);
+    bool is_connected(unsigned long int v, unsigned long int w);
+    std::vector<unsigned long int> get_size_of_components();
+    unsigned long int get_number_of_components();
+//    unsigned long int GetMaxSize();
+//    std::map<unsigned long int, Components> GetComponents();
+//    std::map<unsigned long int, unsigned long int> GetSizeQuantity();
 };
 
 #endif // UNIONFIND_H

@@ -4,7 +4,6 @@
 #include <network.h>
 #include <unionfind.h>
 #include <vector>
-#include <map>
 
 class Assembler{
 private:

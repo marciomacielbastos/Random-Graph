@@ -18,26 +18,22 @@ std::vector<std::vector<double>> Assembler::assembly(){
         unsigned long int position = Random::DiscreteUniform(list.size());
         std::pair<unsigned long int, unsigned long int> pair = list[position];
         // Union the nodes of this link
-        uf.Union(pair.first, pair.second);
+        uf.union_(pair.first, pair.second);
         // Get the pair (number of nodes in the component, number of components with this number of nodes)
-        std::map<unsigned long int, unsigned long int> size_quantity = uf.GetSizeQuantity();
+        std::vector<unsigned long int> number_of_clusters_per_size = uf.get_size_of_components();
         // Mean value of the square of the number of nodes in each component
         double Sc2 = 0;
-        double num_comp = 0;
-        for (auto it = size_quantity.begin(); it != size_quantity.end(); it++) {
-            Sc2 += static_cast<double>(it->first * it->first * it->second);
-            num_comp += static_cast<double>(it->second);
+        double Tm = 0;
+        for (unsigned long int  i = 0;  i < size; i++) {
+            if(number_of_clusters_per_size[i]) {
+                Tm = (i+1);
+                Sc2 += static_cast<double>((i+1) * (i+1));
+            }
         }
         // Remove the link from the list of links
         list.erase(list.begin() + static_cast<long int>(position));
-        // Add to the list of mean values
-        Sc2 /= num_comp;
-        auto it = size_quantity.end();
-        it--;
-        double Tm = it->first;
         double f = 1 - static_cast<double>(list.size())/initial_number_of_links;
         this->mean_component_sizes.push_back({Sc2, Tm, f});
-
     }
     return this->mean_component_sizes;
 }
