@@ -12,30 +12,30 @@
 #include <assembler.h>
 #include <chrono>
 #include <limits>
-#include <math.h>
 
 
 int main(int argc, char *argv[]){
     std::vector<unsigned long int> random_vector;
-    unsigned long int N = std::numeric_limits<long int>::max();
+    unsigned long int N = std::numeric_limits<double>::max();
+    int threads = 16;
     std::cout << "Number of nodes: " << N << std::endl;
-    qExponential qe = qExponential(N, 2 , 1.3);
-    qe.SetMin(1);
+    qExponential qe = qExponential(N, 1, 1.25);
+    qe.SetMin(0);
     auto start = std::chrono::high_resolution_clock::now();
-    random_vector = qe.random(10000000, 6);
+    random_vector = qe.random(10000000, threads);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << "Generate random vector with " << N << " elements: " << duration.count() << " microseconds" << std::endl;
 //    start = std::chrono::high_resolution_clock::now();
-//    Network net = Network(random_vector, 16);
+//    Network net = Network(random_vector, threads);
 //    stop = std::chrono::high_resolution_clock::now();
 //    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 //    std::cout << "Create the network's nodes: " << duration.count() << " microseconds" << std::endl;
 //    start = std::chrono::high_resolution_clock::now();
 //    bool b = net.random_link_AA_algorithm();
 //    while(!b){
-//        random_vector = qe.random(N, 16);
-//        net = Network(random_vector, 16);
+//        random_vector = qe.random(N, threads);
+//        net = Network(random_vector, threads);
 //        b = net.random_link_AA_algorithm();
 //    }
 //    stop = std::chrono::high_resolution_clock::now();
@@ -47,8 +47,8 @@ int main(int argc, char *argv[]){
 //    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 //    std::cout << "Compute the link-by-link adding statistics: " << duration.count() << " microseconds" << std::endl;
     std::ofstream myfile;
-    myfile.open ("/home/marcio/qExp13_2.txt");
-    for (unsigned long int i=0; i<random_vector.size(); i++)
+    myfile.open ("/home/marcio/qExp15_1.txt");
+    for (unsigned long int i = 0; i < random_vector.size(); i++)
         if(i < random_vector.size() - 1) myfile << random_vector[i] << ",";
         else {
             myfile << random_vector[i];
