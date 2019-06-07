@@ -16,8 +16,8 @@ public:
     qExponential(unsigned long int N, double lambda, double q);
     qExponential(unsigned long int N, double lambda, double q, double xmin);
     void SetMin(double x0);
-    double Factor1(double x);
-    double Factor2(double f1);
+    double factor1(double x);
+    double factor2(double f1);
     double f(double f1, double f2);
     double df(double f1, double f2);
     double d2f(double f1, double f2);

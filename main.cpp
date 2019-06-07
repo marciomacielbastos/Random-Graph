@@ -17,8 +17,8 @@
 
 int main(int argc, char *argv[]){
     std::vector<unsigned long int> random_vector;
-    unsigned long int N = std::numeric_limits<long int>::max();
-//    unsigned long int N = 1000;
+//    unsigned long int N = std::numeric_limits<long int>::max();
+    unsigned long int N = 1000;
     std::cout << "Number of nodes: " << N << std::endl;
     qExponential qe = qExponential(N, 2 , 1.3);
     qe.SetMin(0);

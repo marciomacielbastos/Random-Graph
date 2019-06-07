@@ -29,12 +29,12 @@ qExponential::qExponential(unsigned long int N, double lambda, double q, double 
     SetMin(xmin);
 }
 
-double qExponential::Factor1(double x){
+double qExponential::factor1(double x){
     double f1 = 1 - ((1 - q) * lambda * x);
     return f1;
 }
 
-double qExponential::Factor2(double f1){
+double qExponential::factor2(double f1){
     double exponent = ((4 * q) - 3) / (1 - q);
     double f2 = std::pow(f1, exponent);
     return f2;
@@ -85,14 +85,14 @@ double qExponential::dHarmonic(double f1, double f2){
 double qExponential::InverseCDF(double p){
     double x = xmin;
     double tol = 0.001;
-    double f1 = Factor1(xmax);
-    double f2 = Factor2(f1);
-    double f1_0 = Factor1(xmin);
-    double f2_0 = Factor2(f1_0);
+    double f1 = factor1(xmax);
+    double f2 = factor2(f1);
+    double f1_0 = factor1(xmin);
+    double f2_0 = factor2(f1_0);
     double pD = p * Harmonic(f1, f2, f1_0, f2_0);
     while (true) {
-        double f1 = Factor1(x);
-        double f2 = Factor2(f1);
+        double f1 = factor1(x);
+        double f2 = factor2(f1);
         double H = Harmonic(f1, f2, f1_0, f2_0);
         double dH = dHarmonic(f1, f2);
         double factor = (H - pD) / dH;
