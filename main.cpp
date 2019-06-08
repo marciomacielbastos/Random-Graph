@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
     qExponential qe = qExponential(N, 2 , 1.3);
     qe.SetMin(0);
     auto start = std::chrono::high_resolution_clock::now();
-    random_vector = qe.random(10000000, 6);
+    random_vector = qe.random(10000000);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << "Generate random vector with " << N << " elements: " << duration.count() << " microseconds" << std::endl;

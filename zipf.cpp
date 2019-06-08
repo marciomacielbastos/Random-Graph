@@ -85,7 +85,7 @@ double Zipf::dHarmonic(double f1, double f2){
     return harmonic_;
 }
 
-double Zipf::InverseCDF(double p){
+double Zipf::inverse_CDF(double p){
     double x = xmax / 2;
     double tol = 0.01;
     double f1 = Factor1(xmax);

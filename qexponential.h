@@ -10,6 +10,7 @@ private:
     double q;
     double xmin = 0;
     double xmax;
+    std::vector<double> cum_dist;
     
 public:
     qExponential();
@@ -26,7 +27,12 @@ public:
     double Harmonic(double f1, double f2, double f1_0, double f2_0);
     double dHarmonic(double f1, double f2);
     double Integ(double f1, double f2);
-    double InverseCDF(double p);
+    double inverse_CDF(double p);
+    double approx_inverse_CDF(double p);
+    double search_inverse_CDF(double p);
+    double pdf(double x);
+    void build_dist();
+    long int quick_search(double u, unsigned long int j_min, unsigned long int j_max);
 //    unsigned long int PickRand();
 //    std::vector<unsigned long int> PickRand(unsigned long int size);
 };

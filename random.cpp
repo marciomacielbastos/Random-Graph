@@ -17,13 +17,23 @@ double Random::uniform(){
     return double(std::rand())/RAND_MAX; // in (0, 1)
 }
 
-double Random::InverseCDF(double p){
+double Random::inverse_CDF(double p){
+    return p;
+}
+
+double Random::approx_inverse_CDF(double p){
     return p;
 }
 
 unsigned long int Random::random(){
     double p = uniform(); // p ~ U(0,1)
-    double x = InverseCDF(p);
+    double x = inverse_CDF(p);
+    return static_cast<unsigned long int>(x);
+}
+
+unsigned long int Random::random_parallel(){
+    double p = uniform(); // p ~ U(0,1)
+    double x = approx_inverse_CDF(p);
     return static_cast<unsigned long int>(x);
 }
 
@@ -77,7 +87,7 @@ std::vector<unsigned long int> Random::random(unsigned long int size, unsigned l
 
 void Random::random_t(std::vector<unsigned long int> & random_vector, unsigned long int begin, unsigned long int end){
     for (unsigned int i = begin; i < end; ++i) {
-        unsigned long int val = random();
+        unsigned long int val = random_parallel();
         random_vector[i] = val;
     }
 }

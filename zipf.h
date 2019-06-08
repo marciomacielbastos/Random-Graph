@@ -30,7 +30,7 @@ public:
     double d4f(double f1);
     double Harmonic(double f1, double f2, double f1_0, double f2_0);
     double dHarmonic(double f1, double f2);
-    double InverseCDF(double p);
+    double inverse_CDF(double p);
 };
 
 #endif // RANDOMGEN_H

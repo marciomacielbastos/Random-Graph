@@ -12,6 +12,7 @@ qExponential::qExponential(unsigned long int N, double lambda, double q):N(stati
         double factor = 1 / (lambda * (this->q - 1));
         xmax = std::fmin(N - 1, factor);
     }
+    this->build_dist();
 }
 
 void qExponential::SetMin(double x0){
@@ -82,7 +83,7 @@ double qExponential::dHarmonic(double f1, double f2){
     return harmonic_;
 }
 
-double qExponential::InverseCDF(double p){
+double qExponential::approx_inverse_CDF(double p){
     double x = xmin;
     double tol = 0.001;
     double f1 = factor1(xmax);
@@ -102,4 +103,63 @@ double qExponential::InverseCDF(double p){
         }
         x = newx;
     }
+}
+
+double qExponential::pdf(double x){
+    double f1 = factor1(x);
+    double f2 = factor2(f1);
+    return f(f1, f2);
+}
+
+void qExponential::build_dist(){
+    double sum = 0;
+    for(unsigned long int i = xmin; i < xmax; i++){
+        double val = pdf(i);
+        sum += val;
+        this->cum_dist.push_back(val);
+    }
+
+    for(unsigned long int i = 0; i < cum_dist.size(); i++){
+        cum_dist[i] = cum_dist[i] / sum;
+    }
+
+    for(unsigned long int i = 1; i < cum_dist.size(); i++){
+        cum_dist[i] += cum_dist[i - 1];
+    }
+}
+
+
+
+long int qExponential::quick_search(double p, unsigned long int j_min, unsigned long int j_max){
+    unsigned long int mid =  j_min + ((j_max - j_min) / 2);
+
+    if(std::abs(this->cum_dist[mid] - p) < std::numeric_limits<double>::epsilon()){
+        return (mid + 1);
+    }
+
+    else if(this->cum_dist[0] > p){
+        return j_min;
+    }
+
+    else if((this->cum_dist[j_min] < p) && (this->cum_dist[j_min + 1] > p)){
+        return j_min + 1;
+    }
+
+    // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
+    else if (this->cum_dist[mid] < p) {
+        j_min = mid;
+        quick_search(p, j_min, j_max);
+    } else {
+        j_max = mid;
+        quick_search(p, j_min, j_max);
+    }
+}
+
+double qExponential::search_inverse_CDF(double p){
+    unsigned long int pmax = (static_cast<unsigned long int>(xmax) - static_cast<unsigned long int>(xmin));
+    return static_cast<double>(quick_search(p, 0, pmax));
+}
+
+double qExponential::inverse_CDF(double p){
+    return search_inverse_CDF(p);
 }
