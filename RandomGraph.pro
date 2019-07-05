@@ -25,7 +25,8 @@ SOURCES += \
     exponential.cpp \
     unionfind.cpp \
     assembler.cpp \
-    components.cpp
+    components.cpp \
+    binary_adjlist.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -42,4 +43,5 @@ HEADERS += \
     exponential.h \
     unionfind.h \
     assembler.h \
-    components.h
+    components.h \
+    binary_adjlist.h
