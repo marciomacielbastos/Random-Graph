@@ -4,11 +4,13 @@
 Network::Network(unsigned long int numberOfNodes, Random *rd){
     this->is_sorted = false;
     this->distribution = rd;
+    ba = Binary_adjlist(numberOfNodes);
     set_list_of_nodes(numberOfNodes);
 }
 
 Network::Network(std::vector<unsigned long int> &degrees, unsigned int num_threads){
     unsigned long int size = degrees.size();
+    ba = Binary_adjlist(size);
     this->is_sorted = false;
 //    std::vector<unsigned long int> vector_sum_of_degrees(num_threads + 1, 0);
 
@@ -115,6 +117,7 @@ bool Network::link(Node *v, Node *w){
         return false;
     }
     w->add_neighbor(*v);
+    ba.add_link(v->get_id(), w->get_id());
     return true;
 }
 

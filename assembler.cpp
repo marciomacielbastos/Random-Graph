@@ -2,6 +2,8 @@
 #include <iostream>
 
 Assembler::Assembler(Network net): net(net){
+    net.sort_list_of_nodes();
+    std::vector<Node> list_of_nodes = net.get_list_of_nodes();
 
 }
 
@@ -37,3 +39,4 @@ std::vector<std::vector<double>> Assembler::assembly(){
     }
     return this->mean_component_sizes;
 }
+
