@@ -1,14 +1,15 @@
 #include "network.h"
 
-
 //It must receive a random distribution already setted up.
 Network::Network(unsigned long int numberOfNodes, Random *rd){
+    this->is_sorted = false;
     this->distribution = rd;
     set_list_of_nodes(numberOfNodes);
 }
 
 Network::Network(std::vector<unsigned long int> &degrees, unsigned int num_threads){
     unsigned long int size = degrees.size();
+    this->is_sorted = false;
 //    std::vector<unsigned long int> vector_sum_of_degrees(num_threads + 1, 0);
 
 //    unsigned long int sum_of_degrees = get_sum_of_degrees(std::ref(degrees), std::ref(vector_sum_of_degrees), num_threads);
@@ -37,6 +38,49 @@ Network::Network(std::vector<unsigned long int> &degrees, unsigned int num_threa
     }
 }
 
+//Add a node to the network
+bool Network::add_node(Node n){
+    this->list_of_nodes.push_back(n);
+    return true;
+}
+
+std::vector<std::pair<unsigned long int, unsigned long int>> Network::get_list_of_links(){
+    std::vector<std::pair<unsigned long int, unsigned long int>> list;
+    for (unsigned long int i = 0; i < this->list_of_nodes.size(); i++) {
+        for (unsigned long int j = 0; j < this->list_of_nodes[i].get_adjacency_list_size() ; j++) {
+            unsigned long int adjacent_id = this->list_of_nodes[i].get_adjacency_list()[j];
+            if(i < adjacent_id){
+                std::pair<unsigned long int, unsigned long int> pair (i, adjacent_id);
+                list.push_back(pair);
+            }
+        }
+    }
+    return list;
+}
+
+std::map<unsigned long int, unsigned long int> Network::get_map_id_order(){
+    sort_list_of_nodes();
+    std::map<unsigned long int, unsigned long int> map_id_order;
+    unsigned long int counter = 0;
+    for (auto node : list_of_nodes){
+        map_id_order.insert (std::pair<unsigned long int ,unsigned long int>(counter, node.get_id()));
+        counter++;
+    }
+    return map_id_order;
+}
+
+//Return the list of nodes in the network
+std::vector<Node> Network::get_list_of_nodes(){
+    return this->list_of_nodes;
+}
+
+unsigned long int Network::get_next_value_of_algorithm_list(unsigned long int head, unsigned long int it){
+    while(head == algorithm_list[it]){
+        it++;
+    }
+    return it;
+}
+
 //Keep here for future parallelization
 unsigned long int Network::get_sum_of_degrees(const std::vector<unsigned long int> &  degrees, std::vector<unsigned long int> &  vector_sum_of_degrees, unsigned long int num_threads){
     unsigned long int size = degrees.size();
@@ -61,11 +105,7 @@ unsigned long int Network::get_sum_of_degrees(const std::vector<unsigned long in
     return sum_of_degrees;
 }
 
-//Add a node to the network
-bool Network::add_node(Node n){
-    this->list_of_nodes.push_back(n);
-    return true;
-}
+
 
 //Add a link to the network, return false if the nodes are already linked
 bool Network::link(Node *v, Node *w){
@@ -76,31 +116,6 @@ bool Network::link(Node *v, Node *w){
     }
     w->add_neighbor(*v);
     return true;
-}
-
-void Network::set_list_of_nodes_t(std::vector<unsigned long> &degrees, unsigned long begin, unsigned long end){
-    for (unsigned long int i = begin; i < end; ++i) {
-        this->list_of_nodes[i].set_id(i);
-        this->list_of_nodes[i].set_degree(degrees[i]);
-    }
-}
-
-void Network::set_list_of_nodes(unsigned long number_of_nodes){
-        std::vector<unsigned long> rv = this->distribution->random(number_of_nodes);
-        for (auto x : rv) {
-            Node node = Node(x);
-            add_node(node);
-        }
-}
-
-void Network::set_algotithm_list(){
-    unsigned long int number_of_nodes = this->list_of_nodes.size();
-    for (unsigned long int i = 0; i < number_of_nodes; i++) {
-        // Create a list of degree-repeated node id
-        std::vector<unsigned long int> links(this->list_of_nodes[i].ged_degree(), this->list_of_nodes[i].get_id());
-        // Append the lists cited above to create the network through Andre Auto algorithm
-        this->algorithm_list.insert(algorithm_list.end(), links.begin(), links.end());
-    }
 }
 
 // Andre Auto linking method
@@ -139,16 +154,9 @@ bool Network::random_link_AA_algorithm(){
     return true;
 }
 
-unsigned long int Network::get_next_value_of_algorithm_list(unsigned long int head, unsigned long int it){
-    while(head == algorithm_list[it]){
-        it++;
-    }
-    return it;
-}
-
 // Nuno linking method
 bool Network::RandomLinkNuno(){
-    std::sort(this->list_of_nodes.rbegin(), this->list_of_nodes.rend());
+    sort_list_of_nodes();
     set_algotithm_list();
     unsigned long int N = this->algorithm_list.size();
 //    Verify if the algoList size is even and reduce the degreen of the less connecter node by one
@@ -180,21 +188,37 @@ bool Network::RandomLinkNuno(){
     return true;
 }
 
-//Return the list of nodes in the network
-std::vector<Node> Network::get_list_of_nodes(){
-    return this->list_of_nodes;
+
+void Network::set_algotithm_list(){
+    unsigned long int number_of_nodes = this->list_of_nodes.size();
+    for (unsigned long int i = 0; i < number_of_nodes; i++) {
+        // Create a list of degree-repeated node id
+        std::vector<unsigned long int> links(this->list_of_nodes[i].ged_degree(), this->list_of_nodes[i].get_id());
+        // Append the lists cited above to create the network through Andre Auto algorithm
+        this->algorithm_list.insert(algorithm_list.end(), links.begin(), links.end());
+    }
 }
 
-std::vector<std::pair<unsigned long int, unsigned long int>> Network::get_list_of_links(){
-    std::vector<std::pair<unsigned long int, unsigned long int>> list;
-    for (unsigned long int i = 0; i < this->list_of_nodes.size(); i++) {
-        for (unsigned long int j = 0; j < this->list_of_nodes[i].get_adjacency_list_size() ; j++) {
-            unsigned long int adjacent_id = this->list_of_nodes[i].get_adjacency_list()[j];
-            if(i < adjacent_id){
-                std::pair<unsigned long int, unsigned long int> pair (i, adjacent_id);
-                list.push_back(pair);
-            }
+void Network::set_list_of_nodes(unsigned long number_of_nodes){
+        std::vector<unsigned long> rv = this->distribution->random(number_of_nodes);
+        for (auto x : rv) {
+            Node node = Node(x);
+            add_node(node);
         }
+}
+
+void Network::set_list_of_nodes_t(std::vector<unsigned long> &degrees, unsigned long begin, unsigned long end){
+    for (unsigned long int i = begin; i < end; ++i) {
+        this->list_of_nodes[i].set_id(i);
+        this->list_of_nodes[i].set_degree(degrees[i]);
     }
-    return list;
+}
+
+void Network::sort_list_of_nodes(){
+    if(this->is_sorted){
+        return;
+    } else{
+        std::sort(this->list_of_nodes.rbegin(), this->list_of_nodes.rend());
+        this->is_sorted = true;
+    }
 }
