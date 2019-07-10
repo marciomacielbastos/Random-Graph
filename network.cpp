@@ -4,13 +4,13 @@
 Network::Network(unsigned long int numberOfNodes, Random *rd){
     this->is_sorted = false;
     this->distribution = rd;
-    ba = Binary_adjlist(numberOfNodes);
+    ba = Binary_adjmatrix(numberOfNodes);
     set_list_of_nodes(numberOfNodes);
 }
 
 Network::Network(std::vector<unsigned long int> &degrees, unsigned int num_threads){
     unsigned long int size = degrees.size();
-    ba = Binary_adjlist(size);
+    ba = Binary_adjmatrix(size);
     this->is_sorted = false;
 //    std::vector<unsigned long int> vector_sum_of_degrees(num_threads + 1, 0);
 
@@ -128,16 +128,16 @@ bool Network::random_link_AA_algorithm(){
     unsigned long int N = this->algorithm_list.size();
     int counter = 0;
     while(N > 1){
-        unsigned long int rand1 =  distribution->DiscreteUniform(0, N);
-        unsigned long int rand2 =  distribution->DiscreteUniform(0, N);
+        unsigned long int rand1 =  distribution->discrete_uniform(0, N);
+        unsigned long int rand2 =  distribution->discrete_uniform(0, N);
         unsigned long int rnd1 = this->algorithm_list[rand1];
         unsigned long int rnd2 = this->algorithm_list[rand2];
         while((rnd1 == rnd2) || (list_of_nodes[rnd1].is_connected(list_of_nodes[rnd2]))){
             if(counter >= 100){
                 return false;
             }
-            rand1 =  distribution->DiscreteUniform(N);
-            rand2 =  distribution->DiscreteUniform(N);
+            rand1 =  distribution->discrete_uniform(N);
+            rand2 =  distribution->discrete_uniform(N);
             rnd1 = this->algorithm_list[rand1];
             rnd2 = this->algorithm_list[rand2];
             counter++;
@@ -175,7 +175,7 @@ bool Network::RandomLinkNuno(){
         unsigned long int val2 = val1;
         int count = 100;
         while ((val1 == val2) || (list_of_nodes[val1].is_connected(list_of_nodes[val2]))){
-            p2 =  distribution->DiscreteUniform(get_next_value_of_algorithm_list(p1,0), N);
+            p2 =  distribution->discrete_uniform(get_next_value_of_algorithm_list(p1,0), N);
             val2 = this->algorithm_list[p2];
             if(count <= 0){
                 count--;

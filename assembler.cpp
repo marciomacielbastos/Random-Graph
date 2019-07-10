@@ -2,8 +2,8 @@
 #include <iostream>
 
 Assembler::Assembler(Network net): net(net){
-    net.sort_list_of_nodes();
-    std::vector<Node> list_of_nodes = net.get_list_of_nodes();
+//    net.sort_list_of_nodes();
+//    std::vector<Node> list_of_nodes = net.get_list_of_nodes();
 
 }
 
@@ -17,7 +17,7 @@ std::vector<std::vector<double>> Assembler::assembly(){
     unsigned long int initial_number_of_links = list.size();
     while (list.size() > 0) {
         // Get random link of the network
-        unsigned long int position = Random::DiscreteUniform(list.size());
+        unsigned long int position = Random::discrete_uniform(list.size());
         std::pair<unsigned long int, unsigned long int> pair = list[position];
         // Union the nodes of this link
         uf.union_(pair.first, pair.second);

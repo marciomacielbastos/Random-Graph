@@ -2,12 +2,12 @@
 #define BINARY_ADJLIST_H
 #include <vector>
 
-class Binary_adjlist{
+class Binary_adjmatrix{
 private:
     std::vector<std::vector<char>> matrix;
 public:
-    Binary_adjlist();
-    Binary_adjlist(unsigned long int d);
+    Binary_adjmatrix();
+    Binary_adjmatrix(unsigned long int dim);
     void add_link(unsigned long int v, unsigned long int w);
     bool is_connected(unsigned long int v, unsigned long int w);
 };

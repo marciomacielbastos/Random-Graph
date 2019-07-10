@@ -53,11 +53,11 @@ double Random::SetParameter(double p){
     else return p;
 }
 
-unsigned long int Random::DiscreteUniform(unsigned long int max){
+unsigned long int Random::discrete_uniform(unsigned long int max){
     return static_cast<unsigned long int>(std::rand()) % max; // in [0, n - 1)
 }
 
-unsigned long int Random::DiscreteUniform(unsigned long int min, unsigned long int max){
+unsigned long int Random::discrete_uniform(unsigned long int min, unsigned long int max){
     return static_cast<unsigned long int>(std::rand()) %(max-min) + min; // in [min, max)
 }
 

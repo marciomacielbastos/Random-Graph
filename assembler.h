@@ -7,7 +7,7 @@
 
 class Assembler{
 private:
-    Binary_adjlist ba;
+//    Binary_adjmatrix ba;
     Network net;
     std::vector<std::vector<double>> mean_component_sizes;
 

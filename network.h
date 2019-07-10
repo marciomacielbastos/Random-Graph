@@ -1,7 +1,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 #include <algorithm>
-#include <binary_adjlist.h>
+#include <binary_adjmatrix.h>
 #include <functional>
 #include <map>
 #include <node.h>
@@ -14,7 +14,7 @@
 class Network{
 private:
     std::vector<unsigned long int> algorithm_list;
-    Binary_adjlist ba;
+    Binary_adjmatrix ba;
     Random *distribution;
     bool is_sorted;
     std::vector<Node> list_of_nodes;
