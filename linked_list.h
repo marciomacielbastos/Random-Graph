@@ -18,6 +18,7 @@ public:
     unsigned long int get_number_of_nodes();
     Linked_node * get_position(unsigned long int id);
     unsigned long int get_total_number_of_nodes();
+    bool is_empty();
     void pop();
     void push();
     void remove(unsigned long int id);

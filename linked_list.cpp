@@ -20,18 +20,16 @@ void Linked_list::add_node(){
     }
 }
 
-unsigned long int Linked_list::get_number_of_nodes(){
-    return this->number_of_nodes;
-}
-
-unsigned long int Linked_list::get_total_number_of_nodes(){
-    return this->position.size();
-}
-
 unsigned long int Linked_list::dequeue(){
-    unsigned long int val = this->head->get_id();
-    set_head(this->head->get_next());
-    return val;
+    if(number_of_nodes > 0){
+        unsigned long int val = this->head->get_id();
+        set_head(this->head->get_next());
+        number_of_nodes--;
+        return val;
+    }
+    else{
+        return -1;
+    }
 }
 
 void Linked_list::enqueue(unsigned long int v){
@@ -44,6 +42,22 @@ void Linked_list::enqueue(unsigned long int v){
     this->get_position(v)->set_prev(tail);
     set_tail(this->get_position(v));
     number_of_nodes++;
+}
+
+unsigned long int Linked_list::get_number_of_nodes(){
+    return this->number_of_nodes;
+}
+
+Linked_node * Linked_list::get_position(unsigned long id){
+    return &this->position[id];
+}
+
+unsigned long int Linked_list::get_total_number_of_nodes(){
+    return this->position.size();
+}
+
+bool Linked_list::is_empty(){
+    return (number_of_nodes>0);
 }
 
 void Linked_list::remove(unsigned long id){
@@ -61,17 +75,13 @@ void Linked_list::set_ids(){
     }
 }
 
-void Linked_list::set_tail(Linked_node * tail){
-    this->tail = tail;
-    this->tail->set_next(this->tail);
-}
-
 void Linked_list::set_link(unsigned long v, unsigned long w){
     this->get_position(v)->set_next(this->get_position(w));
     this->get_position(w)->set_prev(this->get_position(v));
     set_tail(this->get_position(w));
 }
 
-Linked_node * Linked_list::get_position(unsigned long id){
-    return &this->position[id];
+void Linked_list::set_tail(Linked_node * tail){
+    this->tail = tail;
+    this->tail->set_next(this->tail);
 }
