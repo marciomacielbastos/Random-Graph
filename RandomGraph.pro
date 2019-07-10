@@ -26,7 +26,11 @@ SOURCES += \
     unionfind.cpp \
     assembler.cpp \
     components.cpp \
-    binary_adjlist.cpp
+    binary_adjmatrix.cpp \
+    distance_matrix.cpp \
+    bfs_modified.cpp \
+    linked_list.cpp \
+    linked_node.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -44,4 +48,8 @@ HEADERS += \
     unionfind.h \
     assembler.h \
     components.h \
-    binary_adjlist.h
+    binary_adjmatrix.h \
+    distance_matrix.h \
+    bfs_modified.h \
+    linked_list.h \
+    linked_node.h
