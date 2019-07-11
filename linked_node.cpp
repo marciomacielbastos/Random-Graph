@@ -1,14 +1,14 @@
 #include "linked_node.h"
 
 Linked_node::Linked_node(){
-    this->next = nullptr;
-    this->prev = nullptr;
+    this->next = this;
+    this->prev = this;
 }
 
 Linked_node::Linked_node(unsigned long int id){
     this->id =id;
-    this->next = nullptr;
-    this->prev = nullptr;
+    this->next = this;
+    this->prev = this;
 }
 
 unsigned long int Linked_node::get_id(){

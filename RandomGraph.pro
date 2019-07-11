@@ -30,7 +30,8 @@ SOURCES += \
     distance_matrix.cpp \
     bfs_modified.cpp \
     linked_list.cpp \
-    linked_node.cpp
+    linked_node.cpp \
+    linked_tree.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -52,4 +53,5 @@ HEADERS += \
     distance_matrix.h \
     bfs_modified.h \
     linked_list.h \
-    linked_node.h
+    linked_node.h \
+    linked_tree.h

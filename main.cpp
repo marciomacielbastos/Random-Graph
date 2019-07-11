@@ -26,10 +26,10 @@ int main(int argc, char *argv[]){
     vll.add_node();
     unsigned long int N = std::numeric_limits<long int>::max();
     vll.add_node();
-    N = 1000;
+    N = 5;
     std::cout << "Number of nodes: " << N << std::endl;
     qExponential qe = qExponential(N, 2 , 1.3);
-    qe.SetMin(0);
+    qe.SetMin(2);
     auto start = std::chrono::high_resolution_clock::now();
     random_vector = qe.random(N);
     auto stop = std::chrono::high_resolution_clock::now();
@@ -51,6 +51,9 @@ int main(int argc, char *argv[]){
     duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << "Create the network's links randomly: " << duration.count() << " microseconds" << std::endl;
     Bfs_modified bam = Bfs_modified(net);
+    bam.mount_dist_matrix();
+    unsigned int g = 0;
+    g =1;
 //    net.get_map_id_order();
 //    start = std::chrono::high_resolution_clock::now();
 //    Assembler as = Assembler(net);

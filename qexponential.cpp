@@ -161,5 +161,5 @@ double qExponential::search_inverse_CDF(double p){
 }
 
 double qExponential::inverse_CDF(double p){
-    return search_inverse_CDF(p);
+    return xmin + search_inverse_CDF(p);
 }

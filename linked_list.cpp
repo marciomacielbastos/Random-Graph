@@ -57,7 +57,7 @@ unsigned long int Linked_list::get_total_number_of_nodes(){
 }
 
 bool Linked_list::is_empty(){
-    return (number_of_nodes>0);
+    return (number_of_nodes==0);
 }
 
 void Linked_list::remove(unsigned long id){

@@ -124,34 +124,46 @@ bool Network::link(Node *v, Node *w){
 // Andre Auto linking method
 // I have to count to 100, give up and start again
 bool Network::random_link_AA_algorithm(){
+    sort_list_of_nodes();
     set_algotithm_list();
-    unsigned long int N = this->algorithm_list.size();
+//    unsigned long int N = this->algorithm_list.size();
     int counter = 0;
-    while(N > 1){
-        unsigned long int rand1 =  distribution->discrete_uniform(0, N);
-        unsigned long int rand2 =  distribution->discrete_uniform(0, N);
+    while(algorithm_list.size() > 1){
+        unsigned long int rand1 =  distribution->discrete_uniform(0, algorithm_list.size());
+        unsigned long int rand2 =  distribution->discrete_uniform(0, algorithm_list.size());
         unsigned long int rnd1 = this->algorithm_list[rand1];
         unsigned long int rnd2 = this->algorithm_list[rand2];
         while((rnd1 == rnd2) || (list_of_nodes[rnd1].is_connected(list_of_nodes[rnd2]))){
             if(counter >= 100){
                 return false;
             }
-            rand1 =  distribution->discrete_uniform(N);
-            rand2 =  distribution->discrete_uniform(N);
+            rand1 =  distribution->discrete_uniform(algorithm_list.size());
+            rand2 =  distribution->discrete_uniform(algorithm_list.size());
             rnd1 = this->algorithm_list[rand1];
             rnd2 = this->algorithm_list[rand2];
             counter++;
         }
         link(&list_of_nodes[rnd1] , &list_of_nodes[rnd2]);
-        algorithm_list[rand1] = algorithm_list[N-1];
-        algorithm_list[rand2] = algorithm_list[N-2];
-        if(algorithm_list.size() > 1) {
-            algorithm_list.pop_back();
-            N--;
+        if(rand1 < rand2){
+            if(rand2 == algorithm_list.size()-2){
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-1];
+            } else{
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-2];
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-1];
+            }
         }
+        else if (rand2 < rand1){
+            if(rand1 == algorithm_list.size()-2){
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-1];
+            } else{
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-1];
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-2];
+
+            }
+        }
+        algorithm_list.pop_back();
         if(algorithm_list.size() > 1) {
             algorithm_list.pop_back();
-            N--;
         }
     }
     return true;

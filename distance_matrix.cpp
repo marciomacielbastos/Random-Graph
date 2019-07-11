@@ -9,6 +9,16 @@ Distance_matrix::Distance_matrix(unsigned long int dim){
     while(dim > 0){
         std::vector<unsigned long int> row(dim, 0);
         matrix.push_back(row);
+        dim--;
+    }
+}
+
+unsigned long int Distance_matrix::get_distance(unsigned long v, unsigned long w){
+    if(v < w){
+        return matrix[v][(w - v)];
+    }
+    else {
+        return matrix[w][(v - w)];
     }
 }
 
