@@ -25,9 +25,9 @@ void Bfs_modified::mount_dist_matrix(){
     Linked_list bfs_ll = Linked_list(count);
     Linked_list queue = Linked_list(count);
     count = (count * (count - 1)) / 2;
+    std::vector<bool> marked(bfs_ll.get_total_number_of_nodes(), false);
     //Iterate while all the distance cells are not filled
-    while(count > 0){
-        std::vector<bool> marked(bfs_ll.get_total_number_of_nodes(), false);
+    while(count > 0){    
         unsigned long int s = ll.dequeue();
         Linked_node * current = bfs_ll.get_position(s);
         bfs_ll.set_head(current);
