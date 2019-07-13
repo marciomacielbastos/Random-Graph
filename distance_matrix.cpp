@@ -15,27 +15,27 @@ Distance_matrix::Distance_matrix(unsigned long int dim){
 
 unsigned long int Distance_matrix::get_distance(unsigned long v, unsigned long w){
     if(v < w){
-        return matrix[v][(w - v)];
+        return matrix[v][(w - v - 1)];
     }
     else {
-        return matrix[w][(v - w)];
+        return matrix[w][(v - w - 1)];
     }
 }
 
 void Distance_matrix::set_distance(unsigned long v, unsigned long w, unsigned long distance){
     if(v < w){
-        matrix[v][(w - v)] = distance;
+        matrix[v][(w - v - 1)] = distance;
     }
     else {
-        matrix[w][(v - w)] = distance;
+        matrix[w][(v - w - 1)] = distance;
     }
 }
 
 bool Distance_matrix::is_set(unsigned long v, unsigned long w){
     if(v < w){
-        return (matrix[v][(w - v)] > 0);
+        return (matrix[v][(w - v - 1)] > 0);
     }
     else {
-        return (matrix[v][(v - w)] > 0);
+        return (matrix[w][(v - w - 1)] > 0);
     }
 }

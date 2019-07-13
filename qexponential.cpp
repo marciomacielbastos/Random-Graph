@@ -156,8 +156,8 @@ long int qExponential::quick_search(double p, unsigned long int j_min, unsigned 
 }
 
 double qExponential::search_inverse_CDF(double p){
-    unsigned long int pmax = (static_cast<unsigned long int>(xmax) - static_cast<unsigned long int>(xmin));
-    return static_cast<double>(quick_search(p, 0, pmax));
+//    unsigned long int pmax = (static_cast<unsigned long int>(xmax) - static_cast<unsigned long int>(xmin));
+    return static_cast<double>(quick_search(p, 0, cum_dist.size()));
 }
 
 double qExponential::inverse_CDF(double p){

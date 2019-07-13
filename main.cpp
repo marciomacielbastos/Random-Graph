@@ -41,11 +41,11 @@ int main(int argc, char *argv[]){
     duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << "Create the network's nodes: " << duration.count() << " microseconds" << std::endl;
     start = std::chrono::high_resolution_clock::now();
-    bool b = net.random_link_AA_algorithm();
+    bool b = net.random_link_MM_algorithm();
     while(!b){
         random_vector = qe.random(N, 16);
         net = Network(random_vector, 16);
-        b = net.random_link_AA_algorithm();
+        b = net.random_link_MM_algorithm();
     }
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);

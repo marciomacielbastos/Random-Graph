@@ -5,8 +5,10 @@ Linked_list::Linked_list(){
 }
 
 Linked_list::Linked_list(unsigned long int size){
-    std::vector<Linked_node> position(size);
-    this->position = position;
+    for(unsigned long int i = 0; i < size; i++){
+        Linked_node ln = Linked_node(i);
+        this->position.push_back(ln);
+    }
 }
 
 void Linked_list::add_node(){
@@ -42,6 +44,10 @@ void Linked_list::enqueue(unsigned long int v){
     this->get_position(v)->set_prev(tail);
     set_tail(this->get_position(v));
     number_of_nodes++;
+}
+
+Linked_node * Linked_list::get_head(){
+    return this->head;
 }
 
 unsigned long int Linked_list::get_number_of_nodes(){

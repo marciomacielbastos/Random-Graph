@@ -15,6 +15,7 @@ public:
     void add_node();
     unsigned long int dequeue();
     void enqueue(unsigned long int v);
+    Linked_node * get_head();
     unsigned long int get_number_of_nodes();
     Linked_node * get_position(unsigned long int id);
     unsigned long int get_total_number_of_nodes();
