@@ -1,5 +1,6 @@
 #ifndef BFS_MODIFIED_H
 #define BFS_MODIFIED_H
+#include <binary_adjmatrix.h>
 #include <distance_matrix.h>
 #include <linked_list.h>
 #include <network.h>
@@ -7,14 +8,19 @@
 
 class Bfs_modified{
 private:
-    Distance_matrix distance_matrix;
-    Linked_list ll;
-    std::vector<std::vector<unsigned long int>> lon;
+    double average_path;
+//    Distance_matrix distance_matrix;
+    Binary_adjmatrix binary_adjmatrix;
+    Linked_list linked_lists;
+    std::vector<std::vector<unsigned long int>> neighbors;
+
 
 public:
     Bfs_modified();
     Bfs_modified(Network net);
     void mount_dist_matrix();
+    double get_average_path();
+
 };
 
 #endif // BFS_MODIFIED_H

@@ -7,7 +7,7 @@ Binary_adjmatrix::Binary_adjmatrix(){
 }
 
 Binary_adjmatrix::Binary_adjmatrix(unsigned long int dim){
-    dim--;
+    this->dim = dim;
     unsigned long int r = dim % 8;
     unsigned long int d = dim / 8 + static_cast<bool>(r);
     while(d > 0){
@@ -38,4 +38,12 @@ bool Binary_adjmatrix::is_connected(unsigned long v, unsigned long w){
     else {
         return matrix[w][(v - w)/8] & (bit << (v%8));
     }
+}
+
+bool Binary_adjmatrix::is_marked(unsigned long v){
+    return is_connected(v, v);
+}
+
+void Binary_adjmatrix::mark(unsigned long v){
+    add_link(v, v);
 }

@@ -91,3 +91,66 @@ void Linked_list::set_tail(Linked_node * tail){
     this->tail = tail;
     this->tail->set_next(this->tail);
 }
+
+
+//**************Multi-Linked**************//
+
+
+Linked_list::Linked_list(unsigned long int size, unsigned int q){
+    std::vector<unsigned long int> number_of_nodes_v(q);
+    this->number_of_nodes_v = number_of_nodes_v;
+    std::vector<Linked_node *> head_v(q);
+    this->head_v = head_v;
+    std::vector<Linked_node *> tail_v(q);
+    this->tail_v = tail_v;
+    for(unsigned long int i = 0; i < size; i++){
+        Linked_node ln = Linked_node(i, q);
+        this->position.push_back(ln);
+    }
+}
+
+unsigned long int Linked_list::dequeue(unsigned int q){
+    if(number_of_nodes_v[q] > 0){
+        unsigned long int val = this->head_v[q]->get_id();
+        set_head(this->head_v[q]->get_next(q), q);
+        number_of_nodes_v[q]--;
+        return val;
+    }
+    else{
+        return -1;
+    }
+}
+
+void Linked_list::enqueue(unsigned long int v, unsigned int q){
+    if(number_of_nodes_v[q] == 0){
+        set_head(this->get_position(v), q);
+        set_tail(this->get_position(v), q);
+
+    }
+    tail_v[q]->set_next(this->get_position(v), q);
+    this->get_position(v)->set_prev(tail, q);
+    set_tail(this->get_position(v), q);
+    number_of_nodes_v[q]++;
+}
+
+Linked_node * Linked_list::get_head(unsigned int q){
+    return this->head_v[q];
+}
+
+unsigned long int Linked_list::get_number_of_nodes(unsigned int q){
+    return this->number_of_nodes_v[q];
+}
+
+bool Linked_list::is_empty(unsigned int q){
+    return (number_of_nodes_v[q]==0);
+}
+
+void Linked_list::set_head(Linked_node *head, unsigned int q){
+    this->head_v[q] = head;
+    this->head_v[q]->set_prev(this->head_v[q]);
+}
+
+void Linked_list::set_tail(Linked_node * tail, unsigned int q){
+    this->tail_v[q] = tail;
+    this->tail_v[q]->set_next(this->tail_v[q], q);
+}

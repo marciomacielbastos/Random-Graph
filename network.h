@@ -14,7 +14,6 @@
 class Network{
 private:
     std::vector<unsigned long int> algorithm_list;
-    Binary_adjmatrix ba;
     Random *distribution;
     bool is_sorted;
     std::vector<Node> list_of_nodes;

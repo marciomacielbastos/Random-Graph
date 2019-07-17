@@ -4,13 +4,11 @@
 Network::Network(unsigned long int numberOfNodes, Random *rd){
     this->is_sorted = false;
     this->distribution = rd;
-    ba = Binary_adjmatrix(numberOfNodes);
     set_list_of_nodes(numberOfNodes);
 }
 
 Network::Network(std::vector<unsigned long int> &degrees, unsigned int num_threads){
     unsigned long int size = degrees.size();
-    ba = Binary_adjmatrix(size);
     this->is_sorted = false;
 //    std::vector<unsigned long int> vector_sum_of_degrees(num_threads + 1, 0);
 
@@ -117,7 +115,6 @@ bool Network::link(Node *v, Node *w){
         return false;
     }
     w->add_neighbor(*v);
-    ba.add_link(v->get_id(), w->get_id());
     return true;
 }
 
@@ -169,21 +166,16 @@ bool Network::random_link_AA_algorithm(){
     return true;
 }
 
-
 // My method
 bool Network::random_link_MM_algorithm(){
     sort_list_of_nodes();
     set_algotithm_list();
-//    unsigned long int N = this->algorithm_list.size();
     int counter = 0;
     while(algorithm_list.size() > 1){
         unsigned long int rand1 =  distribution->discrete_uniform(0, algorithm_list.size());
         unsigned long int rand2 =  distribution->discrete_uniform(0, algorithm_list.size());
         unsigned long int rnd1 = this->algorithm_list[rand1];
         unsigned long int rnd2 = this->algorithm_list[rand2];
-        if((algorithm_list.size() == 2) && (algorithm_list[0] == algorithm_list[1])){
-            return false;
-        }
         unsigned long int v1 = map_to_sorted_list_of_nodes[rnd1];
         unsigned long int v2 = map_to_sorted_list_of_nodes[rnd2];
         while((rnd1 == rnd2) || (list_of_nodes[v1].is_connected(list_of_nodes[v2]))){
@@ -199,12 +191,32 @@ bool Network::random_link_MM_algorithm(){
             counter++;
         }
         link(&list_of_nodes[v1] , &list_of_nodes[v2]);
-        this->algorithm_list.erase(this->algorithm_list.begin() + rand1);
-        if(rand1 > rand2){
-            this->algorithm_list.erase(this->algorithm_list.begin() + rand2);
-        } else if(rand1 < rand2){
-            this->algorithm_list.erase(this->algorithm_list.begin() + rand2 - 1);
+        if(rand1 < rand2){
+            if(rand2 == algorithm_list.size()-2){
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-1];
+            } else{
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-2];
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-1];
+            }
         }
+        else if (rand2 < rand1){
+            if(rand1 == algorithm_list.size()-2){
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-1];
+            } else{
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-1];
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-2];
+
+            }
+        }
+        algorithm_list.pop_back();
+        algorithm_list.pop_back();
+//        this->algorithm_list[rand1] = this->algorithm_list[this->algorithm_list.size() - 2];
+//        this->algorithm_list.erase(this->algorithm_list.begin() + rand1);
+//        if(rand1 > rand2){
+//            this->algorithm_list.erase(this->algorithm_list.begin() + rand2);
+//        } else if(rand1 < rand2){
+//            this->algorithm_list.erase(this->algorithm_list.begin() + rand2 - 1);
+//        }
     }
     return true;
 }

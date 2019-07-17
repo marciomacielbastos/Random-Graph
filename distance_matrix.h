@@ -12,6 +12,7 @@ public:
     unsigned long int get_distance(unsigned long int v, unsigned long int w);
     void set_distance(unsigned long int v, unsigned long int w, unsigned long int distance);   
     bool is_set(unsigned long int v, unsigned long int w);
+    double average_path();
 };
 
 #endif // DISTANCE_MATRIX_H

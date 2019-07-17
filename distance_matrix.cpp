@@ -39,3 +39,15 @@ bool Distance_matrix::is_set(unsigned long v, unsigned long w){
         return (matrix[w][(v - w - 1)] > 0);
     }
 }
+
+double Distance_matrix::average_path(){
+    double count = 0;
+    double sum = 0;
+    for(auto i : matrix){
+        for(auto j : i){
+            sum += j;
+            count++;
+        }
+    }
+    return sum / count;
+}
