@@ -18,8 +18,7 @@ private:
 public:
     Bfs_modified();
     Bfs_modified(Network net);
-    void mount_dist_matrix();
-    double get_average_path();
+    double avg_geo_dist();
 
 };
 
