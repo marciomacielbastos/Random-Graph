@@ -14,19 +14,60 @@ Bfs_modified::Bfs_modified(Network net){
         linked_lists.enqueue(n.get_id(), 0);
     }
     this->neighbors = neighbors;
-//    Distance_matrix dm = Distance_matrix(linked_lists.get_total_number_of_nodes());
-//    binary_adjmatrix = Binary_adjmatrix(linked_lists.get_total_number_of_nodes());
+}
+
+double Bfs_modified::bfs(unsigned long s){
+    double dsum = 0;
+    double count = 0;
+    double dist = 0;
+    unsigned long int d1 = 0;
+    unsigned long int d2 = 1;
+    linked_lists.remove(s, 0);
+    linked_lists.enqueue(s, 1);
+    std::vector<bool> marked(linked_lists.get_total_number_of_nodes(), false);
+    marked[s] = true;
+    while(!linked_lists.is_empty(1)){
+        if(d1 == 0){
+            d1 = d2;
+            d2 = 0;
+            dist++;
+        }
+        unsigned long int v = linked_lists.dequeue(1);
+        d1--;
+        for(unsigned long int w : neighbors[v]){
+            if(!marked[w]){
+                d2++;
+                dsum += dist;
+                count++;
+                marked[w] = true;
+                linked_lists.enqueue(w, 1);
+            }
+        }
+    }
+    return dsum/count;
+}
+
+double Bfs_modified::avg_geo_dist(unsigned long int clk){
+    double avg = 0;
+    double count = static_cast<double>(clk);
+    while(clk){
+        unsigned long int root = linked_lists.get_position(Random::discrete_uniform(linked_lists.get_number_of_nodes(0)))->get_id();
+        avg += bfs(root);
+        clk--;
+    }
+    return avg/count;
 }
 
 double Bfs_modified::avg_geo_dist(){
     double dsum = 0;
     double count = 0;
-    unsigned long int verify = 0;
-    while(!linked_lists.is_empty(0)){
+    unsigned long int clk = 1000;
+    while(clk){
         double dist = 0;
         unsigned long int d1 = 0;
         unsigned long int d2 = 1;
-        unsigned long int s = linked_lists.dequeue(0);
+        unsigned long int s = linked_lists.get_position(Random::discrete_uniform(linked_lists.get_number_of_nodes(0)))->get_id();
+        linked_lists.remove(s, 0);
         linked_lists.enqueue(s, 1);
         std::vector<bool> marked(linked_lists.get_total_number_of_nodes(), false);
         marked[s] = true;
@@ -48,14 +89,14 @@ double Bfs_modified::avg_geo_dist(){
                 }
             }
         }
-        if(verify == 0){
-            verify++;
-            std::cout<<"chefao: "<<dsum/count<<std::endl;
-        }
+        clk--;
     }
     return dsum/count;
 }
 
+double Bfs_modified::min_avg(){
+    return bfs(linked_lists.get_position(0)->get_id());
+}
 
 //void Bfs_modified::mount_dist_matrix(){
 //    unsigned long int count = ll.get_total_number_of_nodes();

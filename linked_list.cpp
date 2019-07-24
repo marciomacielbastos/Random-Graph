@@ -68,6 +68,7 @@ bool Linked_list::is_empty(){
 
 void Linked_list::remove(unsigned long id){
     set_link(get_position(id)->get_prev()->get_id(), get_position(id)->get_next()->get_id());
+    number_of_nodes--;
 }
 
 void Linked_list::set_head(Linked_node *head){
@@ -128,7 +129,7 @@ void Linked_list::enqueue(unsigned long int v, unsigned int q){
 
     }
     tail_v[q]->set_next(this->get_position(v), q);
-    this->get_position(v)->set_prev(tail, q);
+    this->get_position(v)->set_prev(tail_v[q], q);
     set_tail(this->get_position(v), q);
     number_of_nodes_v[q]++;
 }
@@ -143,6 +144,18 @@ unsigned long int Linked_list::get_number_of_nodes(unsigned int q){
 
 bool Linked_list::is_empty(unsigned int q){
     return (number_of_nodes_v[q]==0);
+}
+
+void Linked_list::remove(unsigned long id, unsigned long int q){
+    unsigned long int v = get_position(id)->get_prev(q)->get_id();
+    unsigned long int w = get_position(id)->get_next(q)->get_id();
+    set_link(v, w, q);
+    number_of_nodes_v[q]--;
+}
+
+void Linked_list::set_link(unsigned long v, unsigned long w, unsigned long int q){
+    this->get_position(v)->set_next(this->get_position(w), q);
+    this->get_position(w)->set_prev(this->get_position(v), q);
 }
 
 void Linked_list::set_head(Linked_node *head, unsigned int q){

@@ -37,6 +37,8 @@ public:
     Linked_node * get_head(unsigned int q);
     unsigned long int get_number_of_nodes(unsigned int q);
     bool is_empty(unsigned int q);
+    void remove(unsigned long id, unsigned long int q);
+    void set_link(unsigned long v, unsigned long w, unsigned long int q);
     void set_head(Linked_node * head, unsigned int q);
     void set_tail(Linked_node * tail, unsigned int q);
 
