@@ -1,7 +1,7 @@
-#include "assembler.h"
+#include "percolation.h"
 #include <iostream>
 
-Assembler::Assembler(Network net): net(net){
+Percolation::Percolation(Network net): net(net){
 //    net.sort_list_of_nodes();
 //    std::vector<Node> list_of_nodes = net.get_list_of_nodes();
 
@@ -9,7 +9,8 @@ Assembler::Assembler(Network net): net(net){
 
 //This method iterate through a network's links adding them step by step through the Union-Find algorithm.
 //In each step the size of the biggest component is added to a vector.
-std::vector<std::vector<double>> Assembler::assembly(){
+
+std::vector<std::vector<double>> Percolation::assembly(){
     unsigned long int size = net.get_list_of_nodes().size();
     std::vector<std::pair<unsigned long int, unsigned long int>> list = net.get_list_of_links();
     UnionFind uf = UnionFind(size);

@@ -45,17 +45,17 @@ bool Network::add_node(Node n){
 }
 
 std::vector<std::pair<unsigned long int, unsigned long int>> Network::get_list_of_links(){
-    std::vector<std::pair<unsigned long int, unsigned long int>> list;
-    for (unsigned long int i = 0; i < this->list_of_nodes.size(); i++) {
-        for (unsigned long int j = 0; j < this->list_of_nodes[i].get_adjacency_list_size() ; j++) {
-            unsigned long int adjacent_id = this->list_of_nodes[i].get_adjacency_list()[j];
-            if(i < adjacent_id){
-                std::pair<unsigned long int, unsigned long int> pair (i, adjacent_id);
-                list.push_back(pair);
-            }
-        }
-    }
-    return list;
+//    std::vector<std::pair<unsigned long int, unsigned long int>> list;
+//    for (unsigned long int i = 0; i < this->list_of_nodes.size(); i++) {
+//        for (unsigned long int j = 0; j < this->list_of_nodes[i].get_adjacency_list_size() ; j++) {
+//            unsigned long int adjacent_id = this->list_of_nodes[i].get_adjacency_list()[j];
+//            if(i < adjacent_id){
+//                std::pair<unsigned long int, unsigned long int> pair (i, adjacent_id);
+//                list.push_back(pair);
+//            }
+//        }
+//    }
+    return list_of_links;
 }
 
 std::map<unsigned long int, unsigned long int> Network::get_map_id_order(){
@@ -210,16 +210,60 @@ bool Network::random_link_MM_algorithm(){
         }
         algorithm_list.pop_back();
         algorithm_list.pop_back();
-//        this->algorithm_list[rand1] = this->algorithm_list[this->algorithm_list.size() - 2];
-//        this->algorithm_list.erase(this->algorithm_list.begin() + rand1);
-//        if(rand1 > rand2){
-//            this->algorithm_list.erase(this->algorithm_list.begin() + rand2);
-//        } else if(rand1 < rand2){
-//            this->algorithm_list.erase(this->algorithm_list.begin() + rand2 - 1);
-//        }
     }
     return true;
 }
+
+// My method
+bool Network::random_link_MM_algorithm(bool LinkList){
+    sort_list_of_nodes();
+    set_algotithm_list();
+    int counter = 0;
+    while(algorithm_list.size() > 1){
+        unsigned long int rand1 =  distribution->discrete_uniform(0, algorithm_list.size());
+        unsigned long int rand2 =  distribution->discrete_uniform(0, algorithm_list.size());
+        unsigned long int rnd1 = this->algorithm_list[rand1];
+        unsigned long int rnd2 = this->algorithm_list[rand2];
+        unsigned long int v1 = map_to_sorted_list_of_nodes[rnd1];
+        unsigned long int v2 = map_to_sorted_list_of_nodes[rnd2];
+        while((rnd1 == rnd2) || (list_of_nodes[v1].is_connected(list_of_nodes[v2]))){
+            if(counter >= 100){
+                return false;
+            }
+            rand1 =  distribution->discrete_uniform(algorithm_list.size());
+            rand2 =  distribution->discrete_uniform(algorithm_list.size());
+            rnd1 = this->algorithm_list[rand1];
+            rnd2 = this->algorithm_list[rand2];
+            v1 = map_to_sorted_list_of_nodes[rnd1];
+            v2 = map_to_sorted_list_of_nodes[rnd2];
+            counter++;
+        }
+        link(&list_of_nodes[v1] , &list_of_nodes[v2]);
+        std::pair<unsigned long int, unsigned long int> pair (rnd1, rnd2);
+        list_of_links.push_back(pair);
+        if(rand1 < rand2){
+            if(rand2 == algorithm_list.size()-2){
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-1];
+            } else{
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-2];
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-1];
+            }
+        }
+        else if (rand2 < rand1){
+            if(rand1 == algorithm_list.size()-2){
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-1];
+            } else{
+                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-1];
+                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-2];
+
+            }
+        }
+        algorithm_list.pop_back();
+        algorithm_list.pop_back();
+    }
+    return true;
+}
+
 
 // Nuno linking method
 bool Network::RandomLinkNuno(){

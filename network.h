@@ -17,7 +17,8 @@ private:
     Random *distribution;
     bool is_sorted;
     std::vector<Node> list_of_nodes;
-    std::vector<unsigned long int> map_to_sorted_list_of_nodes;
+    std::vector<std::pair<unsigned long int, unsigned long int>> list_of_links;
+    std::vector<unsigned long int> map_to_sorted_list_of_nodes;    
 public:
     Network(unsigned long int number_of_nodes, Random *random_distribution);
     Network(std::vector<unsigned long int> &degrees, unsigned int num_threads);
@@ -32,6 +33,7 @@ public:
     void multithread_set_list_of_nodes(const std::vector<unsigned long int> & degrees, unsigned int num_threads);
     bool random_link_AA_algorithm();
     bool random_link_MM_algorithm();
+    bool random_link_MM_algorithm(bool LinkList);
     bool RandomLinkNuno();
     void set_algotithm_list();
     void set_list_of_nodes(unsigned long int number_of_nodes);

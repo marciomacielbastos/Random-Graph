@@ -5,14 +5,14 @@
 #include <unionfind.h>
 #include <vector>
 
-class Assembler{
+class Percolation{
 private:
 //    Binary_adjmatrix ba;
     Network net;
     std::vector<std::vector<double>> mean_component_sizes;
 
 public:
-    Assembler(Network net);
+    Percolation(Network net);
     std::vector<std::vector<double>> assembly();
 
 };

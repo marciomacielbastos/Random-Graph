@@ -9,7 +9,7 @@ qExponential::qExponential(unsigned long int N, double lambda, double q):N(stati
     if(this->q > 1){
         xmax = N - 1;
     } else if (this->q < 1) {
-        double factor = 1 / (lambda * (this->q - 1));
+        double factor = 1 / (lambda * (1 - this->q));
         xmax = std::fmin(N - 1, factor);
     }
     this->build_dist();
