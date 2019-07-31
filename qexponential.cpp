@@ -15,7 +15,7 @@ qExponential::qExponential(unsigned long int N, double lambda, double q):N(stati
     this->build_dist();
 }
 
-void qExponential::SetMin(double x0){
+void qExponential::set_min(double x0){
     this->xmin = x0;
 }
 
@@ -27,7 +27,7 @@ qExponential::qExponential(unsigned long int N, double lambda, double q, double 
         double factor = 1 / (lambda * (this->q - 1));
         xmax = std::fmin(N - 1, factor);
     }
-    SetMin(xmin);
+    set_min(xmin);
 }
 
 double qExponential::factor1(double x){
@@ -66,12 +66,12 @@ double qExponential::d4f(double f2){
     return result;
 }
 
-double qExponential::Integ(double f1, double f2){
+double qExponential::integ(double f1, double f2){
     return (f1 * f1 * f1 * f1 * f1 * f2);
 }
 
 double qExponential::Harmonic(double f1, double f2, double f1_0, double f2_0){
-    double I = Integ(f1_0, f2_0) - Integ(f1, f2);
+    double I = integ(f1_0, f2_0) - integ(f1, f2);
 //    Using h = 1
     double harmonic = (720 * I) + (360 * (f(f1, f2) + f(f1_0, f2_0))) + (60 * (df(f1, f2) - df(f1_0, f2_0))) - (d3f(f1, f2) - d3f(f1_0, f2_0));
     return harmonic;
@@ -127,8 +127,6 @@ void qExponential::build_dist(){
         cum_dist[i] += cum_dist[i - 1];
     }
 }
-
-
 
 long int qExponential::quick_search(double p, unsigned long int j_min, unsigned long int j_max){
     unsigned long int mid =  j_min + ((j_max - j_min) / 2);
