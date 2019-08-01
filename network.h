@@ -32,8 +32,7 @@ public:
     bool link(Node *v, Node *w);
     void multithread_set_list_of_nodes(const std::vector<unsigned long int> & degrees, unsigned int num_threads);
     bool random_link_AA_algorithm();
-    bool random_link_MM_algorithm();
-    bool random_link_MM_algorithm(bool LinkList);
+    bool random_link_AA_algorithm(bool LinkList);
     bool RandomLinkNuno();
     void set_algotithm_list();
     void set_list_of_nodes(unsigned long int number_of_nodes);

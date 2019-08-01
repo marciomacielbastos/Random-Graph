@@ -123,53 +123,6 @@ bool Network::link(Node *v, Node *w){
 bool Network::random_link_AA_algorithm(){
     sort_list_of_nodes();
     set_algotithm_list();
-//    unsigned long int N = this->algorithm_list.size();
-    int counter = 0;
-    while(algorithm_list.size() > 1){
-        unsigned long int rand1 =  distribution->discrete_uniform(0, algorithm_list.size());
-        unsigned long int rand2 =  distribution->discrete_uniform(0, algorithm_list.size());
-        unsigned long int rnd1 = this->algorithm_list[rand1];
-        unsigned long int rnd2 = this->algorithm_list[rand2];
-        while((rnd1 == rnd2) || (list_of_nodes[rnd1].is_connected(list_of_nodes[rnd2]))){
-            if(counter >= 100){
-                return false;
-            }
-            rand1 =  distribution->discrete_uniform(algorithm_list.size());
-            rand2 =  distribution->discrete_uniform(algorithm_list.size());
-            rnd1 = this->algorithm_list[rand1];
-            rnd2 = this->algorithm_list[rand2];
-            counter++;
-        }
-        link(&list_of_nodes[rnd1] , &list_of_nodes[rnd2]);
-        if(rand1 < rand2){
-            if(rand2 == algorithm_list.size()-2){
-                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-1];
-            } else{
-                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-2];
-                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-1];
-            }
-        }
-        else if (rand2 < rand1){
-            if(rand1 == algorithm_list.size()-2){
-                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-1];
-            } else{
-                algorithm_list[rand1] = algorithm_list[algorithm_list.size()-1];
-                algorithm_list[rand2] = algorithm_list[algorithm_list.size()-2];
-
-            }
-        }
-        algorithm_list.pop_back();
-        if(algorithm_list.size() >= 1) {
-            algorithm_list.pop_back();
-        }
-    }
-    return true;
-}
-
-// My method
-bool Network::random_link_MM_algorithm(){
-    sort_list_of_nodes();
-    set_algotithm_list();
     int counter = 0;
     while(algorithm_list.size() > 1){
         unsigned long int rand1 =  distribution->discrete_uniform(0, algorithm_list.size());
@@ -214,8 +167,7 @@ bool Network::random_link_MM_algorithm(){
     return true;
 }
 
-// My method
-bool Network::random_link_MM_algorithm(bool LinkList){
+bool Network::random_link_AA_algorithm(bool LinkList){
     sort_list_of_nodes();
     set_algotithm_list();
     int counter = 0;
@@ -270,32 +222,38 @@ bool Network::RandomLinkNuno(){
     sort_list_of_nodes();
     set_algotithm_list();
     unsigned long int N = this->algorithm_list.size();
-//    Verify if the algoList size is even and reduce the degreen of the less connecter node by one
-//    if(N % 2){
-//        unsigned long int p = this->algoList[this->algoList.size() - 1];
-//        nodeList[p].SetDegree(nodeList[p].GedDegree() - 1);
-//        this->algoList.pop_back();
-//    }
-    while(N > 1){
+    while(algorithm_list.size() > 1){
         unsigned long int p1 = 0;
         unsigned long int p2 = 0;
         unsigned long int val1 = this->algorithm_list[p1];
         unsigned long int val2 = val1;
+        unsigned long int v1 = map_to_sorted_list_of_nodes[val1];
+        unsigned long int v2 = map_to_sorted_list_of_nodes[val2];
         int count = 100;
-        while ((val1 == val2) || (list_of_nodes[val1].is_connected(list_of_nodes[val2]))){
+        while ((val1 == val2) || (list_of_nodes[v1].is_connected(list_of_nodes[v2]))){
             p2 =  distribution->discrete_uniform(get_next_value_of_algorithm_list(p1,0), N);
             val2 = this->algorithm_list[p2];
+            v2 = map_to_sorted_list_of_nodes[val2];
             if(count <= 0){
                 count--;
                 return false;
             }
         }
-        link(&list_of_nodes[val1] , &list_of_nodes[val2]);
+        link(&list_of_nodes[v1] , &list_of_nodes[v2]);
+        if(p2 == algorithm_list.size()-2){
+                algorithm_list[p1] = algorithm_list[algorithm_list.size()-1];
+            } else{
+                algorithm_list[p1] = algorithm_list[algorithm_list.size()-2];
+                algorithm_list[p2] = algorithm_list[algorithm_list.size()-1];
+            }
+        }
+        algorithm_list.pop_back();
+        algorithm_list.pop_back();
         // Possible error point (cast from unsigned to signed)
-        algorithm_list.erase(algorithm_list.begin() + static_cast<long int >(p2));
-        algorithm_list.erase(algorithm_list.begin());
-        N -= 2;
-    }
+//        algorithm_list.erase(algorithm_list.begin() + static_cast<long int >(p2));
+//        algorithm_list.erase(algorithm_list.begin());
+//        N -= 2;
+//    }
     return true;
 }
 
