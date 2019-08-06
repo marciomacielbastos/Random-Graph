@@ -39,11 +39,14 @@ unsigned long int Random::random_parallel(){
 
 std::vector<unsigned long int> Random::random(unsigned long int size){
     std::vector<unsigned long int> randomVector;
+    unsigned long int sum = 0;
     while (size > 0) {
         unsigned long x = random();
+        sum += x;
         randomVector.push_back(x);
         size--;
     }
+    randomVector.push_back(sum);
     return randomVector;
 }
 

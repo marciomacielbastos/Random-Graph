@@ -44,7 +44,7 @@ void write_mean_l(const std::string& filename, std::vector<double> mean_l){
 int main(int argc, char *argv[]){
     std::vector<unsigned long int> random_vector;
     unsigned long int N = std::numeric_limits<long int>::max();
-    N = 1000;
+    N = 15;
     float gamma = 5;
     std::cout << "Number of nodes: " << N << std::endl;
 //    qExponential qe = qExponential(N, 2 , 1.33);
@@ -68,11 +68,11 @@ int main(int argc, char *argv[]){
     unsigned long int num_of_rep = 1;
     Bfs_modified bam;
     for(unsigned long int i = 0; i < num_of_rep; i++){
-        bool b = net.random_link_AA_algorithm();
+        bool b = net.random_link();
         while(!b){
             random_vector = ps.random(N);
             net = Network(random_vector, 16);
-            b = net.random_link_AA_algorithm();
+            b = net.random_link();
         }
         bam = Bfs_modified(net);
         mean_l.push_back(bam.avg_geo_dist(999));

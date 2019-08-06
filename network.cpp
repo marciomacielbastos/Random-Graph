@@ -8,17 +8,12 @@ Network::Network(unsigned long int numberOfNodes, Random *rd){
 }
 
 Network::Network(std::vector<unsigned long int> &degrees, unsigned int num_threads){
-    unsigned long int size = degrees.size();
     this->is_sorted = false;
-//    std::vector<unsigned long int> vector_sum_of_degrees(num_threads + 1, 0);
-
-//    unsigned long int sum_of_degrees = get_sum_of_degrees(std::ref(degrees), std::ref(vector_sum_of_degrees), num_threads);
-
+//    unsigned long int sum = degrees.back();
+    degrees.pop_back();
+    unsigned long int size = degrees.size();
     { std::vector<Node> node_list(size, Node());
       this->list_of_nodes = node_list; }
-//    { std::vector<unsigned long int> algorithm_list(sum_of_degrees, 0);
-//      this->algorithm_list = algorithm_list; }
-
     std::thread t[num_threads];
     unsigned long int begin = 0;
     unsigned long int end = 0;
@@ -81,32 +76,6 @@ unsigned long int Network::get_next_value_of_algorithm_list(unsigned long int he
     return it;
 }
 
-//Keep here for future parallelization
-unsigned long int Network::get_sum_of_degrees(const std::vector<unsigned long int> &  degrees, std::vector<unsigned long int> &  vector_sum_of_degrees, unsigned long int num_threads){
-    unsigned long int size = degrees.size();
-    unsigned long int sum_of_degrees = 0;
-    unsigned long int begin = 0;
-    unsigned long int end = 0;
-    unsigned long int remainder = size % (num_threads + 1);
-    for (unsigned int i = 0; i < size; ++i) {
-        if(i >= end){
-            vector_sum_of_degrees[begin] = sum_of_degrees;
-            begin++;
-            if(remainder) {
-                end += size / (num_threads + 1) + 1;
-                remainder--;
-            } else{
-                end += size / (num_threads + 1);
-            }
-        }
-        sum_of_degrees += degrees[i];
-    }
-    vector_sum_of_degrees[begin] = sum_of_degrees;
-    return sum_of_degrees;
-}
-
-
-
 //Add a link to the network, return false if the nodes are already linked
 bool Network::link(Node *v, Node *w){
     bool isLinked;
@@ -120,7 +89,7 @@ bool Network::link(Node *v, Node *w){
 
 // Andre Auto linking method
 // I have to count to 100, give up and start again
-bool Network::random_link_AA_algorithm(){
+bool Network::random_link(){
     sort_list_of_nodes();
     set_algotithm_list();
     int counter = 0;
@@ -167,7 +136,7 @@ bool Network::random_link_AA_algorithm(){
     return true;
 }
 
-bool Network::random_link_AA_algorithm(bool LinkList){
+bool Network::random_links(){
     sort_list_of_nodes();
     set_algotithm_list();
     int counter = 0;
@@ -286,7 +255,7 @@ void Network::set_list_of_nodes_t(std::vector<unsigned long> &degrees, unsigned 
 void Network::sort_list_of_nodes(){
     if(this->is_sorted){
         return;
-    } else{
+    } else {
         std::sort(this->list_of_nodes.rbegin(), this->list_of_nodes.rend());
         this->is_sorted = true;
     }

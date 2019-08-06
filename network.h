@@ -31,10 +31,10 @@ public:
     std::vector<std::pair<unsigned long int, unsigned long int>> get_list_of_links();
     bool link(Node *v, Node *w);
     void multithread_set_list_of_nodes(const std::vector<unsigned long int> & degrees, unsigned int num_threads);
-    bool random_link_AA_algorithm();
-    bool random_link_AA_algorithm(bool LinkList);
+    bool random_link();
+    bool random_links();
     bool RandomLinkNuno();
-    void set_algotithm_list();
+    void set_algotithm_list();   
     void set_list_of_nodes(unsigned long int number_of_nodes);
     void set_list_of_nodes_t(std::vector<unsigned long int> & degrees, unsigned long int begin, unsigned long int end);
     void sort_list_of_nodes();
