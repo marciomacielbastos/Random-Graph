@@ -7,6 +7,7 @@
 #include <random.h>
 #include <network.h>
 #include <fstream>
+#include <sstream>
 #include <hoshenkopelman.h>
 #include <qexponential.h>
 #include <percolation.h>
@@ -41,11 +42,35 @@ void write_mean_l(const std::string& filename, std::vector<double> mean_l){
     myfile.close();
 }
 
+void write_uf(const std::string& filename, UnionFind uf){
+    std::ofstream myfile;
+    myfile.open (filename);
+    myfile << uf.get_st_biggest().first << "," << uf.get_st_biggest().second << std::endl;
+    myfile << uf.get_nd_biggest().first << "," << uf.get_nd_biggest().second << std::endl;
+    std::vector<unsigned long int> number_of_clusters_per_size = uf.get_size_of_components();
+    for(unsigned long int i=0; i < uf.get_max_comp(); i++){
+        if(i < number_of_clusters_per_size.size() - 1) myfile <<i + 1<<","<<number_of_clusters_per_size[i]<<std::endl;
+        else  myfile <<i + 1<<","<<number_of_clusters_per_size[i];;
+    }
+    myfile.close();
+}
+
 int main(int argc, char *argv[]){
     std::vector<unsigned long int> random_vector;
     unsigned long int N = std::numeric_limits<long int>::max();
-    N = 15;
+    N = 10;
+    int kmin = 2;
+    std::string out_string;
+    std::stringstream ss;
+    ss << kmin;
+    out_string = ss.str();
+    ss.str(std::string());
+    ss << N;
+    out_string += ss.str();
+    ss.str(std::string());
     float gamma = 5;
+    ss << gamma;
+    out_string += ss.str();
     std::cout << "Number of nodes: " << N << std::endl;
 //    qExponential qe = qExponential(N, 2 , 1.33);
 //    qe.set_min(0);
@@ -53,7 +78,7 @@ int main(int argc, char *argv[]){
 //    write_random_vector("/home/marcio/Projects/Random-Graph/Random-Graph/Results/qExp133_2.txt", random_vector);
     auto start = std::chrono::high_resolution_clock::now();
     Zipf ps = Zipf(N, gamma);
-    ps.set_min(2);
+    ps.set_min(kmin);
     random_vector = ps.random(N);
 //    write_random_vector("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Zipf_3.txt", random_vector);
     auto stop = std::chrono::high_resolution_clock::now();
@@ -68,15 +93,18 @@ int main(int argc, char *argv[]){
     unsigned long int num_of_rep = 1;
     Bfs_modified bam;
     for(unsigned long int i = 0; i < num_of_rep; i++){
-        bool b = net.random_link();
+        bool b = net.random_links();
         while(!b){
             random_vector = ps.random(N);
             net = Network(random_vector, 16);
-            b = net.random_link();
+            b = net.random_links();
         }
         bam = Bfs_modified(net);
-        mean_l.push_back(bam.avg_geo_dist(999));
+        mean_l.push_back(bam.avg_geo_dist(9));
     }
+    Percolation numcomp = Percolation(net);
+    UnionFind uf = numcomp.mount_component_stats();
+    write_uf("/home/marcio/Projects/Random-Graph/Random-Graph/Results/stats_zipf_"+out_string+".txt", uf);
     std::cout << "Create the network's links randomly: " << duration.count() << " microseconds" << std::endl;
     start = std::chrono::high_resolution_clock::now();
 //    std::cout<< "Average distance: "<<bam.avg_geo_dist()<<std::endl;

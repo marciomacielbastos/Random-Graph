@@ -38,6 +38,22 @@ std::vector<std::vector<double>> Percolation::assembly(){
         double f = 1 - static_cast<double>(list.size())/initial_number_of_links;
         this->mean_component_sizes.push_back({Sc2, Tm, f});
     }
+    std::vector<unsigned long int> number_of_clusters_per_size = uf.get_size_of_components();
+    for(unsigned long int i=0; i < uf.get_max_comp(); i++){
+        std::cout<<i<<", "<<number_of_clusters_per_size[i]<<std::endl;
+    }
     return this->mean_component_sizes;
 }
 
+UnionFind Percolation::mount_component_stats(){
+    std::vector<std::pair<unsigned long int, unsigned long int>> list = net.get_list_of_links();
+    UnionFind uf = UnionFind(net.get_list_of_nodes().size());
+    while (list.size() > 0) {
+        std::pair<unsigned long int, unsigned long int> pair = list[list.size() - 1];
+        // Union the nodes of this link
+        uf.union_(pair.first, pair.second);
+        // Remove the link from the list of links
+        list.pop_back();
+    }
+    return uf;
+}
