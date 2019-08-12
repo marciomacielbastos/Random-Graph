@@ -31,7 +31,8 @@ SOURCES += \
     linked_list.cpp \
     linked_node.cpp \
     linked_tree.cpp \
-    percolation.cpp
+    percolation.cpp \
+    rede.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -54,4 +55,5 @@ HEADERS += \
     linked_list.h \
     linked_node.h \
     linked_tree.h \
-    percolation.h
+    percolation.h \
+    rede.h

@@ -20,7 +20,9 @@ public:
     Bfs_modified();
     Bfs_modified(Network net);
     double bfs(unsigned long int root);
+    std::vector<unsigned long int> bfs_component_return(unsigned long int root);
     double avg_geo_dist(unsigned long int clk);
+    double avg_geo_dist(std::vector<unsigned long int> list_of_nodes, unsigned long int clk);
     double avg_geo_dist();
     double min_avg();
 

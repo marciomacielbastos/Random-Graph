@@ -17,6 +17,8 @@
 #include <binary_adjmatrix.h>
 #include <linked_list.h>
 #include <bfs_modified.h>
+#include <rede.h>
+
 
 void write_random_vector(const std::string& filename, std::vector<unsigned long int> random_vector){
     std::ofstream myfile;
@@ -56,63 +58,84 @@ void write_uf(const std::string& filename, UnionFind uf){
 }
 
 int main(int argc, char *argv[]){
-    std::vector<unsigned long int> random_vector;
-    unsigned long int N = std::numeric_limits<long int>::max();
-    N = 10;
-    int kmin = 2;
-    std::string out_string;
-    std::stringstream ss;
-    ss << kmin;
-    out_string = ss.str();
-    ss.str(std::string());
-    ss << N;
-    out_string += ss.str();
-    ss.str(std::string());
-    float gamma = 5;
-    ss << gamma;
-    out_string += ss.str();
-    std::cout << "Number of nodes: " << N << std::endl;
-//    qExponential qe = qExponential(N, 2 , 1.33);
-//    qe.set_min(0);
-//    random_vector = qe.random(N);
-//    write_random_vector("/home/marcio/Projects/Random-Graph/Random-Graph/Results/qExp133_2.txt", random_vector);
-    auto start = std::chrono::high_resolution_clock::now();
+    unsigned long int N = 1000000;
+    float gamma = 2.5;
     Zipf ps = Zipf(N, gamma);
-    ps.set_min(kmin);
-    random_vector = ps.random(N);
-//    write_random_vector("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Zipf_3.txt", random_vector);
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << "Generate random vector with " << N << " elements: " << duration.count() << " microseconds" << std::endl;
-    start = std::chrono::high_resolution_clock::now();
-    Network net = Network(random_vector, 16);
-    stop = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << "Create the network's nodes: " << duration.count() << " microseconds" << std::endl;
-    std::vector<double> mean_l;
-    unsigned long int num_of_rep = 1;
-    Bfs_modified bam;
-    for(unsigned long int i = 0; i < num_of_rep; i++){
-        bool b = net.random_links();
+    Rede rd = Rede(N, &ps);
+    bool b = false;
+    for(unsigned long int i = 0; i < 100; i++){
         while(!b){
-            random_vector = ps.random(N);
-            net = Network(random_vector, 16);
-            b = net.random_links();
+            b = rd.random_link();
+            std::cout<< b << std::endl;
+            rd.reset();
         }
-        bam = Bfs_modified(net);
-        mean_l.push_back(bam.avg_geo_dist(9));
+        b = false;
     }
-    Percolation numcomp = Percolation(net);
-    UnionFind uf = numcomp.mount_component_stats();
-    write_uf("/home/marcio/Projects/Random-Graph/Random-Graph/Results/stats_zipf_"+out_string+".txt", uf);
-    std::cout << "Create the network's links randomly: " << duration.count() << " microseconds" << std::endl;
-    start = std::chrono::high_resolution_clock::now();
-//    std::cout<< "Average distance: "<<bam.avg_geo_dist()<<std::endl;
-    stop = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << "Avg dist process 2: " << duration.count() << " microseconds" << std::endl;
-    net.get_map_id_order();
-    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_Z5_E3.txt", mean_l);
+//    std::vector<unsigned long int> random_vector;
+//    unsigned long int N = std::numeric_limits<long int>::max();
+//    N = 10000000;
+//    int kmin = 2;
+//    std::string out_string;
+//    std::stringstream ss;
+//    ss << kmin;
+//    out_string = ss.str();
+//    ss.str(std::string());
+//    ss << N;
+//    out_string += ss.str();
+//    ss.str(std::string());
+//    float gamma = 2.5;
+//    ss << 25;
+//    out_string += ss.str();
+//    std::cout << "Number of nodes: " << N << std::endl;
+////    qExponential qe = qExponential(N, 2 , 1.33);
+////    qe.set_min(0);
+////    random_vector = qe.random(N);
+////    write_random_vector("/home/marcio/Projects/Random-Graph/Random-Graph/Results/qExp133_2.txt", random_vector);
+//    auto start = std::chrono::high_resolution_clock::now();
+//    Zipf ps = Zipf(N, gamma);
+//    ps.set_min(kmin);
+//    random_vector = ps.random(N);
+////    write_random_vector("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Zipf_3.txt", random_vector);
+//    auto stop = std::chrono::high_resolution_clock::now();
+//    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+//    std::cout << "Generate random vector with " << N << " elements: " << duration.count() << " microseconds" << std::endl;
+//    start = std::chrono::high_resolution_clock::now();
+//    Network net = Network(random_vector, 16);
+//    Percolation num_comp = Percolation(net);
+//    stop = std::chrono::high_resolution_clock::now();
+//    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+//    std::cout << "Create the network's nodes: " << duration.count() << " microseconds" << std::endl;
+//    std::vector<double> mean_l;
+//    unsigned long int num_of_rep = 10;
+//    Bfs_modified bam;
+//    for(unsigned long int i = 0; i < num_of_rep; i++){
+//        bool b = net.random_links();
+//        while(!b){
+//            random_vector = ps.random(N);
+//            net = Network(random_vector, 16);
+//            b = net.random_links();
+//        }
+//        bam = Bfs_modified(net);
+//        UnionFind uf = num_comp.mount_component_stats();
+//        std::vector<unsigned long int> big_component = bam.bfs_component_return(uf.get_st_biggest().first);
+//        mean_l.push_back(bam.avg_geo_dist(big_component, 100));
+////        mean_l.push_back(bam.avg_geo_dist(9));
+//    }
+
+////    UnionFind uf = numcomp.mount_component_stats();
+////    bam = Bfs_modified(net);
+////    std::vector<unsigned long int> big_component = bam.bfs_component_return(uf.get_st_biggest().first);
+////    bam = Bfs_modified(net);
+////    mean_l.push_back(bam.avg_geo_dist(big_component, big_component.size()));
+////    write_uf("/home/marcio/Projects/Random-Graph/Random-Graph/Results/stats_zipf_bc_"+out_string+".txt", uf);
+//    std::cout << "Create the network's links randomly: " << duration.count() << " microseconds" << std::endl;
+//    start = std::chrono::high_resolution_clock::now();
+////    std::cout<< "Average distance: "<<bam.avg_geo_dist()<<std::endl;
+//    stop = std::chrono::high_resolution_clock::now();
+//    duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+//    std::cout << "Avg dist process 2: " << duration.count() << " microseconds" << std::endl;
+//    net.get_map_id_order();
+//    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_Z"+out_string+".txt", mean_l);
 //    start = std::chrono::high_resolution_clock::now();
 //    Percolation pc = Percolation(net);
 //    pc.assembly();

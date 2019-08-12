@@ -47,12 +47,47 @@ double Bfs_modified::bfs(unsigned long s){
     return dsum/count;
 }
 
+std::vector<unsigned long int> Bfs_modified::bfs_component_return(unsigned long s){
+    std::vector<unsigned long int> nodes;
+    linked_lists.enqueue(s, 1);
+    std::vector<bool> marked(linked_lists.get_total_number_of_nodes(), false);
+    marked[s] = true;
+    while(!linked_lists.is_empty(1)){
+        unsigned long int v = linked_lists.dequeue(1);
+        for(unsigned long int w : neighbors[v]){
+            if(!marked[w]){
+                marked[w] = true;
+                linked_lists.enqueue(w, 1);
+            }
+        }
+    }
+    for (unsigned long int i=0; i < marked.size(); i++){
+        if(marked[i]){
+            nodes.push_back(i);
+        }
+    }
+    return nodes;
+}
+
 double Bfs_modified::avg_geo_dist(unsigned long int clk){
     double avg = 0;
     double count = static_cast<double>(clk);
     while(clk){
         unsigned long int root = linked_lists.get_position(Random::discrete_uniform(linked_lists.get_number_of_nodes(0)))->get_id();
         avg += bfs(root);
+        clk--;
+    }
+    return avg/count;
+}
+
+double Bfs_modified::avg_geo_dist(std::vector<unsigned long int> list_of_nodes, unsigned long int clk){
+    double avg = 0;
+    double count = static_cast<double>(clk);
+    while(clk){
+        unsigned long int i = Random::discrete_uniform(list_of_nodes.size());
+        unsigned long int root = list_of_nodes[i];
+        avg += bfs(root);
+        list_of_nodes.erase(list_of_nodes.begin() + i);
         clk--;
     }
     return avg/count;
