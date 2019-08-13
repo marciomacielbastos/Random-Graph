@@ -1,4 +1,5 @@
 #include <QCoreApplication>
+#include <algorithm>
 #include <node.h>
 #include <iostream>
 #include <stdlib.h>
@@ -18,6 +19,7 @@
 #include <linked_list.h>
 #include <bfs_modified.h>
 #include <rede.h>
+#include <regex>
 
 
 void write_random_vector(const std::string& filename, std::vector<unsigned long int> random_vector){
@@ -57,20 +59,68 @@ void write_uf(const std::string& filename, UnionFind uf){
     myfile.close();
 }
 
+void progress_bar(float progress){
+    int bar_width = 70;
+    std::cout << "[";
+    int pos = bar_width * progress;
+    for (int i = 0; i < bar_width; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " %\r";
+    std::cout.flush();
+
+}
+
 int main(int argc, char *argv[]){
-    unsigned long int N = 1000000;
-    float gamma = 2.5;
+    auto start = std::chrono::high_resolution_clock::now();
+    std::string out_string;
+    std::stringstream ss;
+    std::vector<double> mean_l;
+    std::regex e ("[.]");
+    unsigned long int N = 100000;
+    float gamma = 4.5;
+    int kmin = 2;
+    unsigned long int clk = 500;
+    ss << N;
+    ss << gamma;
+    ss << kmin;
+    std::cout <<"N: "<<N<<", gamma: "<<gamma<<", kmin: "<<kmin<< std::endl;
+    out_string = std::regex_replace(ss.str(), e, "_");
     Zipf ps = Zipf(N, gamma);
+    ps.set_min(kmin);
     Rede rd = Rede(N, &ps);
     bool b = false;
-    for(unsigned long int i = 0; i < 100; i++){
+    float progress = 0.0;
+    progress_bar(progress);
+    unsigned int num_rep = 10;
+    for(unsigned long int i = 0; i < num_rep; i++){
+        progress += 1/static_cast<double>(num_rep);
         while(!b){
-            b = rd.random_link();
-            std::cout<< b << std::endl;
             rd.reset();
+            b = rd.random_link();
         }
+        Percolation num_comp = Percolation();
+        UnionFind uf = num_comp.mount_component_stats(rd);
+        Bfs_modified bam = Bfs_modified();
+        clk = std::min(clk, uf.get_st_biggest().second);
+        mean_l.push_back(bam.avg_geo_dist(clk, uf.get_st_biggest().first, rd.get_adj_matrix()));
         b = false;
+        progress_bar(progress);
     }
+//    progress += 0.01;
+//    progress_bar(progress);
+    std::cout << std::endl;
+    std::cout <<"Writing..."<< std::endl;
+    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_Z"+out_string+".txt", mean_l);
+    std::cout << std::endl;
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout << "Done!! (" << duration.count() << " milisecond)"<< std::endl;
+
+
+
 //    std::vector<unsigned long int> random_vector;
 //    unsigned long int N = std::numeric_limits<long int>::max();
 //    N = 10000000;

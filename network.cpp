@@ -40,16 +40,6 @@ bool Network::add_node(Node n){
 }
 
 std::vector<std::pair<unsigned long int, unsigned long int>> Network::get_list_of_links(){
-//    std::vector<std::pair<unsigned long int, unsigned long int>> list;
-//    for (unsigned long int i = 0; i < this->list_of_nodes.size(); i++) {
-//        for (unsigned long int j = 0; j < this->list_of_nodes[i].get_adjacency_list_size() ; j++) {
-//            unsigned long int adjacent_id = this->list_of_nodes[i].get_adjacency_list()[j];
-//            if(i < adjacent_id){
-//                std::pair<unsigned long int, unsigned long int> pair (i, adjacent_id);
-//                list.push_back(pair);
-//            }
-//        }
-//    }
     return list_of_links;
 }
 
@@ -218,11 +208,6 @@ bool Network::RandomLinkNuno(){
         }
         algorithm_list.pop_back();
         algorithm_list.pop_back();
-        // Possible error point (cast from unsigned to signed)
-//        algorithm_list.erase(algorithm_list.begin() + static_cast<long int >(p2));
-//        algorithm_list.erase(algorithm_list.begin());
-//        N -= 2;
-//    }
     return true;
 }
 

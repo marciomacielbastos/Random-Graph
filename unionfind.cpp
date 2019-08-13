@@ -6,10 +6,8 @@ UnionFind::UnionFind(unsigned long int N){
     this->st_biggest =  st_biggest;
     this->nd_biggest = nd_biggest;
     this->count = N;
-    Components c;
     for(unsigned long int i=0; i < N; i++){
-        this->id.push_back(i);
-//        this->components.insert(std::make_pair(i, Components(i)));
+        this->root.push_back(i);
     }
     for(unsigned int i=0; i < N;i++){
         this->sizes.push_back(1);
@@ -23,8 +21,8 @@ unsigned long int UnionFind::get_number_of_components(){
 }
 
 unsigned long int UnionFind::find(unsigned long int v){
-    while (v != this->id[v]) {
-       v = this->id[v];
+    while (v != this->root[v]) {
+       v = this->root[v];
     }
     return v;
 }
@@ -33,13 +31,9 @@ void UnionFind::union_(unsigned long int v, unsigned long int w){
     unsigned long int vRoot = this->find(v);
     unsigned long int wRoot = this->find(w);
     unsigned long int vsize, wsize;
-//    std::map<unsigned long int, Components>::iterator it1;
-//    std::map<unsigned long int, Components>::iterator it2;
-//    it1 = this->components.find(vRoot);
-//    it2 = this->components.find(wRoot);
     if(vRoot == wRoot) return;
-    else if (this->sizes[vRoot] < this->sizes[wRoot]) {
-        this->id[vRoot] = wRoot;
+    else if (this->sizes[vRoot] <= this->sizes[wRoot]) {
+        this->root[vRoot] = wRoot;
         vsize = this->sizes[vRoot];
         wsize = this->sizes[wRoot];
         this->number_of_clusters_per_size[vsize-1]--;
@@ -57,16 +51,14 @@ void UnionFind::union_(unsigned long int v, unsigned long int w){
             else{
                 this->st_biggest.second = wsize;
             }
-        } else if (wsize > this->nd_biggest.second) {
+        }
+        else if (wsize > this->nd_biggest.second) {
             this->nd_biggest.first = wRoot;
             this->nd_biggest.second = wsize;
         }
-        //Union the component sets
-//        it2->second.Union(it1->second);
-//        this->components.erase(it1->first);
 
     } else {
-        this->id[wRoot] = vRoot;
+        this->root[wRoot] = vRoot;
         vsize = this->sizes[vRoot];
         wsize = this->sizes[wRoot];
         this->number_of_clusters_per_size[vsize-1]--;
@@ -84,13 +76,11 @@ void UnionFind::union_(unsigned long int v, unsigned long int w){
             else {
                 this->st_biggest.second = vsize;
             }
-        } else if (vsize > this->nd_biggest.second) {
+        }
+        else if (vsize > this->nd_biggest.second) {
             this->nd_biggest.first = vRoot;
             this->nd_biggest.second = vsize;
         }
-        //Union the component sets
-//        it1->second.Union(it2->second);
-//        this->components.erase(it2->first);
     }
     this->count--;
 }
@@ -114,6 +104,10 @@ std::pair<unsigned long int, unsigned long int> UnionFind::get_nd_biggest(){
 std::pair<unsigned long int, unsigned long int> UnionFind::get_st_biggest(){
     return this->st_biggest;
 }
+
+/***************************************************************/
+/*                         Working                             */
+/***************************************************************/
 
 
 //std::vector<unsigned long int> UnionFind::GetComponentsSize(){

@@ -6,26 +6,17 @@
 #include <network.h>
 #include <random.h>
 #include <vector>
+#include <queue>
 
 class Bfs_modified{
 private:
     double average_path;
-//    Distance_matrix distance_matrix;
-    Binary_adjmatrix binary_adjmatrix;
-    Linked_list linked_lists;
-    std::vector<std::vector<unsigned long int>> neighbors;
-
 
 public:
     Bfs_modified();
-    Bfs_modified(Network net);
-    double bfs(unsigned long int root);
-    std::vector<unsigned long int> bfs_component_return(unsigned long int root);
-    double avg_geo_dist(unsigned long int clk);
-    double avg_geo_dist(std::vector<unsigned long int> list_of_nodes, unsigned long int clk);
-    double avg_geo_dist();
-    double min_avg();
-
+    double bfs(unsigned long int root, std::vector<std::vector<unsigned long int>> neighbors);
+    std::vector<unsigned long int> bfs_component_return(unsigned long s, std::vector<std::vector<unsigned long int>> neighbors);
+    double avg_geo_dist(unsigned long int clk, unsigned long s, std::vector<std::vector<unsigned long int>> neighbors);
 };
 
 #endif // BFS_MODIFIED_H

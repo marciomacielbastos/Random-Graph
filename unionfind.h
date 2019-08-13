@@ -6,13 +6,12 @@
 
 class UnionFind{
 private:
-    std::vector<unsigned long int> id;
+    std::vector<unsigned long int> root;
     std::vector<unsigned long int> sizes;
     std::vector<unsigned long int> number_of_clusters_per_size;
     //<node id, size of the component>
     std::pair<unsigned long int, unsigned long int> st_biggest;
     std::pair<unsigned long int, unsigned long int> nd_biggest;
-//    std::map<unsigned long int, Components> components;
     unsigned long int count;
 public:
     UnionFind(unsigned long int N);

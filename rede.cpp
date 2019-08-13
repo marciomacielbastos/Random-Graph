@@ -16,6 +16,10 @@ void Rede::reset(){
         std::vector<std::vector<unsigned long int>> foo;
         this->adj_matrix.swap(foo);
     }
+    {
+        std::vector<std::pair<unsigned long int, unsigned long int>> foo;
+        this->list_of_links.swap(foo);
+    }
     for(unsigned long int i = 0; i < N; i++){
         std::vector<unsigned long int> bar;
         this->adj_matrix.push_back(bar);
@@ -73,6 +77,8 @@ bool Rede::random_link(){
             counter++;
         }
         link(rnd1, rnd2);
+        std::pair<unsigned long int, unsigned long int> pair (rnd1, rnd2);
+        this->list_of_links.push_back(pair);
         counter = 0;
         if(rand1 < rand2){
             if(rand2 == algorithm_list.size()-2){
@@ -95,4 +101,16 @@ bool Rede::random_link(){
         algorithm_list.pop_back();
     }
     return true;
+}
+
+std::vector<std::vector<unsigned long int>> Rede::get_adj_matrix(){
+    return adj_matrix;
+}
+
+unsigned long int Rede::get_number_of_nodes(){
+    return N;
+}
+
+std::vector<std::pair<unsigned long int, unsigned long int>> Rede::get_list_of_links(){
+    return list_of_links;
 }
