@@ -79,18 +79,30 @@ int main(int argc, char *argv[]){
     std::stringstream ss;
     std::vector<double> mean_l;
     std::regex e ("[.]");
-    unsigned long int N = 100000;
+    double mean = -1;
+    unsigned long int N = static_cast<unsigned long int>(1E1);
+    unsigned long int n = std::log10(N);
+    ss << "1E" << n;
+    unsigned long int clk = 9;
     float gamma = 4.5;
-    int kmin = 2;
-    unsigned long int clk = 500;
-    ss << N;
     ss << gamma;
-    ss << kmin;
-    std::cout <<"N: "<<N<<", gamma: "<<gamma<<", kmin: "<<kmin<< std::endl;
-    out_string = std::regex_replace(ss.str(), e, "_");
-    Zipf ps = Zipf(N, gamma);
-    ps.set_min(kmin);
-    Rede rd = Rede(N, &ps);
+    Zipf distribution = Zipf(N, gamma);
+//    double q = 1.22;
+//    ss << "_" << q;
+//    double lambda;
+//    if(mean > 0){
+//        lambda = 1/ (mean * (3 - 2*q));
+//    } else {
+//        lambda = 2;
+//    }
+//    qExponential distribution = qExponential(N, lambda , q);
+//    ss << "_"<< lambda;
+    int kmin = 2;
+    ss << "_" << kmin;
+    std::cout <<"N: 1E"<<n<<", gamma: "<< gamma << ", kmin: "<<kmin<< std::endl;
+    out_string = std::regex_replace(ss.str(), e, "-");
+    distribution.set_min(kmin);
+    Rede rd = Rede(N, &distribution);
     bool b = false;
     float progress = 0.0;
     progress_bar(progress);
@@ -109,11 +121,15 @@ int main(int argc, char *argv[]){
         b = false;
         progress_bar(progress);
     }
-//    progress += 0.01;
-//    progress_bar(progress);
     std::cout << std::endl;
     std::cout <<"Writing..."<< std::endl;
-    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_Z"+out_string+".txt", mean_l);
+    if(mean > -1){
+        write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_q_st_moment"+out_string+".txt", mean_l);
+    } else {
+        write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_z_"+out_string+".txt", mean_l);
+    }
+
+
     std::cout << std::endl;
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
