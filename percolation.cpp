@@ -71,7 +71,7 @@ UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, 
     double total = static_cast<double>(list.size());
     UnionFind uf = UnionFind(rd.get_number_of_nodes());
 
-    float progress = 0.0;
+    double progress = 0.0;
     progress_bar(progress);
 
     write_mean_cluster_size(params, 0, 1, false);
@@ -86,8 +86,13 @@ UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, 
         uf.union_(pair.first, pair.second);
         // Remove the link from the list of links
         list.pop_back();
-        if((progress > k) || (std::abs(progress - 1) < std::numeric_limits<double>::epsilon())){
-            k += k;
+
+        /**************************************************************************/
+        /*                                                                        */
+        /*                      Percolation data computation                      */
+        /*                                                                        */
+        /**************************************************************************/
+        if((progress > k) || ((list.size() - 1) == 0)){
             double size = 0;
             double total_numb_of_clusters = 0;
             std::vector<unsigned long int> cls = uf.get_size_of_components();
@@ -97,11 +102,12 @@ UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, 
                     size += static_cast<double>(i) * (cls[i] + 1);
                 }
             }
-//            double pc = 1 - static_cast<double>(list.size()) / total;
-
             write_mean_cluster_size(params, progress, (size / total_numb_of_clusters), true);
             write_biggest_component(params, progress, uf.get_st_biggest().second, true);
+            k += 1 / static_cast<double>(freq_of_reg);
         }
+        /***********************************************************************/
+
         progress_bar(progress);
     }
     return uf;
@@ -110,7 +116,7 @@ UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, 
 
 
 
-
+//
 
 /******************************************************************/
 /*                         Deprecated                             */

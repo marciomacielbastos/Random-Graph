@@ -104,29 +104,37 @@ double lambda_computation(double mean, double q){
     return 1 / (mean * (3 - (2 * q)));
 }
 
+/*****************************************************/
+/*         Molloy-Reed criterion <k²>/<k> >2         */
+/*       q-Exponential mean defined to q < 3/2       */
+/*     q-Exponential variance defined to q < 4/3     */
+/*              lambda < 1 / (4 - 3*q)               */
+/*****************************************************/
 
-/************************************************/
-/*                 main()!                      */
-/************************************************/
+double lambda_mr(double q){
+    return 1 / (1 / (4 - 3 * q));
+}
+
+/*****************************************************/
+/*                      main()!                      */
+/*****************************************************/
 
 int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
-//    std::vector<double> mean_l;
+    std::vector<double> mean_l;
     std::regex e ("[.]");
-    double mean = -1;
     unsigned long int N = static_cast<unsigned long int>(1E7);
     unsigned long int n = std::log10(N);
 
-    unsigned long int clk = 9;
-    float gamma = 4.5;
-    int kmin = 2;
+    unsigned long int clk = 1000;
 
-    mean = mean_computation(kmin, N-1, gamma);
+    int kmin = 2;
 
     /*****************************/
     /*            Zipf           */
     /*****************************/
 
+//    float gamma = 2.5;
 //    ss << gamma;
 //    Zipf distribution = Zipf(N, gamma);
 
@@ -134,10 +142,8 @@ int main(int argc, char *argv[]){
     /*       q-Exponential       */
     /*****************************/
 
-    double q = q_computation(gamma);
-
-    double lambda = lambda_computation(mean, q);
-
+    double q = q_computation(3.5);
+    double lambda = lambda_mr(q);
     qExponential distribution = qExponential(N, lambda , q);
     distribution.set_min(kmin);
 
@@ -149,50 +155,50 @@ int main(int argc, char *argv[]){
     ss << "_" << q;
     ss << "_"<< lambda;
     ss << "_" << kmin;
-    std::cout <<"N: 1E"<<n<<", gamma: "<< gamma << ", kmin: "<<kmin<< std::endl;
+    std::cout <<"N: 1E"<<n<<", q: "<<q<<", lambda: "<< lambda << ", kmin: "<<kmin<< std::endl;
     out_string = std::regex_replace(ss.str(), e, "-");
 
     /*********************************************************/
 
     Rede rd = Rede(N, &distribution);
     bool b = false;
-    float progress = 0.0;
+
+//    double progress = 0.0;
 //    progress_bar(progress);
+
     unsigned int num_rep = 1;
     for(unsigned long int i = 0; i < num_rep; i++){
-        progress += 1/static_cast<double>(num_rep);
+
+//        progress += 1/static_cast<double>(num_rep);
         while(!b){
             rd.reset();
             b = rd.random_link();
         }
         Percolation num_comp = Percolation();
-        num_comp.mount_component_stats(rd, 5, out_string);
+        num_comp.mount_component_stats(rd, clk, out_string);
 
         /****************************************/
         /* Mean geodesical distance computation */
         /****************************************/
 
-//        UnionFind uf = num_comp.mount_component_stats(rd);
-//        Bfs_modified bam = Bfs_modified();
-//        clk = std::min(clk, uf.get_st_biggest().second);
-//        mean_l.push_back(bam.avg_geo_dist(clk, uf.get_st_biggest().first, rd.get_adj_matrix()));
+        UnionFind uf = num_comp.mount_component_stats(rd, clk, out_string);
+        Bfs_modified bam = Bfs_modified();
+//        clk = std::min(100, uf.get_st_biggest().second);
+        mean_l.push_back(bam.avg_geo_dist(100, uf.get_st_biggest().first, rd.get_adj_matrix()));
+
 //        progress_bar(progress);
+
         b = false;
     }
 
 
-/**********************************************/
-/*   This write the mean geodesical distance  */
-/**********************************************/
+    /**********************************************/
+    /*   This write the mean geodesical distance  */
+    /**********************************************/
 
-
-//    std::cout << std::endl;
-//    std::cout <<"Writing..."<< std::endl;
-//    if(mean > -1){
-//        write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_q_st_moment"+out_string+".txt", mean_l);
-//    } else {
-//        write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_z_"+out_string+".txt", mean_l);
-//    }
+    std::cout << std::endl;
+    std::cout <<"Writing geodesical data..."<< std::endl;
+    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_"+out_string+".txt", mean_l);
 
 
     std::cout << std::endl;
