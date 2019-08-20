@@ -3,8 +3,15 @@
 #include <network.h>
 #include <random.h>
 #include <unionfind.h>
-#include <vector>
 #include <rede.h>
+
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <limits>
+#include <cmath>
 
 class Percolation{
 private:
@@ -15,10 +22,11 @@ private:
 
 public:
     Percolation();
-//    Percolation(Network net);
-//    UnionFind  mount_component_stats();
-    UnionFind  mount_component_stats(Rede rd);
-//    std::vector<std::vector<double>> assembly();
+    void progress_bar(float progress);
+    void write_mean_cluster_size(const std::string& filename, double pc, double mcs, bool append);
+    void write_biggest_component(const std::string& filename, double pc, unsigned long int biggest, bool append);
+    UnionFind  mount_geodesical_stats(Rede rd);
+    UnionFind mount_component_stats(Rede rd, unsigned int freq_of_reg, const std::string& params);
 };
 
 #endif // ASSEMBLER_H

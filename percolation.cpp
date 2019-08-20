@@ -1,11 +1,55 @@
 #include "percolation.h"
-#include <iostream>
 
 Percolation::Percolation(){
 
 }
 
-UnionFind Percolation::mount_component_stats(Rede rd){
+void Percolation::progress_bar(float progress){
+    int bar_width = 70;
+    std::cout << "[";
+    int pos = bar_width * progress;
+    for (int i = 0; i < bar_width; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " %\r";
+    std::cout.flush();
+}
+
+void Percolation::write_mean_cluster_size(const std::string& params, double pc, double mcs, bool append = false){
+    std::ofstream myfile;
+    std::string filename("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Mean_cluster_size_");
+    filename = filename + params + ".txt";
+
+    if (append)
+        myfile.open(filename, std::ios_base::app);
+    else
+        myfile.open(filename);
+
+    myfile << pc << "," << mcs << std::endl;
+    myfile.close();
+}
+
+void Percolation::write_biggest_component(const std::string& params, double pc, unsigned long int biggest, bool append = false){
+    std::ofstream myfile;
+    std::string filename("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Biggest_component_");
+    filename = filename + params + ".txt";
+
+    if (append)
+        myfile.open(filename, std::ios_base::app);
+    else
+        myfile.open(filename);
+
+    myfile << pc << "," << biggest << std::endl;
+    myfile.close();
+}
+
+/*************************************************************************/
+/*                         To write <l> graphs                           */
+/*************************************************************************/
+
+UnionFind Percolation::mount_geodesical_stats(Rede rd){
     std::vector<std::pair<unsigned long int, unsigned long int>> list = rd.get_list_of_links();
     UnionFind uf = UnionFind(rd.get_number_of_nodes());
     while (list.size() > 0) {
@@ -18,9 +62,59 @@ UnionFind Percolation::mount_component_stats(Rede rd){
     return uf;
 }
 
-/***************************************************************/
-/*                         Working                             */
-/***************************************************************/
+/*********************************************************************************/
+/*                         To write percolation graphs                           */
+/*********************************************************************************/
+
+UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, const std::string& params){
+    std::vector<std::pair<unsigned long int, unsigned long int>> list = rd.get_list_of_links();
+    double total = static_cast<double>(list.size());
+    UnionFind uf = UnionFind(rd.get_number_of_nodes());
+
+    float progress = 0.0;
+    progress_bar(progress);
+
+    write_mean_cluster_size(params, 0, 1, false);
+    write_biggest_component(params, 0, 1, false);
+
+    double k = 1 / static_cast<double>(freq_of_reg);
+
+    while (list.size() > 0) {
+        progress += 1 / total;
+        std::pair<unsigned long int, unsigned long int> pair = list[list.size() - 1];
+        // Union the nodes of this link
+        uf.union_(pair.first, pair.second);
+        // Remove the link from the list of links
+        list.pop_back();
+        if((progress > k) || (std::abs(progress - 1) < std::numeric_limits<double>::epsilon())){
+            k += k;
+            double size = 0;
+            double total_numb_of_clusters = 0;
+            std::vector<unsigned long int> cls = uf.get_size_of_components();
+            for(unsigned long int i = 0; i < cls.size(); i++){
+                if(cls[i] > 0){
+                    total_numb_of_clusters += (cls[i] + 1);
+                    size += static_cast<double>(i) * (cls[i] + 1);
+                }
+            }
+//            double pc = 1 - static_cast<double>(list.size()) / total;
+
+            write_mean_cluster_size(params, progress, (size / total_numb_of_clusters), true);
+            write_biggest_component(params, progress, uf.get_st_biggest().second, true);
+        }
+        progress_bar(progress);
+    }
+    return uf;
+}
+
+
+
+
+
+
+/******************************************************************/
+/*                         Deprecated                             */
+/******************************************************************/
 
 
 //This method iterate through a network's links adding them step by step through the Union-Find algorithm.
