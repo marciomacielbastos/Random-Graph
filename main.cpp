@@ -71,6 +71,12 @@ void write_uf(const std::string& filename, UnionFind uf){
     myfile.close();
 }
 
+void progress_unknown(){
+    std::cout << "/  %\r";
+    std::cout << "- " << " %\r";
+    std::cout << "'\' " << " %\r";
+}
+
 void progress_bar(float progress){
     int bar_width = 70;
     std::cout << "[";
@@ -111,8 +117,52 @@ double lambda_computation(double mean, double q){
 /*              lambda < 1 / (4 - 3*q)               */
 /*****************************************************/
 
+double first_momment(std::vector<unsigned long int> sample){
+    double sum = 0;
+    for(unsigned long int i=0; i < sample.size() - 1; i++){
+        sum += static_cast<double>(sample[i]);
+    }
+    return sum;
+}
+
+double second_moment(std::vector<unsigned long int> sample){
+    for(unsigned long int i=0; i < sample.size() - 1; i++){
+        sample[i] *= sample[i];
+    }
+    return first_momment(sample);
+}
+
+double molloy_reed(std::vector<unsigned long int> sample){
+    double m1 = sample[sample.size() - 1];
+    double m2 = second_moment(sample);
+    return m2 / m1;
+}
+
 double lambda_mr(double q){
     return 1 / (1 / (4 - 3 * q));
+}
+
+double search_lambda(unsigned long int N, double q, double k, double k_min){
+    double lambda = 5.42344;
+    double tol = 0.05;
+    double error = 1;
+    double gamma = 0.5;
+    qExponential distribution;
+    std::vector<unsigned long int> sample;
+    double k_new;
+    int count = 0;
+    while(std::abs(error) > tol){
+        distribution = qExponential(N, lambda , q);
+        distribution.set_min(k_min);
+        sample = distribution.random(N);
+        k_new = molloy_reed(sample);
+        error = ( k_new - k );
+        lambda = (1 + gamma*( error / k )) * lambda;
+        count++;
+    }
+    std::cout <<"Error = "<< error << std::endl;
+    std::cout <<"lambda = "<< lambda << std::endl;
+    return lambda;
 }
 
 /*****************************************************/
@@ -126,9 +176,7 @@ int main(int argc, char *argv[]){
     unsigned long int N = static_cast<unsigned long int>(1E7);
     unsigned long int n = std::log10(N);
 
-    unsigned long int clk = 1000;
-
-    int kmin = 2;
+    unsigned long int clk = 1000; 
 
     /*****************************/
     /*            Zipf           */
@@ -142,12 +190,23 @@ int main(int argc, char *argv[]){
     /*       q-Exponential       */
     /*****************************/
 
-    double q = q_computation(3.5);
-    double lambda = lambda_mr(q);
+    int kmin = 1;
+    double q = q_computation(4.5);
+    double lambda = 2;
+    lambda = search_lambda(N, q, 2, 1);
     qExponential distribution = qExponential(N, lambda , q);
     distribution.set_min(kmin);
 
-    /*********************************************************/
+    /*       Check if the distribution is foolowing Molloy-Reed criterion       */
+    std::vector<unsigned long int> sample = distribution.random(N);
+    std::cout <<"Molloy-Reed criterion (k) = "<< molloy_reed(sample) << std::endl;
+
+
+
+
+    /***********************************************************/
+    /*                  Set Paremeters String                  */
+    /***********************************************************/
 
     std::string out_string;
     std::stringstream ss;
@@ -155,7 +214,7 @@ int main(int argc, char *argv[]){
     ss << "_" << q;
     ss << "_"<< lambda;
     ss << "_" << kmin;
-    std::cout <<"N: 1E"<<n<<", q: "<<q<<", lambda: "<< lambda << ", kmin: "<<kmin<< std::endl;
+    std::cout <<"N: 1E"<<n<<", q: "<< q <<", lambda: "<< lambda << ", kmin: "<<kmin<< std::endl;
     out_string = std::regex_replace(ss.str(), e, "-");
 
     /*********************************************************/
@@ -166,25 +225,25 @@ int main(int argc, char *argv[]){
 //    double progress = 0.0;
 //    progress_bar(progress);
 
-    unsigned int num_rep = 1;
-    for(unsigned long int i = 0; i < num_rep; i++){
-
+    unsigned int num_rep = 100;
+    for(unsigned long int i = 0; i < num_rep; i++){      
 //        progress += 1/static_cast<double>(num_rep);
+//        progress_unknown();
         while(!b){
             rd.reset();
             b = rd.random_link();
         }
         Percolation num_comp = Percolation();
-        num_comp.mount_component_stats(rd, clk, out_string);
+//        num_comp.mount_component_stats(rd, clk, out_string);
 
         /****************************************/
         /* Mean geodesical distance computation */
         /****************************************/
 
-        UnionFind uf = num_comp.mount_component_stats(rd, clk, out_string);
-        Bfs_modified bam = Bfs_modified();
+ //        UnionFind uf = num_comp.mount_component_stats(rd, clk, out_string);
+//        Bfs_modified bam = Bfs_modified();
 //        clk = std::min(100, uf.get_st_biggest().second);
-        mean_l.push_back(bam.avg_geo_dist(100, uf.get_st_biggest().first, rd.get_adj_matrix()));
+//        mean_l.push_back(bam.avg_geo_dist(100, uf.get_st_biggest().first, rd.get_adj_matrix()));
 
 //        progress_bar(progress);
 
