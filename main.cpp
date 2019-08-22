@@ -33,7 +33,6 @@
 /* string manipulation */
 #include <regex>
 
-
 void write_random_vector(const std::string& filename, std::vector<unsigned long int> random_vector){
     std::ofstream myfile;
     myfile.open (filename);
@@ -71,11 +70,17 @@ void write_uf(const std::string& filename, UnionFind uf){
     myfile.close();
 }
 
-void progress_unknown(){
-    std::cout << "/  %\r";
-    std::cout << "- " << " %\r";
-    std::cout << "'\' " << " %\r";
+void write_lambda(const std::string& filename, double q, double lambda, bool append=false){
+    std::ofstream myfile;
+    if (append)
+        myfile.open(filename, std::ios_base::app);
+    else
+        myfile.open(filename);
+        myfile << q << "," << lambda << std::endl;
+    myfile.close();
 }
+
+/*******************************************************************************/
 
 void progress_bar(float progress){
     int bar_width = 70;
@@ -142,8 +147,9 @@ double lambda_mr(double q){
     return 1 / (1 / (4 - 3 * q));
 }
 
-double search_lambda(unsigned long int N, double q, double k, double k_min){
-    double lambda = 5.42344;
+
+
+double search_lambda(unsigned long int N, double q, double k, double k_min, double lambda){
     double tol = 0.05;
     double error = 1;
     double gamma = 0.5;
@@ -157,12 +163,26 @@ double search_lambda(unsigned long int N, double q, double k, double k_min){
         sample = distribution.random(N);
         k_new = molloy_reed(sample);
         error = ( k_new - k );
-        lambda = (1 + gamma*( error / k )) * lambda;
+        lambda = std::abs((1 + gamma*( error / k )) * lambda);
         count++;
     }
-    std::cout <<"Error = "<< error << std::endl;
-    std::cout <<"lambda = "<< lambda << std::endl;
     return lambda;
+}
+
+void lambda_analysis(){
+    int kmin = 1;
+    double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
+    double q = 1.4;
+    double lambda = 2;
+    std::string filename = "/home/marcio/Projects/Random-Graph/Random-Graph/Results/lambda/lambda.txt";
+    write_lambda(filename, q, lambda);
+    for ( auto gamma : gamma_values ){
+        q = q_computation(gamma);
+        for(int i = 0; i < 100; i++){
+            lambda = search_lambda(N, q, 2, kmin, lambda);
+            write_lambda(filename, q, lambda, true);
+        }
+    }
 }
 
 /*****************************************************/
@@ -175,7 +195,6 @@ int main(int argc, char *argv[]){
     std::regex e ("[.]");
     unsigned long int N = static_cast<unsigned long int>(1E7);
     unsigned long int n = std::log10(N);
-
     unsigned long int clk = 1000; 
 
     /*****************************/
@@ -191,9 +210,10 @@ int main(int argc, char *argv[]){
     /*****************************/
 
     int kmin = 1;
-    double q = q_computation(4.5);
+    double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
+    double q = q_computation(gamma_values[0]);
     double lambda = 2;
-    lambda = search_lambda(N, q, 2, 1);
+
     qExponential distribution = qExponential(N, lambda , q);
     distribution.set_min(kmin);
 
@@ -234,16 +254,16 @@ int main(int argc, char *argv[]){
             b = rd.random_link();
         }
         Percolation num_comp = Percolation();
-//        num_comp.mount_component_stats(rd, clk, out_string);
+        num_comp.mount_component_stats(rd, clk, out_string);
 
         /****************************************/
         /* Mean geodesical distance computation */
         /****************************************/
 
- //        UnionFind uf = num_comp.mount_component_stats(rd, clk, out_string);
-//        Bfs_modified bam = Bfs_modified();
-//        clk = std::min(100, uf.get_st_biggest().second);
-//        mean_l.push_back(bam.avg_geo_dist(100, uf.get_st_biggest().first, rd.get_adj_matrix()));
+         UnionFind uf = num_comp.mount_component_stats(rd, clk, out_string);
+        Bfs_modified bam = Bfs_modified();
+        clk = std::min(100, uf.get_st_biggest().second);
+        mean_l.push_back(bam.avg_geo_dist(100, uf.get_st_biggest().first, rd.get_adj_matrix()));
 
 //        progress_bar(progress);
 
@@ -257,7 +277,7 @@ int main(int argc, char *argv[]){
 
     std::cout << std::endl;
     std::cout <<"Writing geodesical data..."<< std::endl;
-    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_"+out_string+".txt", mean_l);
+//    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_"+out_string+".txt", mean_l);
 
 
     std::cout << std::endl;
