@@ -14,6 +14,7 @@ private:
     std::pair<unsigned long int, unsigned long int> nd_biggest;
     unsigned long int count;
 public:
+    UnionFind();
     UnionFind(unsigned long int N);
     void union_(unsigned long int v, unsigned long int w);
     unsigned long int find(unsigned long int v);

@@ -1,8 +1,9 @@
 #ifndef REDE_H
 #define REDE_H
+
+#include <iostream>
 #include <random.h>
 #include <vector>
-
 
 class Rede{
 private:
@@ -21,6 +22,9 @@ public:
     std::vector<std::vector<unsigned long int>> get_adj_matrix();
     unsigned long int get_number_of_nodes();
     std::vector<std::pair<unsigned long int, unsigned long int>> get_list_of_links();
+    double first_momment(std::vector<unsigned long int> sample);
+    double second_moment(std::vector<unsigned long int> sample);
+    double molloy_reed(std::vector<unsigned long int> sample);
 };
 
 #endif // REDE_H

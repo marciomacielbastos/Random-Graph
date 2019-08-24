@@ -1,5 +1,9 @@
 #include "unionfind.h"
 
+UnionFind::UnionFind(){
+
+}
+
 UnionFind::UnionFind(unsigned long int N){
     std::pair<unsigned long int, unsigned long int> st_biggest (0, 0);
     std::pair<unsigned long int, unsigned long int> nd_biggest (0, 0);

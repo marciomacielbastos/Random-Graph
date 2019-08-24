@@ -1,5 +1,5 @@
 #include <QCoreApplication>
-#include <algorithm>
+
 #include <node.h>
 #include <iostream>
 #include <stdlib.h>
@@ -22,8 +22,8 @@
 /*max / min  values of primitives */
 #include <limits>
 
-/* function pow */
-#include <math.h>
+#include <math.h> //pow
+#include <algorithm> //min, max functions
 
 #include <binary_adjmatrix.h>
 #include <linked_list.h>
@@ -169,7 +169,7 @@ double search_lambda(unsigned long int N, double q, double k, double k_min, doub
     return lambda;
 }
 
-void lambda_analysis(){
+void lambda_analysis(unsigned long int N){
     int kmin = 1;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = 1.4;
@@ -212,17 +212,11 @@ int main(int argc, char *argv[]){
     int kmin = 1;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[0]);
-    double lambda = 2;
+    double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
+    double lambda = 10 * lambda_values[0];
 
     qExponential distribution = qExponential(N, lambda , q);
     distribution.set_min(kmin);
-
-    /*       Check if the distribution is foolowing Molloy-Reed criterion       */
-    std::vector<unsigned long int> sample = distribution.random(N);
-    std::cout <<"Molloy-Reed criterion (k) = "<< molloy_reed(sample) << std::endl;
-
-
-
 
     /***********************************************************/
     /*                  Set Paremeters String                  */
@@ -240,45 +234,60 @@ int main(int argc, char *argv[]){
     /*********************************************************/
 
     Rede rd = Rede(N, &distribution);
+    UnionFind uf;
+    Percolation num_comp;
     bool b = false;
+    unsigned long int lower_bound = 100;
 
-//    double progress = 0.0;
-//    progress_bar(progress);
+    /****************************************/
+    /* Mean geodesical distance computation */
+    /****************************************/
+    std::cout <<"[Mean geodesical distance computation...]"<< std::endl;
 
-    unsigned int num_rep = 100;
+    double progress = 0.0;
+    progress_bar(progress);
+
+    unsigned int num_rep = 50;
     for(unsigned long int i = 0; i < num_rep; i++){      
-//        progress += 1/static_cast<double>(num_rep);
-//        progress_unknown();
+        progress += 1/static_cast<double>(num_rep);
         while(!b){
             rd.reset();
             b = rd.random_link();
         }
-        Percolation num_comp = Percolation();
-        num_comp.mount_component_stats(rd, clk, out_string);
+        num_comp = Percolation();
 
-        /****************************************/
-        /* Mean geodesical distance computation */
-        /****************************************/
-
-         UnionFind uf = num_comp.mount_component_stats(rd, clk, out_string);
+        uf = num_comp.mount_geodesical_stats(rd);
         Bfs_modified bam = Bfs_modified();
-        clk = std::min(100, uf.get_st_biggest().second);
-        mean_l.push_back(bam.avg_geo_dist(100, uf.get_st_biggest().first, rd.get_adj_matrix()));
+        clk = std::min(lower_bound, uf.get_st_biggest().second);
+        mean_l.push_back(bam.avg_geo_dist(clk, uf.get_st_biggest().first, rd.get_adj_matrix()));
 
-//        progress_bar(progress);
+        progress_bar(progress);
 
         b = false;
     }
 
+    /***********************************************/
+    /*            write component sizes            */
+    /***********************************************/
+
+    std::cout << std::endl;
+    std::cout <<"[Writing component sizes...]"<< std::endl;
+    write_uf("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Components/c_"+out_string+".txt", uf);
+
+    /*************************************/
+    /*      Percolation computation      */
+    /*************************************/
+
+    std::cout <<"[Percolation computation...]"<< std::endl;
+    uf = num_comp.mount_component_stats(rd, clk, out_string);
 
     /**********************************************/
     /*   This write the mean geodesical distance  */
     /**********************************************/
 
     std::cout << std::endl;
-    std::cout <<"Writing geodesical data..."<< std::endl;
-//    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_"+out_string+".txt", mean_l);
-
+    std::cout <<"[Writing geodesical data...]"<< std::endl;
+    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_"+out_string+".txt", mean_l);
 
     std::cout << std::endl;
     auto stop = std::chrono::high_resolution_clock::now();

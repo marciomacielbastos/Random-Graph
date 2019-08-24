@@ -67,6 +67,9 @@ UnionFind Percolation::mount_geodesical_stats(Rede rd){
 /*********************************************************************************/
 
 UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, const std::string& params){
+    /* "freq_of_reg" represents how manny ticks do you want on your percolation record, if your network
+       is too big its better to reduce this A LOT! (you will execute as many file outputs as this value) */
+
     std::vector<std::pair<unsigned long int, unsigned long int>> list = rd.get_list_of_links();
     double total = static_cast<double>(list.size());
     UnionFind uf = UnionFind(rd.get_number_of_nodes());

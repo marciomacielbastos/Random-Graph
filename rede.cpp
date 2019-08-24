@@ -4,6 +4,7 @@ Rede::Rede(unsigned long int  N, Random *rd){
     this->N = N;
     this->distribution = rd;
     this->degrees = this->distribution->random(N);
+    std::cout<<"Molloy-reed criterion: "<<molloy_reed(degrees)<<std::endl;
     for(unsigned long int i = 0; i < N; i++){
         std::vector<unsigned long int> foo;
         this->adj_matrix.push_back(foo);
@@ -113,4 +114,25 @@ unsigned long int Rede::get_number_of_nodes(){
 
 std::vector<std::pair<unsigned long int, unsigned long int>> Rede::get_list_of_links(){
     return list_of_links;
+}
+
+double Rede::first_momment(std::vector<unsigned long int> sample){
+    double sum = 0;
+    for(unsigned long int i=0; i < sample.size() - 1; i++){
+        sum += static_cast<double>(sample[i]);
+    }
+    return sum;
+}
+
+double Rede::second_moment(std::vector<unsigned long int> sample){
+    for(unsigned long int i=0; i < sample.size() - 1; i++){
+        sample[i] *= sample[i];
+    }
+    return first_momment(sample);
+}
+
+double Rede::molloy_reed(std::vector<unsigned long int> sample){
+    double m1 = sample[sample.size() - 1];
+    double m2 = second_moment(sample);
+    return m2 / m1;
 }
