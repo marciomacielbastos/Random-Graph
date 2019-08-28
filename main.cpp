@@ -210,10 +210,11 @@ int main(int argc, char *argv[]){
     /*****************************/
 
     int kmin = 1;
+    unsigned int i = 3;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
-    double q = q_computation(gamma_values[0]);
+    double q = q_computation(gamma_values[i]);
     double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
-    double lambda = 10 * lambda_values[0];
+    double lambda = 0.1 * lambda_values[i];
 
     qExponential distribution = qExponential(N, lambda , q);
     distribution.set_min(kmin);
@@ -225,8 +226,8 @@ int main(int argc, char *argv[]){
     std::string out_string;
     std::stringstream ss;
     ss << "1E" << n;
-    ss << "_" << q;
-    ss << "_"<< lambda;
+    ss << "_" << i;
+//    ss << "_"<< lambda;
     ss << "_" << kmin;
     std::cout <<"N: 1E"<<n<<", q: "<< q <<", lambda: "<< lambda << ", kmin: "<<kmin<< std::endl;
     out_string = std::regex_replace(ss.str(), e, "-");
