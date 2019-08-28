@@ -193,7 +193,7 @@ int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<double> mean_l;
     std::regex e ("[.]");
-    unsigned long int N = static_cast<unsigned long int>(1E7);
+    unsigned long int N = static_cast<unsigned long int>(1E6);
     unsigned long int n = std::log10(N);
     unsigned long int clk = 1000; 
 
@@ -210,7 +210,7 @@ int main(int argc, char *argv[]){
     /*****************************/
 
     int kmin = 1;
-    unsigned int i = 3;
+    unsigned int i = 4;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
