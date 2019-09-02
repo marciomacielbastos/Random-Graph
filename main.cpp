@@ -57,6 +57,18 @@ void write_mean_l(const std::string& filename, std::vector<double> mean_l){
     myfile.close();
 }
 
+void write_mean_component(const std::string& filename, std::vector<std::vector<double>> mean_component, unsigned int num_rep){
+    std::ofstream myfile;
+    myfile.open (filename);
+    for (unsigned long int i = 0; i < mean_component.size(); i++){
+        if(i < mean_component.size() - 1) myfile << mean_component[i][0] << "," << mean_component[i][1]/num_rep << std::endl;
+        else {
+            myfile << mean_component[i][0] << "," << mean_component[i][1]/num_rep;
+        }
+    }
+    myfile.close();
+}
+
 void write_uf(const std::string& filename, UnionFind uf){
     std::ofstream myfile;
     myfile.open (filename);
@@ -72,11 +84,13 @@ void write_uf(const std::string& filename, UnionFind uf){
 
 void write_lambda(const std::string& filename, double q, double lambda, bool append=false){
     std::ofstream myfile;
-    if (append)
+    if (append){
         myfile.open(filename, std::ios_base::app);
-    else
+    }
+    else{
         myfile.open(filename);
         myfile << q << "," << lambda << std::endl;
+    }
     myfile.close();
 }
 
@@ -193,9 +207,9 @@ int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<double> mean_l;
     std::regex e ("[.]");
-    unsigned long int N = static_cast<unsigned long int>(1E6);
+    unsigned long int N = static_cast<unsigned long int>(1E7);
     unsigned long int n = std::log10(N);
-    unsigned long int clk = 1000; 
+    unsigned long int clk = 1000;
 
     /*****************************/
     /*            Zipf           */
@@ -210,7 +224,7 @@ int main(int argc, char *argv[]){
     /*****************************/
 
     int kmin = 1;
-    unsigned int i = 4;
+    unsigned int i = 3;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
@@ -249,7 +263,7 @@ int main(int argc, char *argv[]){
     progress_bar(progress);
 
     unsigned int num_rep = 50;
-    for(unsigned long int i = 0; i < num_rep; i++){      
+    for(unsigned long int i = 0; i < num_rep; i++){
         progress += 1/static_cast<double>(num_rep);
         while(!b){
             rd.reset();
@@ -280,8 +294,37 @@ int main(int argc, char *argv[]){
     /*************************************/
 
     std::cout <<"[Percolation computation...]"<< std::endl;
-    uf = num_comp.mount_component_stats(rd, clk, out_string);
+    num_comp = Percolation(clk);
+    std::vector<std::vector<double>> mean_cluster_size(clk + 1, {0, 1});
+    std::vector<std::vector<double>> biggest_component(clk + 1, {0, 1});
+    for(unsigned long int i = 0; i < num_rep; i++){
+        std::cout <<"[Connecting vertices...]"<< std::endl;
+        while(!b){
+            rd.reset();
+            b = rd.random_link();
+        }
+        std::cout << "\e[A";
+        std::cout<< "[" << i + 1 << "/" << num_rep << "]                  " << std::endl;
+        std::vector<std::vector<std::vector<double>>> input = num_comp.mount_component(rd, clk);
+        for(unsigned int i = 1; i <= clk; ++i){
+            mean_cluster_size[i][0] = input[0][i][0];
+            biggest_component[i][0] = input[1][i][0];
+            mean_cluster_size[i][1] += (input[0][i][1] / input[0][clk][1]);
+            biggest_component[i][1] += (input[1][i][1] / input[1][clk][1]);
+        }
+        b = false;
+        // Take carriage 2 alines above to count / progress without messy newlines
+        if(i < num_rep -1){
+            std::cout << "\e[A";
+            std::cout << "\e[A";
+        }
+    }
+    /*********************************************/
+    /*    This write the mean component stats    */
+    /*********************************************/
 
+    write_mean_component("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Biggest_component_" + out_string, biggest_component, num_rep);
+    write_mean_component("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Mean_cluster_size_" + out_string, mean_cluster_size, num_rep);
     /**********************************************/
     /*   This write the mean geodesical distance  */
     /**********************************************/
