@@ -132,30 +132,70 @@ UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, 
     return uf;
 }
 
-std::vector<std::vector<std::vector<double>>> Percolation::mount_component(Rede rd, unsigned int freq_of_reg){
+void Percolation::molloy_reed(bool &is_already_added, double &molloy_reed_k, double &molloy_reed_k2, const unsigned long int degree, double &m){
+    if(!is_already_added){
+        is_already_added = true;
+        molloy_reed_k *= m;
+        molloy_reed_k2 *= m;
+        m++;
+        molloy_reed_k += static_cast<double>(degree);
+        molloy_reed_k /= m;
+        molloy_reed_k2 += (static_cast<double>(degree) * static_cast<double>(degree));
+        molloy_reed_k2 /=m;
+    }
+}
+
+std::vector<std::vector<std::vector<double>>> Percolation::mount_component(Rede rd, unsigned long int freq_of_reg){
     /* "freq_of_reg" represents how manny ticks do you want on your percolation record, if your network
        is too big its better to reduce this A LOT! (you will execute as many file outputs as this value) */
     std::vector<std::pair<unsigned long int, unsigned long int>> list = rd.get_list_of_links();
 
-    std::vector<std::vector<std::vector<double>>> output;
-    std::vector<std::vector<double>> mean_cluster_size(freq_of_reg + 1, {0, 1});
-    std::vector<std::vector<double>> biggest_component(freq_of_reg + 1, {0, 1});
-    output.push_back(mean_cluster_size);
-    output.push_back(biggest_component);
-
     double total = static_cast<double>(list.size());
     UnionFind uf = UnionFind(rd.get_number_of_nodes());
 
+    std::vector<std::vector<std::vector<double>>> output;
+    std::vector<std::vector<double>> mean_cluster_size(std::min(freq_of_reg, static_cast<unsigned long int>(total)) + 1, {0, 1});
+    std::vector<std::vector<double>> biggest_component(std::min(freq_of_reg, static_cast<unsigned long int>(total)) + 1, {0, 1});
+    std::vector<bool> list_of_nodes (rd.get_number_of_nodes(), false);
+    output.push_back(mean_cluster_size);
+    output.push_back(biggest_component);
+
+    double molloy_reed_coeficient = 0;
+    double molloy_reed_k = 0;
+    double molloy_reed_k2 = 0;
+    double m = 1;
+    double pc = -1;
+    unsigned long int biggest_in_pc;
+
     double progress = 0.0;
+
     progress_bar(progress);
 
-    double k = 1 / static_cast<double>(freq_of_reg);
+    double k = 1 / static_cast<double>(std::min(freq_of_reg, static_cast<unsigned long int>(total)));
+
     unsigned int i = 1;
     while (list.size() > 0) {
         progress += 1 / total;
         std::pair<unsigned long int, unsigned long int> pair = list[list.size() - 1];
         // Union the nodes of this link
         uf.union_(pair.first, pair.second);
+
+        bool is_already_added = list_of_nodes[pair.first];
+        molloy_reed(is_already_added, molloy_reed_k, molloy_reed_k2, rd.get_degree(pair.first), m);
+        list_of_nodes[pair.first] = is_already_added;
+
+        is_already_added = list_of_nodes[pair.second];
+        molloy_reed(is_already_added, molloy_reed_k, molloy_reed_k2, rd.get_degree(pair.second), m);
+        list_of_nodes[pair.second] = is_already_added;
+
+        // Check if the fraction of nodes added reach the Molloy-Reed criterion limit [<k²>/<k> = 2]
+        // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
+        if((std::abs((molloy_reed_k2 / molloy_reed_k) - 2) <= 0.05) && (std::abs((molloy_reed_k2 / molloy_reed_k) - 2) < std::abs(molloy_reed_coeficient - 2))){
+            molloy_reed_coeficient = molloy_reed_k2 / molloy_reed_k;
+            pc = progress;
+            biggest_in_pc = uf.get_st_biggest().second;
+        }
+
         // Remove the link from the list of links
         list.pop_back();
 
@@ -164,26 +204,29 @@ std::vector<std::vector<std::vector<double>>> Percolation::mount_component(Rede 
         /*                      Percolation data computation                      */
         /*                                                                        */
         /**************************************************************************/
-        if((progress > k) || ((list.size() - 1) == 0)){
-            double size = 0;
-            double total_numb_of_clusters = 0;
-            std::vector<unsigned long int> cls = uf.get_size_of_components();
-            for(unsigned long int i = 0; i < cls.size(); i++){
-                if(cls[i] > 0){
-                    total_numb_of_clusters += (cls[i] + 1);
-                    size += static_cast<double>(i) * (cls[i] + 1);
-                }
-            }
-            output[0][i][0] = progress;
-            output[0][i][1] = size / total_numb_of_clusters;
-            output[1][i][0] = progress;
+        if((progress >= k) || ((list.size()) == 0)){
+                        // It's wrong!!!
+//            double size = 0;
+//            double total_numb_of_clusters = 0;
+//            std::vector<unsigned long int> size_of_components = uf.get_size_of_components();
+//            for(unsigned long int i = 0; i < size_of_components.size(); i++){
+//                if(size_of_components[i] > 0){
+//                    total_numb_of_clusters += (size_of_components[i] + 1);
+//                    size += static_cast<double>(i) * (size_of_components[i] + 1);
+//                }
+//            }
+//            output[0][i][0] = progress;
+//            output[0][i][1] = size / total_numb_of_clusters;
+            output[1][i][0] = k;
             output[1][i][1] = uf.get_st_biggest().second;
-            k += 1 / static_cast<double>(freq_of_reg);
+            k += 1 / static_cast<double>(std::min(freq_of_reg, static_cast<unsigned long int>(total)));
             i++;
         }
         /***********************************************************************/
         progress_bar(progress);
     }
+    //Add the critical fraction of added nodes and biggest component in [<k²>/<k> = 2] to output
+    output[1].push_back({pc, biggest_in_pc});
     std::cout<<std::endl;
     return output;
 }

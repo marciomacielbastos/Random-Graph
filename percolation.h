@@ -5,6 +5,7 @@
 #include <unionfind.h>
 #include <rede.h>
 
+#include <algorithm>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -31,8 +32,9 @@ public:
     void write_biggest_component(const std::string& filename, double pc, unsigned long int biggest, bool append);
     UnionFind  mount_geodesical_stats(Rede rd);
     UnionFind mount_component_stats(Rede rd, unsigned int freq_of_reg, const std::string& params);
-    std::vector<std::vector<std::vector<double>>> mount_component(Rede rd, unsigned int freq_of_reg);
+    std::vector<std::vector<std::vector<double>>> mount_component(Rede rd, unsigned long int freq_of_reg);
     void mount_component_mean(Rede rd, unsigned int freq_of_reg);
+    void molloy_reed(bool &is_already_added, double &molloy_reed_k, double &molloy_reed_k2, const unsigned long int degree, double &m);
 };
 
 #endif // ASSEMBLER_H

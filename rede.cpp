@@ -108,6 +108,10 @@ std::vector<std::vector<unsigned long int>> Rede::get_adj_matrix(){
     return adj_matrix;
 }
 
+unsigned long int Rede::get_degree(unsigned long i){
+    return this->degrees[i];
+}
+
 unsigned long int Rede::get_number_of_nodes(){
     return N;
 }

@@ -20,6 +20,7 @@ public:
     bool is_connected(unsigned long int v, unsigned long int w);
     void link(unsigned long int v, unsigned long int w);
     std::vector<std::vector<unsigned long int>> get_adj_matrix();
+    unsigned long int get_degree(unsigned long int i);
     unsigned long int get_number_of_nodes();
     std::vector<std::pair<unsigned long int, unsigned long int>> get_list_of_links();
     double first_momment(std::vector<unsigned long int> sample);

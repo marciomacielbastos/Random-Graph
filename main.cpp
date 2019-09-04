@@ -61,10 +61,7 @@ void write_mean_component(const std::string& filename, std::vector<std::vector<d
     std::ofstream myfile;
     myfile.open (filename);
     for (unsigned long int i = 0; i < mean_component.size(); i++){
-        if(i < mean_component.size() - 1) myfile << mean_component[i][0] << "," << mean_component[i][1]/num_rep << std::endl;
-        else {
-            myfile << mean_component[i][0] << "," << mean_component[i][1]/num_rep;
-        }
+        myfile << mean_component[i][0] << "," << mean_component[i][1]/num_rep << std::endl;
     }
     myfile.close();
 }
@@ -207,7 +204,7 @@ int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<double> mean_l;
     std::regex e ("[.]");
-    unsigned long int N = static_cast<unsigned long int>(1E7);
+    unsigned long int N = static_cast<unsigned long int>(1E4);
     unsigned long int n = std::log10(N);
     unsigned long int clk = 1000;
 
@@ -224,7 +221,7 @@ int main(int argc, char *argv[]){
     /*****************************/
 
     int kmin = 1;
-    unsigned int i = 3;
+    unsigned int i = 0;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
@@ -257,46 +254,47 @@ int main(int argc, char *argv[]){
     /****************************************/
     /* Mean geodesical distance computation */
     /****************************************/
-    std::cout <<"[Mean geodesical distance computation...]"<< std::endl;
+//    std::cout <<"[Mean geodesical distance computation...]"<< std::endl;
 
-    double progress = 0.0;
-    progress_bar(progress);
+//    double progress = 0.0;
+//    progress_bar(progress);
 
     unsigned int num_rep = 50;
-    for(unsigned long int i = 0; i < num_rep; i++){
-        progress += 1/static_cast<double>(num_rep);
-        while(!b){
-            rd.reset();
-            b = rd.random_link();
-        }
-        num_comp = Percolation();
+//    for(unsigned long int i = 0; i < num_rep; i++){
+//        progress += 1/static_cast<double>(num_rep);
+//        while(!b){
+//            rd.reset();
+//            b = rd.random_link();
+//        }
+//        num_comp = Percolation();
 
-        uf = num_comp.mount_geodesical_stats(rd);
-        Bfs_modified bam = Bfs_modified();
-        clk = std::min(lower_bound, uf.get_st_biggest().second);
-        mean_l.push_back(bam.avg_geo_dist(clk, uf.get_st_biggest().first, rd.get_adj_matrix()));
+//        uf = num_comp.mount_geodesical_stats(rd);
+//        Bfs_modified bam = Bfs_modified();
+//        clk = std::min(lower_bound, uf.get_st_biggest().second);
+//        mean_l.push_back(bam.avg_geo_dist(clk, uf.get_st_biggest().first, rd.get_adj_matrix()));
 
-        progress_bar(progress);
+//        progress_bar(progress);
 
-        b = false;
-    }
+//        b = false;
+//    }
 
     /***********************************************/
     /*            write component sizes            */
     /***********************************************/
 
-    std::cout << std::endl;
-    std::cout <<"[Writing component sizes...]"<< std::endl;
-    write_uf("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Components/c_"+out_string+".txt", uf);
+//    std::cout << std::endl;
+//    std::cout <<"[Writing component sizes...]"<< std::endl;
+//    write_uf("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Components/c_"+out_string+".txt", uf);
 
     /*************************************/
     /*      Percolation computation      */
     /*************************************/
 
     std::cout <<"[Percolation computation...]"<< std::endl;
+    clk = std::min(N, static_cast<unsigned long int>(100));
     num_comp = Percolation(clk);
-    std::vector<std::vector<double>> mean_cluster_size(clk + 1, {0, 1});
-    std::vector<std::vector<double>> biggest_component(clk + 1, {0, 1});
+//    std::vector<std::vector<double>> mean_cluster_size);
+    std::vector<std::vector<double>> biggest_component(clk + 2, {0, 0});
     for(unsigned long int i = 0; i < num_rep; i++){
         std::cout <<"[Connecting vertices...]"<< std::endl;
         while(!b){
@@ -306,12 +304,25 @@ int main(int argc, char *argv[]){
         std::cout << "\e[A";
         std::cout<< "[" << i + 1 << "/" << num_rep << "]                  " << std::endl;
         std::vector<std::vector<std::vector<double>>> input = num_comp.mount_component(rd, clk);
+        double bc_mean;
         for(unsigned int i = 1; i <= clk; ++i){
-            mean_cluster_size[i][0] = input[0][i][0];
+            if(i == 1){
+//                clk = input[1].size() - 1;
+                biggest_component[i][1] = 1 / input[1][clk][1];
+            }
+//            mean_cluster_size[i][0] = input[0][i][0];
             biggest_component[i][0] = input[1][i][0];
-            mean_cluster_size[i][1] += (input[0][i][1] / input[0][clk][1]);
-            biggest_component[i][1] += (input[1][i][1] / input[1][clk][1]);
+//            mean_cluster_size[i][1] += (input[0][i][1] / input[0][clk][1]);
+            bc_mean = (input[1][i][1] / input[1][clk][1]);
+            biggest_component[i][1] += bc_mean;
         }
+
+        if(input[1][clk + 1][0] >= 0){
+            biggest_component[clk + 1][0] += input[1][clk + 1][0];
+            bc_mean = (input[1][clk + 1][1] / input[1][clk][1]);
+            biggest_component[clk + 1][1] += bc_mean;
+        }
+
         b = false;
         // Take carriage 2 alines above to count / progress without messy newlines
         if(i < num_rep -1){
@@ -319,19 +330,20 @@ int main(int argc, char *argv[]){
             std::cout << "\e[A";
         }
     }
+    biggest_component[clk + 1][0] /= num_rep;
     /*********************************************/
     /*    This write the mean component stats    */
     /*********************************************/
 
     write_mean_component("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Biggest_component_" + out_string, biggest_component, num_rep);
-    write_mean_component("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Mean_cluster_size_" + out_string, mean_cluster_size, num_rep);
+//    write_mean_component("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Mean_cluster_size_" + out_string, mean_cluster_size, num_rep);
     /**********************************************/
     /*   This write the mean geodesical distance  */
     /**********************************************/
 
-    std::cout << std::endl;
-    std::cout <<"[Writing geodesical data...]"<< std::endl;
-    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_"+out_string+".txt", mean_l);
+//    std::cout << std::endl;
+//    std::cout <<"[Writing geodesical data...]"<< std::endl;
+//    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_"+out_string+".txt", mean_l);
 
     std::cout << std::endl;
     auto stop = std::chrono::high_resolution_clock::now();
