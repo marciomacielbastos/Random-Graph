@@ -156,14 +156,15 @@ std::vector<std::vector<std::vector<double>>> Percolation::mount_component(Rede 
     std::vector<std::vector<std::vector<double>>> output;
     std::vector<std::vector<double>> mean_cluster_size(std::min(freq_of_reg, static_cast<unsigned long int>(total)) + 1, {0, 1});
     std::vector<std::vector<double>> biggest_component(std::min(freq_of_reg, static_cast<unsigned long int>(total)) + 1, {0, 1});
+    std::vector<unsigned long int> degrees(rd.get_number_of_nodes(), 0);
+
     std::vector<bool> list_of_nodes (rd.get_number_of_nodes(), false);
     output.push_back(mean_cluster_size);
     output.push_back(biggest_component);
 
-    double molloy_reed_coeficient = 0;
-    double molloy_reed_k = 0;
-    double molloy_reed_k2 = 0;
-    double m = 1;
+    double sum_of_squared_k = 0;
+    double Nl = 0;
+    double molloy_reed_coef = 0;
     double pc = -1;
     unsigned long int biggest_in_pc;
 
@@ -179,19 +180,15 @@ std::vector<std::vector<std::vector<double>>> Percolation::mount_component(Rede 
         std::pair<unsigned long int, unsigned long int> pair = list[list.size() - 1];
         // Union the nodes of this link
         uf.union_(pair.first, pair.second);
-
-        bool is_already_added = list_of_nodes[pair.first];
-        molloy_reed(is_already_added, molloy_reed_k, molloy_reed_k2, rd.get_degree(pair.first), m);
-        list_of_nodes[pair.first] = is_already_added;
-
-        is_already_added = list_of_nodes[pair.second];
-        molloy_reed(is_already_added, molloy_reed_k, molloy_reed_k2, rd.get_degree(pair.second), m);
-        list_of_nodes[pair.second] = is_already_added;
+        Nl += 1;
+        sum_of_squared_k += static_cast<double>(2 * (degrees[pair.first] + degrees[pair.second] + 1));
+        degrees[pair.first]++;
+        degrees[pair.second]++;
+        molloy_reed_coef = sum_of_squared_k / (2 * Nl);
 
         // Check if the fraction of nodes added reach the Molloy-Reed criterion limit [<k²>/<k> = 2]
         // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
-        if((std::abs((molloy_reed_k2 / molloy_reed_k) - 2) <= 0.05) && (std::abs((molloy_reed_k2 / molloy_reed_k) - 2) < std::abs(molloy_reed_coeficient - 2))){
-            molloy_reed_coeficient = molloy_reed_k2 / molloy_reed_k;
+        if(std::abs(molloy_reed_coef - 2) <= 0.05){
             pc = progress;
             biggest_in_pc = uf.get_st_biggest().second;
         }
