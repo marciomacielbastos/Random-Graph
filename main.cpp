@@ -204,7 +204,7 @@ int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<double> mean_l;
     std::regex e ("[.]");
-    unsigned long int N = static_cast<unsigned long int>(1E4);
+    unsigned long int N = static_cast<unsigned long int>(1E3);
     unsigned long int n = std::log10(N);
     unsigned long int clk = 1000;
 
@@ -335,7 +335,7 @@ int main(int argc, char *argv[]){
     /*    This write the mean component stats    */
     /*********************************************/
 
-    write_mean_component("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Biggest_component_" + out_string, biggest_component, num_rep);
+    write_mean_component("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
 //    write_mean_component("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Mean_cluster_size_" + out_string, mean_cluster_size, num_rep);
     /**********************************************/
     /*   This write the mean geodesical distance  */
