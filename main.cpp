@@ -204,7 +204,7 @@ int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<double> mean_l;
     std::regex e ("[.]");
-    unsigned long int N = static_cast<unsigned long int>(1E3);
+    unsigned long int N = static_cast<unsigned long int>(1E6);
     unsigned long int n = std::log10(N);
     unsigned long int clk = 1000;
 
@@ -291,7 +291,7 @@ int main(int argc, char *argv[]){
     /*************************************/
 
     std::cout <<"[Percolation computation...]"<< std::endl;
-    clk = std::min(N, static_cast<unsigned long int>(100));
+    clk = std::min(N, static_cast<unsigned long int>(1000));
     num_comp = Percolation(clk);
 //    std::vector<std::vector<double>> mean_cluster_size);
     std::vector<std::vector<double>> biggest_component(clk + 2, {0, 0});
