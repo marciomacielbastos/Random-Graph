@@ -1,0 +1,91 @@
+* [33m31c26f5[m[33m ([m[1;36mHEAD -> [m[1;32mtemp[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m some results added
+* [33m0af8515[m Computational methods created
+* [33m74a48f5[m correct Molloy-Reed critical p
+* [33md69784d[m same-same
+* [33m7e70fa2[m Fixed some errors in percolation (still missing errors not funtionals)
+* [33mf495bd5[m Fixed some errors in percolation (still missing errors not funtionals)
+* [33mc5bc496[m Fixed some errors in percolation (still missing errors not funtionals)
+* [33mfed5a89[m sample bitch
+* [33m54edbb6[m 1E7 2 and 3
+* [33m14550da[m 1E6 done
+* [33m6f13e29[m 0 and 1 simulations for kmin = 1
+* [33md640c51[m complete analysis
+* [33mc79c8d9[m boxplot lambda
+* [33mcfaa21c[m Lambda analysis complete
+* [33mdeadbb5[m Molloy-Reed criterion approximator
+* [33m5b62b28[m Percolation and geodesical distance on Tsalis network
+* [33mc6c0a5c[m Bugged percolation analysis
+* [33mbd20ba0[m Tsalis = Zipf (Havlin is Right)
+* [33m1221491[m Project fully refactored
+* [33mf51c965[m Class rede added, improvement to Network
+* [33m99ec24c[m component size evaluation
+* [33m48e13e5[m check version
+* [33m8529746[m Set the data before fit
+* [33m756a423[m quando a caminhada fica dura, eu fico duro também
+* [33m8184f73[m Remove duplicated files
+* [33m3206835[m Zipf distribution
+* [33m2ae8de0[m fix the negative q q-exp
+* [33m67c8522[m some results
+* [33md42861b[m Dumb BFS
+* [33mc99ed9a[m shit
+* [33m6ac46d6[m Bfs modiffied complete also improve the network maker
+* [33mec102f6[m Indo pra tapera
+* [33mac282d3[m fixed some issues in the linker
+* [33m2be3836[m I have to create a tree like method to linked_list
+* [33m9d9fed0[m bfs on progress 01
+* [33m3f9fc0d[m There's always hope.
+* [33m9c46cd8[m binary_matrix to net
+* [33mb083a2d[m sort nodes notwork
+* [33me24a5c3[m binary adjacent list
+* [33me87ba0d[m q_exponential using old fashion generator
+* [33md326cb0[m Found the plot error
+* [33m25b8478[m Some issues in the histogram plot
+* [33mc4ca883[m Histogram correctly written
+* [33ma09a4d6[m Build network
+* [33mff3f7a9[m histograms
+* [33m7df6fba[m histogram
+* [33m08fb1a4[m distribution comparison
+* [33md2d68f6[m distribution comparison
+* [33mf6c53a0[m assembler more efficient
+* [33mf0029c2[m Missing optimize / parallelize the methods Network::random_link_AA_algorithm and Assembler::assembly
+* [33md6db066[m Missing optimize / parallelize assembly method
+* [33m5b7715f[m Random multi-thread
+* [33mfee4b6d[m assembler ok
+* [33m2de5507[m Sc, Tm, f
+* [33m3e4e37d[m Union Find with size of each component
+* [33m8800826[m Assembler
+* [33mf94932a[m Assembler class and Union Find
+* [33mba36437[m Node Static Values Reset Fixed
+* [33ma3975d5[m qExponential
+* [33m3499a96[m Add xmin parameter to random classes
+* [33m49e9bb5[m Zipf and qExponential refactored
+* [33m1b2db46[m qExponential almost done
+* [33m319d0a1[m qExponential almost done
+* [33mdd408f4[m qExponential Euler-MacLaurin fundamental equations coded
+* [33m0960a5b[m qExponential distribution
+* [33mbb6289d[m Settings of the random distributions
+* [33me79131b[m Map of Labels and Connected Components
+* [33mde16ae7[m Map of Labels and Connected Components
+* [33m0ecdfd6[m Map of Labels and Connected Components
+* [33m2acc4a6[m Hoshen Kopelman algorithm fixed
+* [33m08d6947[m Hoshen-Kopelman
+* [33m9fc2501[m Hoshen-Kopelman
+* [33m2e60578[m Andre Auto/ Nuno Connection Model
+* [33m69755e3[m Andre Auto/ Nuno Connection Model
+* [33m049ae28[m Andre Auto/ Nuno Connection Model
+* [33m76c2b05[m Andre Auto/ Nuno Connection Model
+* [33m685b415[m Andre Auto/ Nuno Connection Model
+* [33ma0d1d5b[m Andre Auto/ Nuno Connection Model
+* [33mfa2c3f4[m Andre Auto Connection Model
+* [33md768e5d[m Andre Auto Connection Model
+* [33m3a735a6[m Network class and random linking node methods (missing the counter)
+* [33m16406b0[m Network Class Implemented
+* [33maee635c[m Approximated method fixed
+* [33m3691a02[m Approximated method fixed
+* [33m5fe5ad5[m Improve Constructor of ZipfGen
+* [33m645eff2[m minor changes
+* [33m8b0451a[m Zipf RV generator, the approximated method is unstable, but the brute-force works well
+* [33mcabdfe7[m random class
+* [33md047939[m Add node to adjacency list, adjacency list as list of IDs
+* [33ma1b0b87[m Add node to adjacency list, adjacency list as list of IDs
+* [33m29d801c[m Node Class
