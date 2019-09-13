@@ -306,8 +306,8 @@ int main(int argc, char *argv[]){
     /*       q-Exponential       */
     /*****************************/
 
-    int kmin = 2;
-    unsigned int i = 1;
+    int kmin = 1;
+    unsigned int i = 3;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
