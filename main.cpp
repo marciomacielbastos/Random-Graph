@@ -186,7 +186,7 @@ void lambda_analysis(unsigned long int N){
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = 1.4;
     double lambda = 2;
-    std::string filename = "/home/marcio/Projects/Random-Graph/Random-Graph/Results/lambda/lambda.txt";
+    std::string filename = "/home/marcio/MEGA/Physics/Thesis/Andre/Results/lambda/lambda.txt";
     write_lambda(filename, q, lambda);
     for ( auto gamma : gamma_values ){
         q = q_computation(gamma);
@@ -232,7 +232,7 @@ UnionFind geodesical_distance_computation(unsigned int num_rep, Rede &rd, unsign
     /**********************************************/
     /*   This write the mean geodesical distance  */
     /**********************************************/
-    write_mean_l("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/mean_l_"+out_string+".txt", mean_l);
+    write_mean_l("/home/marcio/MEGA/Physics/Thesis/Andre/Results/Mean/mean_l_"+out_string+".txt", mean_l);
     return uf;
 }
 
@@ -345,7 +345,7 @@ int main(int argc, char *argv[]){
     /*            write component sizes            */
     /***********************************************/
     std::cout <<"[Writing component sizes...]"<< std::endl;
-    write_uf("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Components/c_"+out_string+".txt", uf);
+    write_uf("/home/marcio/MEGA/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
 
     /*************************************/
     /*      Percolation computation      */
@@ -358,7 +358,7 @@ int main(int argc, char *argv[]){
     /*************************************************/
 
     std::cout <<"[Writing percolation series stats...]"<< std::endl;
-    write_percolation_series("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
+    write_percolation_series("/home/marcio/MEGA/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
 
     std::cout << std::endl;
     auto stop = std::chrono::high_resolution_clock::now();

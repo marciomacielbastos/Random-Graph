@@ -26,7 +26,7 @@ void Percolation::progress_bar(float progress){
 
 void Percolation::write_mean_cluster_size(const std::string& params, double pc, double mcs, bool append = false){
     std::ofstream myfile;
-    std::string filename("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Mean_cluster_size_");
+    std::string filename("/home/marcio/MEGA/Physics/Thesis/Andre/Results/Mean/Mean_cluster_size_");
     filename = filename + params + ".txt";
 
     if (append)
@@ -40,7 +40,7 @@ void Percolation::write_mean_cluster_size(const std::string& params, double pc, 
 
 void Percolation::write_biggest_component(const std::string& params, double pc, unsigned long int biggest, bool append = false){
     std::ofstream myfile;
-    std::string filename("/home/marcio/Projects/Random-Graph/Random-Graph/Results/Mean/Biggest_component_");
+    std::string filename("/home/marcio/MEGA/Physics/Thesis/Andre/Results/Mean/Biggest_component_");
     filename = filename + params + ".txt";
 
     if (append)
