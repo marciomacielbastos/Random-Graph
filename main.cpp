@@ -186,7 +186,7 @@ void lambda_analysis(unsigned long int N){
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = 1.4;
     double lambda = 2;
-    std::string filename = "/home/marcio/MEGA/Physics/Thesis/Andre/Results/lambda/lambda.txt";
+    std::string filename = "/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/lambda/lambda.txt";
     write_lambda(filename, q, lambda);
     for ( auto gamma : gamma_values ){
         q = q_computation(gamma);
@@ -232,7 +232,7 @@ UnionFind geodesical_distance_computation(unsigned int num_rep, Rede &rd, unsign
     /**********************************************/
     /*   This write the mean geodesical distance  */
     /**********************************************/
-    write_mean_l("/home/marcio/MEGA/Physics/Thesis/Andre/Results/Mean/mean_l_"+out_string+".txt", mean_l);
+    write_mean_l("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Mean/mean_l_"+out_string+".txt", mean_l);
     return uf;
 }
 
@@ -291,7 +291,7 @@ std::vector<std::vector<double>> percolation_computation(unsigned int num_rep, R
 int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::regex e ("[.]");
-    unsigned long int N = static_cast<unsigned long int>(1E7);
+    unsigned long int N = static_cast<unsigned long int>(1E4);
     unsigned long int n = std::log10(N);
 
     /*****************************/
@@ -307,7 +307,7 @@ int main(int argc, char *argv[]){
     /*****************************/
 
     int kmin = 1;
-    unsigned int i = 3;
+    unsigned int i = 4;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
@@ -345,7 +345,7 @@ int main(int argc, char *argv[]){
     /*            write component sizes            */
     /***********************************************/
     std::cout <<"[Writing component sizes...]"<< std::endl;
-    write_uf("/home/marcio/MEGA/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
+    write_uf("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
 
     /*************************************/
     /*      Percolation computation      */
@@ -358,7 +358,7 @@ int main(int argc, char *argv[]){
     /*************************************************/
 
     std::cout <<"[Writing percolation series stats...]"<< std::endl;
-    write_percolation_series("/home/marcio/MEGA/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
+    write_percolation_series("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
 
     std::cout << std::endl;
     auto stop = std::chrono::high_resolution_clock::now();
