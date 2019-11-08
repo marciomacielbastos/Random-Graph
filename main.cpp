@@ -62,7 +62,7 @@ void write_percolation_series(const std::string& filename, std::vector<std::vect
     std::ofstream myfile;
     myfile.open (filename);
     for (unsigned long int i = 0; i < mean_component.size(); i++){
-        myfile << mean_component[i][0] << "," << mean_component[i][1]/num_rep << std::endl;
+        myfile << mean_component[i][0] << "," << mean_component[i][1] << "," << std::sqrt(mean_component[i][2] / num_rep) << std::endl;
     }
     myfile.close();
 }
@@ -182,11 +182,11 @@ double search_lambda(unsigned long int N, double q, double k, double k_min, doub
 }
 
 void lambda_analysis(unsigned long int N){
-    int kmin = 1;
+    int kmin = 2;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = 1.4;
     double lambda = 2;
-    std::string filename = "/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/lambda/lambda.txt";
+    std::string filename = "/home/marcio/pCloudDrive//Physics/Thesis/Andre/Results/lambda/lambda.txt";
     write_lambda(filename, q, lambda);
     for ( auto gamma : gamma_values ){
         q = q_computation(gamma);
@@ -243,45 +243,39 @@ std::vector<std::vector<double>> percolation_computation(unsigned int num_rep, R
     unsigned long int clk = std::min(N, static_cast<unsigned long int>(1000));
     Percolation num_comp = Percolation(clk);
     bool b = false;
+    double bc_mu = 0;
+    std::vector<std::vector<double>> biggest_component(clk + 1, {0, 0, 0}); // (Fraction of nodes, size of biggest component)
 
-    std::vector<std::vector<double>> biggest_component(clk + 2, {0, 0});
-
-    for(unsigned long int i = 0; i < num_rep; i++){
+    for(unsigned long int n = 0; n < num_rep; n++){
         std::cout <<"[Connecting vertices...]"<< std::endl;
         while(!b){
             rd.reset();
             b = rd.random_link();
         }
         std::cout << "\e[A";
-        std::cout<< "[" << i + 1 << "/" << num_rep << "]                  " << std::endl;
-        std::vector<std::vector<std::vector<double>>> input = num_comp.mount_component(rd, clk);
-        double bc_mean;
-        for(unsigned int i = 1; i <= clk; ++i){
-            if(i == 1){
-//                clk = input[1].size() - 1;
-                biggest_component[i][1] = 1 / input[1][clk][1];
-            }
-//            mean_cluster_size[i][0] = input[0][i][0];
-            biggest_component[i][0] = input[1][i][0];
-//            mean_cluster_size[i][1] += (input[0][i][1] / input[0][clk][1]);
-            bc_mean = (input[1][i][1] / input[1][clk][1]);
-            biggest_component[i][1] += bc_mean;
+        std::cout<< "[" << n + 1 << "/" << num_rep << "]                  " << std::endl;
+        std::vector<std::vector<double>> input = num_comp.mount_component(rd, clk); // (Fraction of nodes, size of biggest component)
+        for(unsigned int j = 0; j < clk; ++j){
+            biggest_component[j][0] = input[j][0]; //edge fraction added
+            bc_mu = biggest_component[j][1];
+            biggest_component[j][1] = biggest_component[j][1] + ((input[j][1] - biggest_component[j][1]) / (n + 1));
+            biggest_component[j][2] = biggest_component[j][2] + (input[j][1] - bc_mu) * (input[j][1] - biggest_component[j][1]);
         }
 
-        if(input[1][clk + 1][0] >= 0){
-            biggest_component[clk + 1][0] += input[1][clk + 1][0];
-            bc_mean = (input[1][clk + 1][1] / input[1][clk][1]);
-            biggest_component[clk + 1][1] += bc_mean;
+        if(input[clk][0] >= 0){
+            biggest_component[clk][0] = biggest_component[clk][0] + ((input[clk][0] - biggest_component[clk][0]) / (n + 1));
+            bc_mu = biggest_component[clk][1];
+            biggest_component[clk][1] = biggest_component[clk][1] + ((input[clk][1] - biggest_component[clk][1]) / (n + 1));
+            biggest_component[clk][2] = biggest_component[clk][2] + (input[clk][1] - bc_mu) * (input[clk][1] - biggest_component[clk][1]);
         }
 
         b = false;
         // Take carriage 2 alines above to count / progress without messy newlines
-        if(i < num_rep -1){
+        if(n < num_rep -1){
             std::cout << "\e[A";
             std::cout << "\e[A";
         }
     }
-    biggest_component[clk + 1][0] /= num_rep;
     return biggest_component;
 }
 /*****************************************************/
@@ -291,7 +285,7 @@ std::vector<std::vector<double>> percolation_computation(unsigned int num_rep, R
 int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::regex e ("[.]");
-    unsigned long int N = static_cast<unsigned long int>(1E6);
+    unsigned long int N = static_cast<unsigned long int>(1E7);
     unsigned long int n = std::log10(N);
 
     /*****************************/
@@ -306,8 +300,8 @@ int main(int argc, char *argv[]){
     /*       q-Exponential       */
     /*****************************/
 
-    int kmin = 2;
-    unsigned int i = 2;
+    int kmin = 1;
+    unsigned int i = 3;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
