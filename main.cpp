@@ -285,7 +285,9 @@ std::vector<std::vector<double>> percolation_computation(unsigned int num_rep, R
 int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::regex e ("[.]");
-    unsigned long int N = static_cast<unsigned long int>(1E7);
+    unsigned long int f = 5;
+    unsigned long int N = static_cast<unsigned long int>(1E6);
+    N *= f;
     unsigned long int n = std::log10(N);
 
     /*****************************/
@@ -301,7 +303,7 @@ int main(int argc, char *argv[]){
     /*****************************/
 
     int kmin = 1;
-    unsigned int i = 3;
+    unsigned int i = 1;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     double lambda_values[5] = {17.51, 5.51, 3.34, 2.6, 2.23};
@@ -316,10 +318,11 @@ int main(int argc, char *argv[]){
 
     std::string out_string;
     std::stringstream ss;
-    ss << "1E" << n;
+    ss << f;
+    ss << "E" << n;
     ss << "_" << i;
     ss << "_" << kmin;
-    std::cout <<"N: 1E"<<n<< ", i: "<< i <<"(q="<< q <<", lambda="<< lambda << "), kmin: "<<kmin<< std::endl;
+    std::cout <<"N: "<<f<<"E"<<n<< ", i: "<< i <<"(q="<< q <<", lambda="<< lambda << "), kmin: "<<kmin<< std::endl;
     out_string = std::regex_replace(ss.str(), e, "-");
 
     /*********************************************************/

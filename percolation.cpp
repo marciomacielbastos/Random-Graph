@@ -133,16 +133,17 @@ UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, 
 }
 
 void Percolation::molloy_reed(bool &is_already_added, double &molloy_reed_k, double &molloy_reed_k2, const unsigned long int degree, double &m){
-    if(!is_already_added){
-        is_already_added = true;
-        molloy_reed_k *= m;
-        molloy_reed_k2 *= m;
-        m++;
-        molloy_reed_k += static_cast<double>(degree);
-        molloy_reed_k /= m;
-        molloy_reed_k2 += (static_cast<double>(degree) * static_cast<double>(degree));
-        molloy_reed_k2 /=m;
-    }
+//    if(!is_already_added){
+//        is_already_added = true;
+//        molloy_reed_k *= m;
+//        molloy_reed_k2 *= m;
+//        m++;
+//        molloy_reed_k += static_cast<double>(degree);
+//        molloy_reed_k /= m;
+//        molloy_reed_k2 += (static_cast<double>(degree) * static_cast<double>(degree));
+//        molloy_reed_k2 /=m;
+//    }
+
 }
 
 std::vector<std::vector<double>> Percolation::mount_component(Rede rd, unsigned long int freq_of_reg){
@@ -163,7 +164,8 @@ std::vector<std::vector<double>> Percolation::mount_component(Rede rd, unsigned 
     double molloy_reed_coef = 0;
     double pc = -1;
     unsigned long int biggest_in_pc;
-
+    double A;
+    double B;
     double progress = 0.0;
 
     progress_bar(progress);
@@ -179,9 +181,12 @@ std::vector<std::vector<double>> Percolation::mount_component(Rede rd, unsigned 
         uf.union_(pair.first, pair.second);
         Nl += 1;
         sum_of_squared_k += static_cast<double>(2 * (degrees[pair.first] + degrees[pair.second] + 1));
+        A += 2 *(degrees[pair.first] + degrees[pair.second] + 2);
+        B += 2;
         degrees[pair.first]++;
         degrees[pair.second]++;
-        molloy_reed_coef = sum_of_squared_k / (2 * Nl);
+//        molloy_reed_coef = sum_of_squared_k / (2 * Nl);
+        molloy_reed_coef = A / B;
 
         // Check if the fraction of nodes added reach the Molloy-Reed criterion limit [<k²>/<k> = 2]
         // DO NOT COMPARE FLOAT NUMBERS AS USUAL!!!!
