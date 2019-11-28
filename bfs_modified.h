@@ -1,10 +1,10 @@
 #ifndef BFS_MODIFIED_H
 #define BFS_MODIFIED_H
-#include <binary_adjmatrix.h>
-#include <distance_matrix.h>
-#include <linked_list.h>
-#include <network.h>
-#include <random.h>
+#include "binary_adjmatrix.h"
+#include "distance_matrix.h"
+#include "linked_list.h"
+#include "network.h"
+#include "random.h"
 #include <vector>
 #include <queue>
 

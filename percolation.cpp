@@ -178,11 +178,11 @@ std::vector<std::vector<double>> Percolation::mount_component(Rede rd, unsigned 
         progress += 1 / total;
         std::pair<unsigned long int, unsigned long int> pair = list[list.size() - 1];
         // Union the nodes of this link
-        uf.union_(pair.first, pair.second);
-        Nl += 1;
-        sum_of_squared_k += static_cast<double>(2 * (degrees[pair.first] + degrees[pair.second] + 1));
-        A += 2 *(degrees[pair.first] + degrees[pair.second] + 2);
-        B += 2;
+            uf.union_(pair.first, pair.second);
+            Nl += 1;
+            sum_of_squared_k += static_cast<double>(2 * (degrees[pair.first] + degrees[pair.second] + 1));
+            A += 2 *(degrees[pair.first] + degrees[pair.second] + 2);
+            B += 2;
         degrees[pair.first]++;
         degrees[pair.second]++;
 //        molloy_reed_coef = sum_of_squared_k / (2 * Nl);

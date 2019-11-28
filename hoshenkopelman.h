@@ -2,7 +2,7 @@
 #define HOSHENKOPELMAN_H
 #include <vector>
 #include <map>
-#include <node.h>
+#include "node.h"
 
 class HoshenKopelman{
 private:

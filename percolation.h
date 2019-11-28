@@ -1,9 +1,9 @@
 #ifndef ASSEMBLER_H
 #define ASSEMBLER_H
-#include <network.h>
-#include <random.h>
-#include <unionfind.h>
-#include <rede.h>
+#include "network.h"
+#include "random.h"
+#include "unionfind.h"
+#include "rede.h"
 
 #include <algorithm>
 #include <vector>

@@ -1,6 +1,6 @@
 #ifndef RANDOMGEN_H
 #define RANDOMGEN_H
-#include <random.h>
+#include "random.h"
 #include <vector>
 #include <float.h>
 

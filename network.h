@@ -1,11 +1,11 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 #include <algorithm>
-#include <binary_adjmatrix.h>
+#include "binary_adjmatrix.h"
 #include <functional>
 #include <map>
-#include <node.h>
-#include <random.h>
+#include "node.h"
+#include "random.h"
 #include <stdlib.h>
 #include <time.h>
 #include <thread>

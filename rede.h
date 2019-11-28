@@ -2,7 +2,7 @@
 #define REDE_H
 
 #include <iostream>
-#include <random.h>
+#include "random.h"
 #include <vector>
 
 class Rede{

@@ -1,7 +1,7 @@
 #ifndef QEXPONENTIAL_H
 #define QEXPONENTIAL_H
-#include <random.h>
-#include <exponential.h>
+#include "random.h"
+//#include <exponential.h>
 
 class qExponential: public Random{
 private:

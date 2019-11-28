@@ -1,7 +1,7 @@
 #ifndef UNIONFIND_H
 #define UNIONFIND_H
-#include <network.h>
-#include <components.h>
+#include "network.h"
+#include "components.h"
 #include <map>
 
 class UnionFind{

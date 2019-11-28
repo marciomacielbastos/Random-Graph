@@ -1,6 +1,6 @@
 #ifndef VERICE_LINKED_LIST_H
 #define VERICE_LINKED_LIST_H
-#include <linked_node.h>
+#include "linked_node.h"
 #include <vector>
 
 class Linked_list{
