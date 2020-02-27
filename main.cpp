@@ -309,7 +309,8 @@ int main(int argc, char *argv[]){
     unsigned int i = 0;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
-    double lambda_values[5] = {7.51, 5.51, 3.34, 2.6, 2.23};
+    /*17.51*/
+    double lambda_values[5] = {15.51, 5.51, 3.34, 2.6, 2.23};
     double lambda = 0.1 * lambda_values[i];
 
     qExponential distribution = qExponential(N, lambda , q);
@@ -337,28 +338,28 @@ int main(int argc, char *argv[]){
     /****************************************/
     /* Mean geodesical distance computation */
     /****************************************/
-    UnionFind uf;
-    unsigned long int lower_bound = 100;
+//    UnionFind uf;
+//    unsigned long int lower_bound = 100;
     uf = geodesical_distance_computation(num_rep, rd, lower_bound, out_string);
 
     /***********************************************/
     /*            write component sizes            */
     /***********************************************/
-    std::cout <<"[Writing component sizes...]"<< std::endl;
-    write_uf("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
+//    std::cout <<"[Writing component sizes...]"<< std::endl;
+//    write_uf("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
 
     /*************************************/
     /*      Percolation computation      */
     /*************************************/
 
-    std::vector<std::vector<double>> biggest_component = percolation_computation(num_rep, rd);
+//    std::vector<std::vector<double>> biggest_component = percolation_computation(num_rep, rd);
 
     /*************************************************/
     /*    This write the percolation series stats    */
     /*************************************************/
 
-    std::cout <<"[Writing percolation series stats...]"<< std::endl;
-    write_percolation_series("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
+//    std::cout <<"[Writing percolation series stats...]"<< std::endl;
+//    write_percolation_series("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
 
     std::cout << std::endl;
     auto stop = std::chrono::high_resolution_clock::now();
