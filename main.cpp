@@ -62,7 +62,8 @@ void write_percolation_series(const std::string& filename, std::vector<std::vect
     std::ofstream myfile;
     myfile.open (filename);
     for (unsigned long int i = 0; i < mean_component.size(); i++){
-        myfile << mean_component[i][0] << "," << mean_component[i][1] << "," << std::sqrt(mean_component[i][2] / num_rep) << std::endl;
+        myfile << mean_component[i][0] << "," << mean_component[i][1] << "," << std::sqrt(mean_component[i][2] / num_rep)
+                << "," << mean_component[i][3] << "," << mean_component[i][4] << std::endl;
     }
     myfile.close();
 }
@@ -244,8 +245,7 @@ std::vector<std::vector<double>> percolation_computation(unsigned int num_rep, R
     Percolation num_comp = Percolation(clk);
     bool b = false;
     double bc_mu = 0;
-    std::vector<std::vector<double>> biggest_component(clk + 2, {0, 0, 0}); // (Fraction of nodes, size of biggest component)
-
+    std::vector<std::vector<double>> biggest_component(clk + 2, {0, 0, 0, N, 0}); // (Fraction of nodes, size of biggest component) {p, mu, var, min, max}
     for(unsigned long int n = 0; n < num_rep; n++){
         std::cout <<"[Connecting vertices...]"<< std::endl;
         while(!b){
@@ -262,6 +262,13 @@ std::vector<std::vector<double>> percolation_computation(unsigned int num_rep, R
             biggest_component[j][1] = biggest_component[j][1] + ((input[j][1] - biggest_component[j][1]) / (n + 1));
             //Var
             biggest_component[j][2] = biggest_component[j][2] + (input[j][1] - bc_mu) * (input[j][1] - biggest_component[j][1]);
+            if (biggest_component[j][3] > input[j][1]){
+                biggest_component[j][3] = input[j][1];
+            }
+            if (biggest_component[j][4] < input[j][1]){
+                biggest_component[j][4] = input[j][1];
+            }
+
         }
 
         if(input[clk + 1][0] >= 0){
@@ -269,6 +276,12 @@ std::vector<std::vector<double>> percolation_computation(unsigned int num_rep, R
             bc_mu = biggest_component[clk + 1][1];
             biggest_component[clk + 1][1] = biggest_component[clk + 1][1] + ((input[clk + 1][1] - biggest_component[clk + 1][1]) / (n + 1));
             biggest_component[clk + 1][2] = biggest_component[clk + 1][2] + (input[clk + 1][1] - bc_mu) * (input[clk + 1][1] - biggest_component[clk + 1][1]);
+            if (biggest_component[clk + 1][3] > input[clk + 1][1]){
+                biggest_component[clk + 1][3] = input[clk + 1][1];
+            }
+            if (biggest_component[clk + 1][4] < input[clk + 1][1]){
+                biggest_component[clk + 1][4] = input[clk + 1][1];
+            }
         }
 
         b = false;
@@ -289,7 +302,7 @@ int main(int argc, char *argv[]){
     std::regex e ("[.]");
     unsigned long int f = 1;
 
-    unsigned long int N = static_cast<unsigned long int>(1E5);
+    unsigned long int N = static_cast<unsigned long int>(1E7);
     N *= f;
     unsigned long int n = std::log10(N);
 
@@ -306,7 +319,7 @@ int main(int argc, char *argv[]){
     /*****************************/
 
     int kmin = 1;
-    unsigned int i = 0;
+    unsigned int i = 4;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     /*17.51*/
@@ -338,28 +351,28 @@ int main(int argc, char *argv[]){
     /****************************************/
     /* Mean geodesical distance computation */
     /****************************************/
-//    UnionFind uf;
-//    unsigned long int lower_bound = 100;
+    UnionFind uf;
+    unsigned long int lower_bound = 100;
     uf = geodesical_distance_computation(num_rep, rd, lower_bound, out_string);
 
     /***********************************************/
     /*            write component sizes            */
     /***********************************************/
-//    std::cout <<"[Writing component sizes...]"<< std::endl;
-//    write_uf("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
+    std::cout <<"[Writing component sizes...]"<< std::endl;
+    write_uf("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
 
     /*************************************/
     /*      Percolation computation      */
     /*************************************/
 
-//    std::vector<std::vector<double>> biggest_component = percolation_computation(num_rep, rd);
+    std::vector<std::vector<double>> biggest_component = percolation_computation(num_rep, rd);
 
     /*************************************************/
     /*    This write the percolation series stats    */
     /*************************************************/
 
-//    std::cout <<"[Writing percolation series stats...]"<< std::endl;
-//    write_percolation_series("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
+    std::cout <<"[Writing percolation series stats...]"<< std::endl;
+    write_percolation_series("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
 
     std::cout << std::endl;
     auto stop = std::chrono::high_resolution_clock::now();
