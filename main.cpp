@@ -300,78 +300,84 @@ std::vector<std::vector<double>> percolation_computation(unsigned int num_rep, R
 int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::regex e ("[.]");
-    unsigned long int f = 256;
+    unsigned long int f = 1;
 
-    unsigned long int N = static_cast<unsigned long int>(1E4);
+    unsigned long int N = static_cast<unsigned long int>(1E2);
     N *= f;
     unsigned long int n = std::log2(f);
 
-    /*****************************/
-    /*            Zipf           */
-    /*****************************/
+    /**********************************/
+    /*            Parameters          */
+    /**********************************/
 
-//    float gamma = 2.5;
-//    ss << gamma;
-//    Zipf distribution = Zipf(N, gamma);
-
-    /*****************************/
-    /*       q-Exponential       */
-    /*****************************/
-
-    unsigned int num_rep = 250;
+    unsigned int num_rep = 50;
     int kmin = 1;
-    unsigned int i = 1;
+    unsigned int i = 4;
     double gamma_values[5] = {2.5, 3.0, 3.5, 4.0 , 4.5};
     double q = q_computation(gamma_values[i]);
     /*17.51*/
     double lambda_values[5] = {15.51, 5.51, 3.34, 2.6, 2.23};
     double lambda = 0.1 * lambda_values[i];
 
+    /*****************************/
+    /*       q-Exponential       */
+    /*****************************/
     qExponential distribution = qExponential(N, lambda , q);
+
+    /*****************************/
+    /*            Zipf           */
+    /*****************************/
+//    Zipf distribution = Zipf(N, gamma_values[i]);
+
+
     distribution.set_min(kmin);
+    std::string filename = "/home/marcio/qExp10E44.csv";
+    std::vector<unsigned long int> random_vector = distribution.random(N);
+    write_random_vector(filename, random_vector);
+
 
     /***********************************************************/
     /*                  Set Paremeters String                  */
     /***********************************************************/
 
-    std::string out_string;
-    std::stringstream ss;
-    ss << n;
-    ss << "E4";
-    ss << "_" << i;
-    ss << "_" << kmin;
-    std::cout <<"N: 2^"<<n<<"E4"<<", i: "<< i <<"(q="<< q <<", lambda="<< lambda << "), kmin: "<<kmin<< std::endl;
-    out_string = std::regex_replace(ss.str(), e, "-");
+//    std::string out_string;
+//    std::stringstream ss;
+//    ss << n;
+//    ss << "E4";
+//    ss << "_" << i;
+//    ss << "_" << kmin;
+//    std::cout <<"N: 2^"<<n<<"E4"<<", i: "<< i <<"(q="<< q <<", lambda="<< lambda << "), kmin: "<<kmin<< std::endl;
+//    out_string = std::regex_replace(ss.str(), e, "-");
 
     /*********************************************************/
 
-    Rede rd = Rede(N, &distribution);
+//    Rede rd = Rede(N, &distribution);
 
     /****************************************/
     /* Mean geodesical distance computation */
     /****************************************/
-    UnionFind uf;
-    unsigned long int lower_bound = 100;
-    uf = geodesical_distance_computation(num_rep, rd, lower_bound, out_string);
+//    UnionFind uf;
+//    unsigned long int lower_bound = 100;
+//    uf = geodesical_distance_computation(num_rep, rd, lower_bound, out_string);
 
     /***********************************************/
     /*            write component sizes            */
     /***********************************************/
-    std::cout <<"[Writing component sizes...]"<< std::endl;
-    write_uf("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
+//    std::cout <<"[Writing component sizes...]"<< std::endl;
+//    write_uf("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Components/c_"+out_string+".txt", uf);
 
     /*************************************/
     /*      Percolation computation      */
     /*************************************/
 
-    std::vector<std::vector<double>> biggest_component = percolation_computation(num_rep, rd);
+//    std::vector<std::vector<double>> biggest_component = percolation_computation(num_rep, rd);
 
     /*************************************************/
     /*    This write the percolation series stats    */
     /*************************************************/
 
-    std::cout <<"[Writing percolation series stats...]"<< std::endl;
-    write_percolation_series("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
+//    std::cout <<"[Writing percolation series stats...]"<< std::endl;
+//    write_percolation_series("/home/marcio/pCloudDrive/Physics/Thesis/Andre/Results/Mean/Biggest_component_" + out_string + ".txt", biggest_component, num_rep);
 
     std::cout << std::endl;
     auto stop = std::chrono::high_resolution_clock::now();
