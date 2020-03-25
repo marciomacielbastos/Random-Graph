@@ -68,12 +68,12 @@ void Percolation::write_component_stats(const std::string &filename){
 UnionFind Percolation::mount_geodesical_stats(Rede rd){
     std::vector<std::pair<unsigned long int, unsigned long int>> list = rd.get_list_of_links();
     UnionFind uf = UnionFind(rd.get_number_of_nodes());
-    while (list.size() > 0) {
-        std::pair<unsigned long int, unsigned long int> pair = list[list.size() - 1];
-        // Union the nodes of this link
-        uf.union_(pair.first, pair.second);
+    while (!list.empty()) {
+        std::pair<unsigned long int, unsigned long int> pair = list.back();
         // Remove the link from the list of links
         list.pop_back();
+	// Union the nodes of this link
+        uf.union_(pair.first, pair.second);
     }
     return uf;
 }
@@ -98,20 +98,20 @@ UnionFind Percolation::mount_component_stats(Rede rd, unsigned int freq_of_reg, 
 
     double k = 1 / static_cast<double>(freq_of_reg);
 
-    while (list.size() > 0) {
+    while (!list.empty()) {
         progress += 1 / total;
-        std::pair<unsigned long int, unsigned long int> pair = list[list.size() - 1];
-        // Union the nodes of this link
-        uf.union_(pair.first, pair.second);
+        std::pair<unsigned long int, unsigned long int> pair = list.back();
         // Remove the link from the list of links
         list.pop_back();
+	// Union the nodes of this link
+        uf.union_(pair.first, pair.second);
 
         /**************************************************************************/
         /*                                                                        */
         /*                      Percolation data computation                      */
         /*                                                                        */
         /**************************************************************************/
-        if((progress > k) || ((list.size() - 1) == 0)){
+        if((progress > k) || list.empty()){
             double size = 0;
             double total_numb_of_clusters = 0;
             std::vector<unsigned long int> cls = uf.get_size_of_components();
@@ -174,9 +174,9 @@ std::vector<std::vector<double>> Percolation::mount_component(Rede rd, unsigned 
 
     unsigned int i = 1;
     //Feed the algorithm with edges until there ain't no edges in the list
-    while (list.size() > 0) {
+    while (!list.empty()) {
         progress += 1 / total;
-        std::pair<unsigned long int, unsigned long int> pair = list[list.size() - 1];
+        std::pair<unsigned long int, unsigned long int> pair = list.back();
         // Union the nodes of this link
             uf.union_(pair.first, pair.second);
             Nl += 1;
