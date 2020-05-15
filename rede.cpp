@@ -60,8 +60,9 @@ void Rede::link(unsigned long v, unsigned long w){
 }
 
 bool Rede::random_link(){
+    std::vector<unsigned long int> algorithm_list;
     try{
-        std::vector<unsigned long int> algorithm_list = mount_algorithm_list();
+        algorithm_list = mount_algorithm_list();
     }
     catch(std::bad_alloc& ba){
     	std::cerr << "bad_alloc caught on 'mount_algorithm_list()': " << ba.what() << '\n';

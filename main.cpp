@@ -47,15 +47,16 @@ void write_random_vector(const std::string& filename, std::vector<unsigned long 
 
 void write_links(const std::string& filename, Rede rd){
     std::ofstream myfile;
-    myfile.open (filename);
-    std::vector<std::pair<unsigned long int, unsigned long int>> list = rd.get_list_of_links();
-    bool b = false;
+    myfile.open (filename);   
     std::cout <<"[Linking nodes...]"<< std::endl;
+    bool b = false;
     while(!b){
         rd.reset();
         b = rd.random_link();
     }
+    std::vector<std::pair<unsigned long int, unsigned long int>> list = rd.get_list_of_links();
     std::cout <<"[Writing graph links...]"<< std::endl;
+    myfile << "Source" << "," << "Target" << std::endl;
     while (!list.empty()) {
         std::pair<unsigned long int, unsigned long int> pair = list.back();
         if(list.size() > 1){
@@ -318,7 +319,7 @@ return biggest_component;
 int main(int argc, char *argv[]){
     auto start = std::chrono::high_resolution_clock::now();
     std::regex e ("[.]");
-    unsigned long int f = 4;
+    unsigned long int f = 2;
     unsigned long int N = static_cast<unsigned long int>(1E4);
     N *= f;
     unsigned long int n = std::log2(f);
@@ -374,7 +375,7 @@ int main(int argc, char *argv[]){
     /*  Write sample graph's links  */
     /********************************/
 
-    write_links("/home/marcio/Results/Graph_" + out_string + ".txt", rd);
+    write_links("/home/marcio/Results/Graph_" + out_string + ".csv", rd);
 
     /****************************************/
     /* Mean geodesical distance computation */
