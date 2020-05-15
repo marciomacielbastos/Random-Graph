@@ -60,7 +60,12 @@ void Rede::link(unsigned long v, unsigned long w){
 }
 
 bool Rede::random_link(){
-    std::vector<unsigned long int> algorithm_list = mount_algorithm_list();
+    try{
+        std::vector<unsigned long int> algorithm_list = mount_algorithm_list();
+    }
+    catch(std::bad_alloc& ba){
+    	std::cerr << "bad_alloc caught on 'mount_algorithm_list()': " << ba.what() << '\n';
+    }
     int counter = 0;
     while(algorithm_list.size() > 1){
         unsigned long int rand1 =  distribution->discrete_uniform(0, algorithm_list.size());

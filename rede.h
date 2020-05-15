@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "random.h"
+#include <new>
 #include <vector>
 
 class Rede{
